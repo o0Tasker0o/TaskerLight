@@ -85,6 +85,7 @@
     <Compile Include="RegionManager.cs" />
     <Compile Include="ScriptLoader.cs" />
     <Compile Include="SettingsManager.cs" />
+    <Compile Include="VideoEffectGenerator.cs" />
     <Compile Include="WallpaperEffectGenerator.cs" />
     <EmbeddedResource Include="CompilerForm.resx">
       <DependentUpon>CompilerForm.cs</DependentUpon>

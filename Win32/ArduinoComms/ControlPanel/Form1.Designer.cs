@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.screenCaptureTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundTab = new System.Windows.Forms.TabPage();
             this.editScriptButton = new System.Windows.Forms.Button();
@@ -98,10 +97,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.notifyIconMenu.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // screenCaptureTimer
-            // 
-            this.screenCaptureTimer.Tick += new System.EventHandler(this.screenCaptureTimer_Tick);
             // 
             // tabControl1
             // 
@@ -701,7 +696,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer screenCaptureTimer;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage backgroundTab;
         private System.Windows.Forms.RadioButton activeSceneModeRadioButton;
