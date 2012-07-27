@@ -1,3 +1,11 @@
+Version 0.0.7
+================
+Add active script mode
+    Compile and run C# scripts
+Add example active scripts
+Add application to prepare Win32 release
+
+
 Version 0.0.6
 ================
 Minor GUI adjustments

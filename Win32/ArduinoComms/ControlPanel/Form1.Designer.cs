@@ -33,6 +33,8 @@
             this.screenCaptureTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundTab = new System.Windows.Forms.TabPage();
+            this.scriptPanel = new System.Windows.Forms.Panel();
+            this.newScriptButton = new System.Windows.Forms.Button();
             this.hsvPicker = new CSharpGUIElements.Colour_Pickers.HSVPicker();
             this.staticColoursBackgroundRadioButton = new System.Windows.Forms.RadioButton();
             this.capturedBackgroundModeRadioButton = new System.Windows.Forms.RadioButton();
@@ -70,6 +72,8 @@
             this.wallpaperTimer = new System.Windows.Forms.Timer(this.components);
             this.mOpenExeDialog = new System.Windows.Forms.OpenFileDialog();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.activeAppTimer = new System.Windows.Forms.Timer(this.components);
+            this.editScriptButton = new System.Windows.Forms.Button();
             this.ledPreview1 = new ControlPanel.LEDPreview();
             this.tabControl1.SuspendLayout();
             this.backgroundTab.SuspendLayout();
@@ -109,6 +113,9 @@
             // backgroundTab
             // 
             this.backgroundTab.BackColor = System.Drawing.SystemColors.Control;
+            this.backgroundTab.Controls.Add(this.editScriptButton);
+            this.backgroundTab.Controls.Add(this.scriptPanel);
+            this.backgroundTab.Controls.Add(this.newScriptButton);
             this.backgroundTab.Controls.Add(this.hsvPicker);
             this.backgroundTab.Controls.Add(this.staticColoursBackgroundRadioButton);
             this.backgroundTab.Controls.Add(this.capturedBackgroundModeRadioButton);
@@ -120,6 +127,26 @@
             this.backgroundTab.Size = new System.Drawing.Size(450, 198);
             this.backgroundTab.TabIndex = 0;
             this.backgroundTab.Text = "Background";
+            // 
+            // scriptPanel
+            // 
+            this.scriptPanel.AutoScroll = true;
+            this.scriptPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.scriptPanel.Location = new System.Drawing.Point(6, 6);
+            this.scriptPanel.Name = "scriptPanel";
+            this.scriptPanel.Size = new System.Drawing.Size(337, 186);
+            this.scriptPanel.TabIndex = 9;
+            // 
+            // newScriptButton
+            // 
+            this.newScriptButton.Location = new System.Drawing.Point(369, 169);
+            this.newScriptButton.Name = "newScriptButton";
+            this.newScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.newScriptButton.TabIndex = 7;
+            this.newScriptButton.Text = "New Script";
+            this.newScriptButton.UseVisualStyleBackColor = true;
+            this.newScriptButton.Visible = false;
+            this.newScriptButton.Click += new System.EventHandler(this.newScriptButton_Click);
             // 
             // hsvPicker
             // 
@@ -162,13 +189,13 @@
             // 
             this.activeSceneModeRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.activeSceneModeRadioButton.AutoSize = true;
-            this.activeSceneModeRadioButton.Enabled = false;
             this.activeSceneModeRadioButton.Location = new System.Drawing.Point(354, 29);
             this.activeSceneModeRadioButton.Name = "activeSceneModeRadioButton";
             this.activeSceneModeRadioButton.Size = new System.Drawing.Size(89, 17);
             this.activeSceneModeRadioButton.TabIndex = 1;
             this.activeSceneModeRadioButton.Text = "Active Scene";
             this.activeSceneModeRadioButton.UseVisualStyleBackColor = true;
+            this.activeSceneModeRadioButton.CheckedChanged += new System.EventHandler(this.activeSceneModeRadioButton_CheckedChanged);
             // 
             // wallpaperBackgroundModeRadioButton
             // 
@@ -545,6 +572,22 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
+            // activeAppTimer
+            // 
+            this.activeAppTimer.Interval = 200;
+            this.activeAppTimer.Tick += new System.EventHandler(this.activeAppTimer_Tick);
+            // 
+            // editScriptButton
+            // 
+            this.editScriptButton.Location = new System.Drawing.Point(368, 140);
+            this.editScriptButton.Name = "editScriptButton";
+            this.editScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.editScriptButton.TabIndex = 10;
+            this.editScriptButton.Text = "Edit Script";
+            this.editScriptButton.UseVisualStyleBackColor = true;
+            this.editScriptButton.Visible = false;
+            this.editScriptButton.Click += new System.EventHandler(this.editScriptButton_Click);
+            // 
             // ledPreview1
             // 
             this.ledPreview1.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -632,6 +675,10 @@
         private System.Windows.Forms.ImageList mAppImageList;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown arduinoComPortUpDown;
+        private System.Windows.Forms.Button newScriptButton;
+        private System.Windows.Forms.Timer activeAppTimer;
+        private System.Windows.Forms.Panel scriptPanel;
+        private System.Windows.Forms.Button editScriptButton;
 
     }
 }
