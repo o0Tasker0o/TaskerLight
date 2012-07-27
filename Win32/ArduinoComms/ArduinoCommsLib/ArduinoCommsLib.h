@@ -16,9 +16,9 @@ struct LEDColour
 //Exported functions
 extern "C"
 {
-    DECLDIR unsigned int Initialise(void);
+    DECLDIR unsigned int InitialiseArduinoComms(void);
 
-	DECLDIR unsigned int Shutdown(void);
+	DECLDIR unsigned int ShutdownArduinoComms(void);
 	
 	DECLDIR unsigned int SetLED(unsigned char red, 
 								unsigned char green, 

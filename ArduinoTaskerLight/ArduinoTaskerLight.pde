@@ -11,7 +11,7 @@ WS2801 strip = WS2801(25, dataPin, clockPin);
 
 void setup() 
 {
-  Serial.begin(9600);  
+  Serial.begin(115200);  
   
   strip.begin();
 
@@ -72,7 +72,7 @@ void loop()
     
     strip.show();
     
-    Serial.write(0);
+    Serial.write((uint8_t) 0);
 }
 
 /* Helper functions */

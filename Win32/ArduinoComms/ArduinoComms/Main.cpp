@@ -1,10 +1,12 @@
 #include <windows.h>
 
+#include <stdio.h>
+
 #include "../ArduinoCommsLib/ArduinoCommsLib.h"
 
 int main()
 {
-	if(TASKERLIGHT_OK != Initialise())
+	if(TASKERLIGHT_OK != InitialiseArduinoComms())
 	{
 		return -1;
 	}
@@ -14,6 +16,8 @@ int main()
 
 	while(!GetKeyState(VK_SPACE))
 	{
+		DWORD startTime = GetTickCount();
+
 		for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
 		{
 			SetLED(colour, 0, 255 - colour, pixelIndex);
@@ -34,9 +38,11 @@ int main()
 		}
 
 		FlushColours();
+
+		printf("%d\n", GetTickCount() - startTime);
 	}
 
-	Shutdown();
+	ShutdownArduinoComms();
 
 	return 0;
 }

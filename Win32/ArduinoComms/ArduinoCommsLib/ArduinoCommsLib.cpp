@@ -1,5 +1,7 @@
 #include "ArduinoCommsLib.h"
 
+#include <stdio.h>
+
 #define NUMBER_OF_LEDS 25
 
 HANDLE g_arduinoHandle;
@@ -7,7 +9,7 @@ LEDColour g_Pixels[NUMBER_OF_LEDS];
 
 extern "C"
 {
-    DECLDIR unsigned int Initialise(void)
+    DECLDIR unsigned int InitialiseArduinoComms(void)
 	{
 		g_arduinoHandle = CreateFile("COM3",
 									 GENERIC_READ | GENERIC_WRITE,
@@ -17,6 +19,14 @@ extern "C"
 									 FILE_ATTRIBUTE_NORMAL,
 									 NULL);
 	
+		COMMTIMEOUTS timeouts;		
+		timeouts.ReadTotalTimeoutConstant = 500;
+		timeouts.ReadTotalTimeoutMultiplier = 1;
+		timeouts.WriteTotalTimeoutConstant = 500;
+		timeouts.WriteTotalTimeoutMultiplier = 1;
+
+		SetCommTimeouts(g_arduinoHandle, &timeouts);
+
 		//If you were unable to open comms with the Arduino
 		if(INVALID_HANDLE_VALUE == g_arduinoHandle)
 		{
@@ -44,7 +54,7 @@ extern "C"
 			else
 			{
 				//Define serial connection parameters for the arduino board
-				dcbSerialParams.BaudRate=CBR_9600;
+				dcbSerialParams.BaudRate=CBR_115200;
 				dcbSerialParams.ByteSize=8;
 				dcbSerialParams.StopBits=ONESTOPBIT;
 				dcbSerialParams.Parity=NOPARITY;
@@ -70,7 +80,7 @@ extern "C"
 		return TASKERLIGHT_OK;
 	}
 
-	DECLDIR unsigned int Shutdown(void)
+	DECLDIR unsigned int ShutdownArduinoComms(void)
 	{
 		CloseHandle(g_arduinoHandle);
 

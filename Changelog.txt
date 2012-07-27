@@ -12,3 +12,9 @@ Version 0.0.1
 Implemented C++ serial comms library
 Added C# control panel
   - Can set static colour for each pixel
+
+Version 0.0.2
+================
+
+Increased baud rate from 9600 to 115200
+Implemented basic, fixed region screen capture
