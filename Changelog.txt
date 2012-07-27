@@ -1,0 +1,6 @@
+Version 0.0.0
+================
+
+Initial release
+Arduino sketch reads pixel colours from serial
+C++ code sends a green -> red fade to all pixels
