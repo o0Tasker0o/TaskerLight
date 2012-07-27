@@ -174,7 +174,6 @@ namespace ControlPanel
                                   (int) (b * 255));
         }
 
-
         internal static Color ConvertToColor(UInt32 colour)
         {
             UInt32 blue = colour & 255;
@@ -184,6 +183,50 @@ namespace ControlPanel
             UInt32 red = colour & 255;
 
             return Color.FromArgb((int)red, (int)green, (int)blue);
+        }
+
+        internal static Color AdjustSaturation(Color inputColour, float saturationMultiplier)
+        {
+            float hue = 0.0f;
+            float saturation = 0.0f;
+            float value = 0.0f;
+
+            RGBToHSV(inputColour, ref hue, ref saturation, ref value);
+
+            saturation *= saturationMultiplier;
+
+            if (saturation > 1.0f)
+            {
+                saturation = 1.0f;
+            }
+
+            return ColourUtil.HSVToRGB(hue, saturation, value);
+        }
+
+        internal static Color AdjustContrast(Color inputColour, float contrast)
+        {
+            float rDiff = inputColour.R - 127;
+            float gDiff = inputColour.G - 127;
+            float bDiff = inputColour.B - 127;
+
+            rDiff *= contrast;
+            gDiff *= contrast;
+            bDiff *= contrast;
+
+            float r = 127 + rDiff;
+            float g = 127 + gDiff;
+            float b = 127 + bDiff;
+
+            r = Math.Max(r, 0);
+            r = Math.Min(r, 255);
+
+            g = Math.Max(g, 0);
+            g = Math.Min(g, 255);
+
+            b = Math.Max(b, 0);
+            b = Math.Min(b, 255);
+
+            return Color.FromArgb((int)r, (int)g, (int)b);
         }
     }
 }

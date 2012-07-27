@@ -14,6 +14,10 @@ namespace ControlPanel
         private readonly Rectangle [] mLEDRegions;
         private Color[] mLEDColours;
         private Color mActiveColour;
+        
+        private const int RegionXOffset = 9;
+        private const int RegionYOffset = 10;
+
 
         internal Color ActiveColour
         {
@@ -74,8 +78,12 @@ namespace ControlPanel
             
             for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
             {
-                e.Graphics.FillRectangle(new SolidBrush(mLEDColours[pixelIndex]), 
-                                         mLEDRegions[pixelIndex]);
+                Rectangle ledRegion = mLEDRegions[pixelIndex];
+                ledRegion.X += RegionXOffset;
+                ledRegion.Y += RegionYOffset;
+
+                e.Graphics.FillRectangle(new SolidBrush(mLEDColours[pixelIndex]),
+                                         ledRegion);
             }
         }
         
@@ -96,6 +104,8 @@ namespace ControlPanel
                 for (int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
                     Rectangle currentLED = mLEDRegions[pixelIndex];
+                    currentLED.X += RegionXOffset;
+                    currentLED.Y += RegionYOffset;
 
                     if (e.X > currentLED.X && e.X < currentLED.X + currentLED.Width &&
                        e.Y > currentLED.Y && e.Y < currentLED.Y + currentLED.Height)

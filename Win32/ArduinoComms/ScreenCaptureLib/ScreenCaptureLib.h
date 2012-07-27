@@ -18,6 +18,12 @@ extern "C"
 
 	DECLDIR unsigned int GetAverageColour(unsigned int x, unsigned int y,
 										  unsigned int width, unsigned int height);
+	
+	DECLDIR void TestLeftBorder(int x, int y, int width, int height);
+	DECLDIR void TestRightBorder(int x, int y, int width, int height);
+	
+	DECLDIR int GetLeftBorder(void);
+	DECLDIR int GetRightBorder(void);
 }
 
 #endif

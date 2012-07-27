@@ -34,9 +34,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::ControlPanel.Properties.Resources.Dell_Display_Front_icon;
             this.DoubleBuffered = true;
             this.Name = "LEDPreview";
-            this.Size = new System.Drawing.Size(222, 142);
+            this.Size = new System.Drawing.Size(238, 199);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LEDPreview_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LEDPreview_MouseMove);
             this.ResumeLayout(false);

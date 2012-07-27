@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Diagnostics;
 
 namespace ControlPanel
 {
@@ -36,6 +37,20 @@ namespace ControlPanel
         private static extern UInt32 GetAverageColour(UInt32 x, UInt32 y,
                                                       UInt32 width, UInt32 height);
 
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 TestLeftBorder(Int32 x, Int32 y,
+                                                   Int32 width, Int32 height);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 GetLeftBorder();
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 TestRightBorder(Int32 x, Int32 y,
+                                                    Int32 width, Int32 height);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 GetRightBorder();
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int SystemParametersInfo(UInt32 uAction, 
                                                        int uParam,
@@ -43,9 +58,34 @@ namespace ControlPanel
                                                        int fuWinIni);
         
         private const UInt32 SPI_GETDESKWALLPAPER = 0x73;
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetClientRect(IntPtr hWnd, ref Rectangle rect);
+
+        [DllImport("user32.dll")]
+        static extern bool ClientToScreen(IntPtr hWnd, ref Point point);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetWindow(IntPtr hWnd, UInt32 wCmd);
+
+        private const UInt32 GW_HWNDNEXT = 0x02;
         #endregion
 
         private Color [] mStaticColours;
+
+        private ImageList mAppImageList;
+
+        internal struct ProcessIndex
+        {
+            internal String processName;
+            internal String exeName;
+            internal Process process;
+            internal int topMargin;
+            internal int bottomMargin;
+        };
 
         public Form1()
         {
@@ -62,14 +102,45 @@ namespace ControlPanel
             }
 
             SettingsManager.LoadSettings();
+            
+            mAppImageList = new ImageList();
+            mAppImageList.ColorDepth = ColorDepth.Depth32Bit;
+            mAppImageList.ImageSize = new Size(32, 32);
+            this.activeAppListView.LargeImageList = mAppImageList;
+
+            foreach(ProcessIndex activeApp in SettingsManager.GetActiveApps())
+            {
+                AddActiveApp(activeApp);
+            }
 
             mStaticColours = SettingsManager.GetStaticColours();
+            
+            this.oversaturationTrackbar.Value = (int) (SettingsManager.GetSaturation() * 100.0f);
+            this.contrastTrackbar.Value = (int) (SettingsManager.GetContrast() * 100.0f);
 
             staticColoursBackgroundRadioButton_CheckedChanged(this, EventArgs.Empty);
             wallpaperBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
             capturedBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
         }
-        
+
+        internal void AddActiveApp(ProcessIndex processIndex)
+        {
+            FileInfo exeFile = new FileInfo(processIndex.exeName);
+
+            Icon icon = Icon.ExtractAssociatedIcon(processIndex.exeName);
+            mAppImageList.Images.Add(icon);
+
+            //ProcessIndex processIndex = new ProcessIndex();
+            processIndex.processName = Path.GetFileNameWithoutExtension(exeFile.FullName);
+            //processIndex.exeName = exeFile.FullName;
+
+            ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFile.FullName));
+            appItem.Tag = processIndex;
+            appItem.ImageIndex = this.mAppImageList.Images.Count - 1;
+
+            this.activeAppListView.Items.Add(appItem);
+        }
+
         internal void LoadWallpaper()
         {
             String wallpaperFilename = new String(' ', 256);
@@ -105,7 +176,8 @@ namespace ControlPanel
                 Rectangle region = RegionManager.Instance().GetRegion(i);
                 this.ledPreview1.SetPixel(OutputManager.SetLED(scaledWallpaper.GetPixel(region.X, region.Y),
                                                                i,
-                                                               1.0f),
+                                                               SettingsManager.GetSaturation(),
+                                                               SettingsManager.GetContrast()),
                                           i);
             }
 
@@ -125,25 +197,128 @@ namespace ControlPanel
 
         private void screenCaptureTimer_Tick(object sender, EventArgs e)
         {
-            float saturation = 1.6f;
+            List<ProcessIndex> activeProcesses = new List<ProcessIndex>();
+            
+            for(int appIndex = 0; appIndex < activeAppListView.Items.Count; ++appIndex)
+            {
+                ProcessIndex processIndex = (ProcessIndex)activeAppListView.Items[appIndex].Tag;
+                Process[] processes = Process.GetProcessesByName(processIndex.processName);
 
+                if(processes.Length > 0)
+                {
+                    processIndex.process = processes[0];
+                    activeProcesses.Add(processIndex);
+                }
+
+                activeAppListView.Items[appIndex].Tag = processIndex;
+            }
+
+            IntPtr foregroundWindow = GetForegroundWindow();
+
+            bool activeProcessFound = false;
+
+            do
+            {
+                //for(int appIndex = 0; appIndex < activeAppListView.Items.Count; ++appIndex)
+                foreach(ProcessIndex runningProcess in activeProcesses)
+                {
+                    //ProcessIndex processIndex = (ProcessIndex) activeAppListView.Items[appIndex].Tag;
+                
+                    if(foregroundWindow == runningProcess.process.MainWindowHandle)
+                    {
+                        //This window is the highest level window of one of our active applications
+                        activeProcessFound = true;
+
+                        Rectangle rectangle = new Rectangle();
+
+                        Point position = new Point(0, 0);
+                        ClientToScreen(runningProcess.process.MainWindowHandle, ref position);
+
+                        GetClientRect(runningProcess.process.MainWindowHandle, ref rectangle);
+
+                        if(rectangle == Screen.PrimaryScreen.Bounds && !marginsFullscreenCheckbox.Checked)
+                        {
+                            TestLeftBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+                            TestRightBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
+                            rectangle.X += GetLeftBorder();
+                            rectangle.Width -= GetLeftBorder();
+                            rectangle.Width -= GetRightBorder();
+
+                            RegionManager.Instance().Resize(rectangle);
+                            break;
+                        }
+
+                        rectangle.X = position.X;
+                        rectangle.Y = position.Y + runningProcess.topMargin;
+                      
+                        rectangle.Height -= runningProcess.topMargin;
+                        rectangle.Height -= runningProcess.bottomMargin;
+
+                        if(rectangle.X < 0)
+                        {
+                            rectangle.Width += rectangle.X;
+                            rectangle.X = 0;
+                        }
+
+                        if(rectangle.X + rectangle.Width > Screen.PrimaryScreen.Bounds.Width)
+                        {
+                            int excessWidth = (rectangle.X + rectangle.Width) - Screen.PrimaryScreen.Bounds.Width;
+                            rectangle.Width -= excessWidth;
+                        }
+
+                        if(rectangle.Y + rectangle.Height > Screen.PrimaryScreen.Bounds.Height)
+                        {
+                            int excessHeight = (rectangle.Y + rectangle.Height) - Screen.PrimaryScreen.Bounds.Height;
+                            rectangle.Height -= excessHeight;
+                        }
+
+                        TestLeftBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+                        TestRightBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
+                        rectangle.X += GetLeftBorder();
+                        rectangle.Width -= GetLeftBorder();
+                        rectangle.Width -= GetRightBorder();
+
+                        RegionManager.Instance().Resize(rectangle);
+
+                        break;
+                    }
+                }
+
+                foregroundWindow = GetWindow(foregroundWindow, GW_HWNDNEXT);
+            } while(foregroundWindow != IntPtr.Zero && !activeProcessFound);
+
+            if(!activeProcessFound)
+            {
+                Rectangle rectangle = Screen.PrimaryScreen.Bounds;
+
+                TestLeftBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+                TestRightBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
+                rectangle.X += GetLeftBorder();
+                rectangle.Width -= GetLeftBorder();
+                rectangle.Width -= GetRightBorder();
+
+                RegionManager.Instance().Resize(rectangle);
+            }
+            
             for (UInt32 i = 0; i < 25; ++i)
             {
                 Rectangle region = RegionManager.Instance().GetRegion(i);
                 Color colour = ColourUtil.ConvertToColor(GetAverageColour((UInt32) region.X, (UInt32) region.Y,
                                                                           (UInt32) region.Width, (UInt32) region.Height));
 
-                this.ledPreview1.SetPixel(OutputManager.SetLED(colour, i, saturation), i);
+                this.ledPreview1.SetPixel(OutputManager.SetLED(colour, 
+                                                               i, 
+                                                               SettingsManager.GetSaturation(),
+                                                               SettingsManager.GetContrast()),
+                                          i);
             }
 
             OutputManager.FlushColours();
 
             this.ledPreview1.Refresh();
-        }
-
-        private void hsvPicker1_ColourChanged(object sender, EventArgs e)
-        {
-            this.ledPreview1.ActiveColour = this.hsvPicker1.GetColour();
         }
 
         private void staticColoursBackgroundRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -161,11 +336,11 @@ namespace ControlPanel
 
                 OutputManager.FlushColours();
 
-                this.hsvPicker1.Visible = true;
+                this.hsvPicker.Visible = true;
             }
             else
             {
-                this.hsvPicker1.Visible = false;
+                this.hsvPicker.Visible = false;
             }
         }
         
@@ -219,6 +394,8 @@ namespace ControlPanel
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             SettingsManager.SetStaticColours(mStaticColours);
+            SettingsManager.SetActiveApps(activeAppListView.Items);
+
             SettingsManager.SaveSettings();
 
             base.OnFormClosing(e);
@@ -227,6 +404,82 @@ namespace ControlPanel
         private void wallpaperTimer_Tick(object sender, EventArgs e)
         {
             LoadWallpaper();
+        }
+
+        private void addAppButton_Click(object sender, EventArgs e)
+        {
+            if(mOpenExeDialog.ShowDialog() == DialogResult.OK)
+            {
+                ProcessIndex processIndex = new ProcessIndex();
+                processIndex.exeName = mOpenExeDialog.FileName;
+                AddActiveApp(processIndex);
+            }
+        }
+
+        private void activeAppListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(activeAppListView.SelectedIndices.Count > 0)
+            {
+                this.activeAppsMarginGroupbox.Visible = true;
+                this.removeAppButton.Visible = true;
+
+                ProcessIndex currentProcess = (ProcessIndex) activeAppListView.Items[activeAppListView.SelectedIndices[0]].Tag;
+                this.topMarginUpDown.Value = currentProcess.topMargin;
+                this.bottomMarginUpDown.Value = currentProcess.bottomMargin;
+            }
+            else
+            {
+                this.activeAppsMarginGroupbox.Visible = false;
+                this.removeAppButton.Visible = false;
+            }
+        }
+
+        private void removeAppButton_Click(object sender, EventArgs e)
+        {
+            this.activeAppListView.Items.RemoveAt(this.activeAppListView.SelectedIndices[0]);
+        }
+
+        private void topMarginUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ProcessIndex processIndex = (ProcessIndex) activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag;
+            processIndex.topMargin = (int) topMarginUpDown.Value;
+            activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag = processIndex;
+        }
+
+        private void bottomMarginUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ProcessIndex processIndex = (ProcessIndex)activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag;
+            processIndex.bottomMargin = (int) bottomMarginUpDown.Value;
+            activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag = processIndex;
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if(FormWindowState.Minimized == WindowState)
+            {
+                Hide();
+            }
+        }
+
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void oversaturationTrackbar_ValueChanged(object sender, EventArgs e)
+        {
+            SettingsManager.SetSaturation(oversaturationTrackbar.Value / 100.0f);
+        }
+
+        private void contrastTrackbar_ValueChanged(object sender, EventArgs e)
+        {
+            SettingsManager.SetContrast(contrastTrackbar.Value / 100.0f);
+        }
+
+        private void hsvPicker_ColourChanged(object sender, EventArgs e)
+        {
+            this.ledPreview1.ActiveColour = this.hsvPicker.Colour;
         }
     }
 }

@@ -60,9 +60,44 @@ namespace ControlPanel.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ContrastHigh {
+            get {
+                object obj = ResourceManager.GetObject("ContrastHigh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ContrastLow {
+            get {
+                object obj = ResourceManager.GetObject("ContrastLow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Dell_Display_Front_icon {
+            get {
+                object obj = ResourceManager.GetObject("Dell-Display-Front-icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Hue {
             get {
                 object obj = ResourceManager.GetObject("Hue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SaturationHigh {
+            get {
+                object obj = ResourceManager.GetObject("SaturationHigh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SaturationLow {
+            get {
+                object obj = ResourceManager.GetObject("SaturationLow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

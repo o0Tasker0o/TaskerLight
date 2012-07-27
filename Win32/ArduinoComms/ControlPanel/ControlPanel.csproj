@@ -33,7 +33,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>TaskerLight.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSharpGUIElements, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Out\Release\CSharpGUIElements.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -104,6 +111,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Hue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SaturationLow.png" />
+    <None Include="Resources\SaturationHigh.png" />
+    <None Include="Resources\Dell-Display-Front-icon.png" />
+    <None Include="Resources\ContrastHigh.png" />
+    <None Include="Resources\ContrastLow.png" />
+    <Content Include="TaskerLight.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

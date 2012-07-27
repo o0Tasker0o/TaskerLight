@@ -15,24 +15,16 @@ namespace ControlPanel
         [DllImport("ArduinoCommsLib.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern UInt32 FlushColours();
 
-        internal static Color SetLED(Color ledColor, UInt32 pixelIndex, float saturationMultiplier = 1.0f)
+        internal static Color SetLED(Color ledColor, UInt32 pixelIndex, float saturationMultiplier = 1.0f, float contrastMultiplier = 1.0f)
         {
             if(saturationMultiplier != 1.0f)
             {
-                float hue = 0.0f;
-                float saturation = 0.0f;
-                float value = 0.0f;
+                ledColor = ColourUtil.AdjustSaturation(ledColor, saturationMultiplier);
+            }
 
-                ColourUtil.RGBToHSV(ledColor, ref hue, ref saturation, ref value);
-
-                saturation *= saturationMultiplier;
-
-                if(saturation > 1.0f)
-                {
-                    saturation = 1.0f;
-                }
-
-                ledColor = ColourUtil.HSVToRGB(hue, saturation, value);
+            if(contrastMultiplier != 1.0f)
+            {
+                ledColor = ColourUtil.AdjustContrast(ledColor, contrastMultiplier);
             }
 
             SetLED(Convert.ToByte(ledColor.R),

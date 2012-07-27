@@ -4,13 +4,14 @@
 
 #define NUMBER_OF_LEDS 25
 
-HANDLE g_arduinoHandle;
+HANDLE g_arduinoHandle(NULL);
 LEDColour g_Pixels[NUMBER_OF_LEDS];
 
 extern "C"
 {
     DECLDIR unsigned int InitialiseArduinoComms(void)
 	{
+		//Open the arduino's serial port for reading and writing
 		g_arduinoHandle = CreateFile("COM3",
 									 GENERIC_READ | GENERIC_WRITE,
 									 0,
@@ -45,9 +46,9 @@ extern "C"
 			if (!GetCommState(g_arduinoHandle, &dcbSerialParams))
 			{
 				MessageBox(NULL, 
-							"Unable get serial properties", 
-							"Init Error", 
-							MB_OK | MB_ICONERROR);
+						   "Unable get serial properties", 
+						   "Init Error", 
+						   MB_OK | MB_ICONERROR);
 
 				return TASKERLIGHT_ERROR;
 			}
@@ -63,9 +64,9 @@ extern "C"
 				if(!SetCommState(g_arduinoHandle, &dcbSerialParams))
 				{
 					MessageBox(NULL, 
-								"Unable set serial properties", 
-								"Init Error", 
-								MB_OK | MB_ICONERROR);
+							   "Unable set serial properties", 
+							   "Init Error", 
+							   MB_OK | MB_ICONERROR);
 
 					return TASKERLIGHT_ERROR;
 				}
