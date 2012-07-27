@@ -60,6 +60,7 @@
     <Compile Include="CompilerForm.Designer.cs">
       <DependentUpon>CompilerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EffectGenerator.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +85,7 @@
     <Compile Include="RegionManager.cs" />
     <Compile Include="ScriptLoader.cs" />
     <Compile Include="SettingsManager.cs" />
+    <Compile Include="WallpaperEffectGenerator.cs" />
     <EmbeddedResource Include="CompilerForm.resx">
       <DependentUpon>CompilerForm.cs</DependentUpon>
     </EmbeddedResource>

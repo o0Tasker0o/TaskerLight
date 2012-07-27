@@ -70,7 +70,6 @@
             this.oversaturationTrackbar = new System.Windows.Forms.TrackBar();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.wallpaperTimer = new System.Windows.Forms.Timer(this.components);
             this.mOpenExeDialog = new System.Windows.Forms.OpenFileDialog();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.notifyIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -81,6 +80,7 @@
             this.activeAppTimer = new System.Windows.Forms.Timer(this.components);
             this.ledPreview1 = new ControlPanel.LEDPreview();
             this.connectButton = new System.Windows.Forms.Button();
+            this.ledPreviewTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.backgroundTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -575,11 +575,6 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // wallpaperTimer
-            // 
-            this.wallpaperTimer.Interval = 1000;
-            this.wallpaperTimer.Tick += new System.EventHandler(this.wallpaperTimer_Tick);
-            // 
             // mOpenExeDialog
             // 
             this.mOpenExeDialog.FileName = "openFileDialog1";
@@ -661,6 +656,11 @@
             this.connectButton.Visible = false;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
+            // ledPreviewTimer
+            // 
+            this.ledPreviewTimer.Interval = 50;
+            this.ledPreviewTimer.Tick += new System.EventHandler(this.ledPreviewTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -708,7 +708,6 @@
         private System.Windows.Forms.RadioButton wallpaperBackgroundModeRadioButton;
         private System.Windows.Forms.RadioButton staticColoursBackgroundRadioButton;
         private System.Windows.Forms.RadioButton capturedBackgroundModeRadioButton;
-        private System.Windows.Forms.Timer wallpaperTimer;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button removeAppButton;
@@ -752,6 +751,7 @@
         private System.Windows.Forms.ToolStripMenuItem wallpaperToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem videoCaptureToolStripMenuItem;
         private System.Windows.Forms.Button connectButton;
+        private System.Windows.Forms.Timer ledPreviewTimer;
 
     }
 }

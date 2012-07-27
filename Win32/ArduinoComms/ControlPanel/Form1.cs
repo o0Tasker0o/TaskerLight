@@ -64,15 +64,7 @@ namespace ControlPanel
 
         [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern Int32 GetBottomBorder();
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int SystemParametersInfo(UInt32 uAction, 
-                                                       int uParam,
-                                                       String lpvParam, 
-                                                       int fuWinIni);
         
-        private const UInt32 SPI_GETDESKWALLPAPER = 0x73;
-
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
 
@@ -107,6 +99,7 @@ namespace ControlPanel
         private AppDomain mScriptAppDomain;
         private ScriptLoader mLoader;
         private long mInitialMS;
+        private WallpaperEffectGenerator wallpaperEffectGenerator;
         #endregion
 
         public Form1()
@@ -140,6 +133,7 @@ namespace ControlPanel
         {
             InitialiseScreenCapture();
 
+            ledPreviewTimer.Start();
             mCompilerForm = new CompilerForm();
 
             SettingsManager.LoadSettings();
@@ -151,6 +145,8 @@ namespace ControlPanel
                         
             this.oversaturationTrackbar.Value = (int) (SettingsManager.Saturation * 100.0f);
             this.contrastTrackbar.Value = (int) (SettingsManager.Contrast * 100.0f);
+
+            wallpaperEffectGenerator = new WallpaperEffectGenerator(this.ledPreview1);
 
             switch(SettingsManager.Mode)
             {
@@ -168,6 +164,7 @@ namespace ControlPanel
                   break;
             }
 
+
             staticColoursBackgroundRadioButton_CheckedChanged(this, EventArgs.Empty);
             activeSceneModeRadioButton_CheckedChanged(this, EventArgs.Empty);
             wallpaperBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
@@ -176,6 +173,8 @@ namespace ControlPanel
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            wallpaperEffectGenerator.Stop();
+
             SettingsManager.SetActiveApps(activeAppListView.Items);
 
             SettingsManager.SaveSettings();
@@ -305,59 +304,7 @@ namespace ControlPanel
             }
         }
         #endregion
-
-        #region Wallpaper Functions
-        internal void LoadWallpaper()
-        {
-            String wallpaperFilename = new String(' ', 256);
-
-            SystemParametersInfo(SPI_GETDESKWALLPAPER,
-                                 wallpaperFilename.Length,
-                                 wallpaperFilename,
-                                 0);
-
-            wallpaperFilename = wallpaperFilename.Substring(0, wallpaperFilename.IndexOf('\0'));
-
-            Bitmap scaledWallpaper = new Bitmap(11, 7);
-            Image originalWallpaper;
-            
-            try
-            {
-                using(FileStream stream = File.OpenRead(wallpaperFilename))
-                {
-                    originalWallpaper = Bitmap.FromStream(stream);
-                }
-            }
-            catch
-            {
-                return;
-            }
-            
-            using (Graphics g = Graphics.FromImage(scaledWallpaper))
-            {
-                g.DrawImage(originalWallpaper, 0, 0, 11, 7);
-            }
-
-            originalWallpaper.Dispose();
-            
-            for (UInt32 i = 0; i < 25; ++i)
-            {
-                Rectangle region = RegionManager.Instance().GetRegion(i);
-                this.ledPreview1.SetPixel(OutputManager.SetLED(scaledWallpaper.GetPixel(region.X, region.Y),
-                                                               i,
-                                                               SettingsManager.Saturation,
-                                                               SettingsManager.Contrast),
-                                          i);
-            }
-
-            scaledWallpaper.Dispose();
-
-            this.ledPreview1.Refresh();
-
-            OutputManager.FlushColours();
-        }
-        #endregion
-
+        
         #region Mode RadioButton Change Functions
         private void staticColoursBackgroundRadioButton_CheckedChanged(object sender, EventArgs e)
         {
@@ -446,19 +393,15 @@ namespace ControlPanel
         
         private void wallpaperBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.wallpaperToolStripMenuItem.Checked = this.wallpaperBackgroundModeRadioButton.Checked;
-
             if(wallpaperBackgroundModeRadioButton.Checked)
             {
-                RegionManager.Instance().Resize(new Rectangle(0, 0, 11, 7));
-                LoadWallpaper();
-                wallpaperTimer.Start();
+                wallpaperEffectGenerator.Start();
 
                 SettingsManager.Mode = 2;
             }
             else
             {
-                wallpaperTimer.Stop();
+                wallpaperEffectGenerator.Stop();
             }
         }
 
@@ -503,11 +446,6 @@ namespace ControlPanel
 
             this.ledPreview1.Refresh();
             OutputManager.FlushColours();
-        }
-
-        private void wallpaperTimer_Tick(object sender, EventArgs e)
-        {
-            LoadWallpaper();
         }
 
         private void screenCaptureTimer_Tick(object sender, EventArgs e)
@@ -789,6 +727,11 @@ namespace ControlPanel
         private void connectButton_Click(object sender, EventArgs e)
         {
             AttemptConnection();
+        }
+
+        private void ledPreviewTimer_Tick(object sender, EventArgs e)
+        {
+            ledPreview1.Refresh();
         }
     }
 }
