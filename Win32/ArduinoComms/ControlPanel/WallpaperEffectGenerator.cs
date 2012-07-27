@@ -68,7 +68,7 @@ namespace ControlPanel
 
                 OutputColours();
 
-                Thread.Sleep(1000);
+                mWaitEvent.WaitOne(1000);
             }
         }
     }

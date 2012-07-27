@@ -10,12 +10,15 @@ namespace ControlPanel
         private LEDPreview mLEDPreview;
         protected bool mRunning;
         protected Color[] mOutputColours;
+        protected AutoResetEvent mWaitEvent;
 
         public EffectGenerator(LEDPreview ledPreview)
         {
             mLEDPreview = ledPreview;
 
             mOutputColours = new Color[25];
+
+            mWaitEvent = new AutoResetEvent(false);
         }
         
         internal void Start()
@@ -32,6 +35,7 @@ namespace ControlPanel
         {
             if (mRunning)
             {
+                mWaitEvent.Set();
                 mRunning = false;
                 mTickThread.Join();
             }

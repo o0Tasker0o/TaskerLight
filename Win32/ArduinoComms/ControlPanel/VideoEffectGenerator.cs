@@ -215,7 +215,7 @@ namespace ControlPanel
 
                 OutputColours();
 
-                Thread.Sleep(100);
+                mWaitEvent.WaitOne(100);
             }
 
             StopCapturing();

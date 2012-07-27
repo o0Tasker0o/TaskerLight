@@ -54,7 +54,7 @@ namespace ControlPanel
 
                 OutputColours();
 
-                Thread.Sleep(200);
+                mWaitEvent.WaitOne(200);
             }
             
             //If an appdomain has been created containing the active script
