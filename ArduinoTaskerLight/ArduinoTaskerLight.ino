@@ -1,4 +1,6 @@
-#include "WS2801.h"
+#include <SPI.h>
+
+#include "Adafruit_WS2801.h"
 
 #define FADE_TIME_MS 200
 #define DATA_PIN 2    //Yellow cable
@@ -21,7 +23,7 @@ byte m_colours[3];
 int m_pixelsRead;
 int m_coloursRead;
 
-WS2801 m_strip = WS2801(NUM_OF_PIXELS, DATA_PIN, CLOCK_PIN);
+Adafruit_WS2801 m_strip = Adafruit_WS2801(NUM_OF_PIXELS, DATA_PIN, CLOCK_PIN);
 
 unsigned long m_lastUpdate;
 

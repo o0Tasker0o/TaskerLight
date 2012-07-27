@@ -1,7 +1,14 @@
+Version 0.0.8
+================
+Add automatic Top & Bottom border detection
+Set window's startup state to minimised
+Fix memory leak issue in wallpaper mode
+Minor code refactoring
+
 Version 0.0.7
 ================
 Add active script mode
-    Compile and run C# scripts
+    Create/Edit, compile and run C# scripts
 Add example active scripts
 Add application to prepare Win32 release
 

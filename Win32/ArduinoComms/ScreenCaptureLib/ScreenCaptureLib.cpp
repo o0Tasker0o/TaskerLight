@@ -34,6 +34,8 @@ const unsigned int g_screenHeight(GetSystemMetrics(SM_CYSCREEN));
 const unsigned int g_maxBorder(200);
 unsigned int g_leftBorder(0);
 unsigned int g_rightBorder(0);
+unsigned int g_topBorder(0);
+unsigned int g_bottomBorder(0);
 
 HWND g_hwnd(NULL);
 WNDCLASSEX g_windowClass;
@@ -292,20 +294,24 @@ extern "C"
 	{	
 		unsigned char r, g, b;
 
+		//Start where the left border is
 		x += g_leftBorder;
-
+		
+		//Assume that all the pixels in this column are black
 		bool allBlack = true;
 
 		WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
 		ResetEvent(g_captureThreadCriticalSectionLock);
 
+		//For every other pixel in the column
 		for(int yPos = y; yPos < y + height; yPos += 2)
 		{
-
+			//Get the pixel colour
 			b = g_pCapturedPixelBits[(x * 4) + (yPos * g_screenWidth * 4)];
 			g = g_pCapturedPixelBits[(x * 4) + (yPos * g_screenWidth * 4) + 1];
 			r = g_pCapturedPixelBits[(x * 4) + (yPos * g_screenWidth * 4) + 2];
 
+			//If the pixel has some colour
 			if(r != 0 || g != 0 || b != 0)
 			{
 				allBlack = false;
@@ -374,6 +380,101 @@ extern "C"
 			}
 		}
 	}
+	
+	DECLDIR void TestTopBorder(int x, int y, int width, int height)
+	{
+		unsigned char r, g, b;
+
+		//Start where the left border is
+		y += g_topBorder;
+		
+		//Assume that all the pixels in this column are black
+		bool allBlack = true;
+
+		WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
+		ResetEvent(g_captureThreadCriticalSectionLock);
+
+		//For every other pixel in the row
+		for(int xPos = x; xPos < x + width; xPos += 2)
+		{
+			//Get the pixel colour
+			b = g_pCapturedPixelBits[(xPos * 4) + (y * g_screenWidth * 4)];
+			g = g_pCapturedPixelBits[(xPos * 4) + (y * g_screenWidth * 4) + 1];
+			r = g_pCapturedPixelBits[(xPos * 4) + (y * g_screenWidth * 4) + 2];
+
+			//If the pixel has some colour
+			if(r != 0 || g != 0 || b != 0)
+			{
+				allBlack = false;
+				break;
+			}
+		}	
+		
+		SetEvent(g_captureThreadCriticalSectionLock);
+
+		if(allBlack)
+		{
+			if(g_topBorder < g_maxBorder)
+			{
+				++g_topBorder;
+			}
+		}
+		else
+		{
+			if(g_topBorder > 0)
+			{
+				--g_topBorder;
+			}
+		}
+	}
+
+	DECLDIR void TestBottomBorder(int x, int y, int width, int height)
+	{
+		unsigned char r, g, b;
+
+		//Start where the left border is
+		y += height - 1;
+		y -= g_bottomBorder;
+		
+		//Assume that all the pixels in this column are black
+		bool allBlack = true;
+
+		WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
+		ResetEvent(g_captureThreadCriticalSectionLock);
+
+		//For every other pixel in the row
+		for(int xPos = x; xPos < x + width; xPos += 2)
+		{
+			//Get the pixel colour
+			b = g_pCapturedPixelBits[(xPos * 4) + (y * g_screenWidth * 4)];
+			g = g_pCapturedPixelBits[(xPos * 4) + (y * g_screenWidth * 4) + 1];
+			r = g_pCapturedPixelBits[(xPos * 4) + (y * g_screenWidth * 4) + 2];
+
+			//If the pixel has some colour
+			if(r != 0 || g != 0 || b != 0)
+			{
+				allBlack = false;
+				break;
+			}
+		}	
+		
+		SetEvent(g_captureThreadCriticalSectionLock);
+
+		if(allBlack)
+		{
+			if(g_bottomBorder < g_maxBorder)
+			{
+				++g_bottomBorder;
+			}
+		}
+		else
+		{
+			if(g_bottomBorder > 0)
+			{
+				--g_bottomBorder;
+			}
+		}
+	}
 
 	DECLDIR int GetLeftBorder(void)
 	{
@@ -383,5 +484,15 @@ extern "C"
 	DECLDIR int GetRightBorder(void)
 	{
 		return g_rightBorder;
+	}
+
+	DECLDIR int GetTopBorder(void)
+	{
+		return g_topBorder;
+	}
+
+	DECLDIR int GetBottomBorder(void)
+	{
+		return g_bottomBorder;
 	}
 }

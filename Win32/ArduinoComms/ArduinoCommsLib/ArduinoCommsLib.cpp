@@ -35,55 +35,62 @@ extern "C"
 
 		SetCommTimeouts(g_arduinoHandle, &timeouts);
 
-		//If you were unable to open comms with the Arduino
-		if(INVALID_HANDLE_VALUE == g_arduinoHandle)
-		{
-			MessageBox(NULL, 
-					   "Unable to open Arduino comms", 
-					   "IO Error", 
-					   MB_OK | MB_ICONERROR);
+		const unsigned int cMaxConnectAttempts(20);
+		unsigned int connectAttempts;
 
-			return TASKERLIGHT_ERROR;
-		}
-		else //You are now connected to the Arduino
-		{
-			DCB dcbSerialParams = {0};
+		char pErrorBuffer[256];
 
-			//Try to get the current
-			if (!GetCommState(g_arduinoHandle, &dcbSerialParams))
+		for(connectAttempts = 0; connectAttempts < cMaxConnectAttempts; ++connectAttempts)
+		{
+			//If you were unable to open comms with the Arduino
+			if(INVALID_HANDLE_VALUE == g_arduinoHandle)
 			{
-				MessageBox(NULL, 
-						   "Unable get serial properties", 
-						   "Init Error", 
-						   MB_OK | MB_ICONERROR);
-
-				return TASKERLIGHT_ERROR;
+				sprintf_s(pErrorBuffer, 256, "Unable to open Arduino comms");
 			}
-			else
+			else //You are now connected to the Arduino
 			{
-				//Define serial connection parameters for the Arduino board
-				dcbSerialParams.BaudRate=CBR_115200;
-				dcbSerialParams.ByteSize=8;
-				dcbSerialParams.StopBits=ONESTOPBIT;
-				dcbSerialParams.Parity=NOPARITY;
+				DCB dcbSerialParams = {0};
 
-				//Set the parameters and check for their proper application
-				if(!SetCommState(g_arduinoHandle, &dcbSerialParams))
+				//Try to get the current
+				if (!GetCommState(g_arduinoHandle, &dcbSerialParams))
 				{
-					MessageBox(NULL, 
-							   "Unable set serial properties", 
-							   "Init Error", 
-							   MB_OK | MB_ICONERROR);
-
-					return TASKERLIGHT_ERROR;
+					sprintf_s(pErrorBuffer, 256, "Unable get serial properties");
 				}
 				else
 				{
-					//We wait 3s as the Arduino resets whenever a connection
-					//is made. This gives it time to boot
-					Sleep(3000);
+					//Define serial connection parameters for the Arduino board
+					dcbSerialParams.BaudRate=CBR_115200;
+					dcbSerialParams.ByteSize=8;
+					dcbSerialParams.StopBits=ONESTOPBIT;
+					dcbSerialParams.Parity=NOPARITY;
+
+					//Set the parameters and check for their proper application
+					if(!SetCommState(g_arduinoHandle, &dcbSerialParams))
+					{
+						sprintf_s(pErrorBuffer, 256, "Unable set serial properties");
+					}
+					else
+					{
+						//We wait 3s as the Arduino resets whenever a connection
+						//is made. This gives it time to boot
+						Sleep(3000);
+						break;
+					}
 				}
 			}
+
+			//Wait for a second before trying to reconnect
+			Sleep(1000);
+		}
+
+		if(connectAttempts == cMaxConnectAttempts)
+		{/*
+			MessageBox(NULL, 
+					   pErrorBuffer, 
+					   "Init Error", 
+					   MB_OK | MB_ICONERROR);
+			*/
+			return TASKERLIGHT_ERROR;
 		}
 
 		return TASKERLIGHT_OK;

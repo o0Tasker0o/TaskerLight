@@ -51,6 +51,20 @@ namespace ControlPanel
         [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern Int32 GetRightBorder();
 
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 TestTopBorder(Int32 x, Int32 y,
+                                                  Int32 width, Int32 height);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 GetTopBorder();
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 TestBottomBorder(Int32 x, Int32 y,
+                                                     Int32 width, Int32 height);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 GetBottomBorder();
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int SystemParametersInfo(UInt32 uAction, 
                                                        int uParam,
@@ -73,7 +87,12 @@ namespace ControlPanel
 
         private const UInt32 GW_HWNDNEXT = 0x02;
         #endregion
-        
+
+        #region Error codes defined in ArduinoComms header     
+        const uint TASKERLIGHT_OK	    = 0x00;
+        const uint TASKERLIGHT_ERROR    = 0x01;
+        #endregion
+
         internal struct ProcessIndex
         {
             internal String processName;
@@ -94,8 +113,31 @@ namespace ControlPanel
         {
             InitializeComponent();
 
-            InitialiseArduinoComms("\\\\.\\com" + arduinoComPortUpDown.Value.ToString());
+            AttemptConnection();
+        }
 
+        private void AttemptConnection()
+        {
+            if(TASKERLIGHT_OK == InitialiseArduinoComms("\\\\.\\com" + arduinoComPortUpDown.Value.ToString()))
+            {
+                connectButton.Visible = false;
+
+                ledPreview1.Visible = true;
+                tabControl1.Visible = true;
+
+                StartupRoutine();
+            }
+            else
+            {
+                connectButton.Visible = true;
+
+                ledPreview1.Visible = false;
+                tabControl1.Visible = false;
+            }
+        }
+
+        private void StartupRoutine()
+        {
             InitialiseScreenCapture();
 
             mCompilerForm = new CompilerForm();
@@ -153,17 +195,21 @@ namespace ControlPanel
 
         private void ledPreview1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (staticColoursBackgroundRadioButton.Checked)
+            //If the mode is set to static colours
+            if(staticColoursBackgroundRadioButton.Checked)
             {
-                SettingsManager.StaticColours = (Color[])this.ledPreview1.GetPixels().Clone();
+                //Copy the current static colours for saving on exit
+                SettingsManager.StaticColours = (Color[]) this.ledPreview1.GetPixels().Clone();
 
                 UInt32 pixelIndex = 0;
 
-                foreach (Color pixel in SettingsManager.StaticColours)
+                //Set the LED colours to the static colours
+                foreach(Color pixel in SettingsManager.StaticColours)
                 {
                     OutputManager.SetLED(pixel, pixelIndex++);
                 }
 
+                //Send the LED colours to the LED strip
                 OutputManager.FlushColours();
             }
         }
@@ -172,28 +218,39 @@ namespace ControlPanel
         #region Script Functions
         private void StartActiveScript(String scriptDirectory)
         {
-            mScriptAppDomain = AppDomain.CreateDomain("MyTestDomain");
+            //In order to load and unload the script DLLs at runtime,
+            //the DLLs need to be loaded into a seperate appdomain...
+            //which we create here
+            mScriptAppDomain = AppDomain.CreateDomain("TaskerLightScriptDomain");
 
-            // Loader lives in another AppDomain
-            mLoader = (ScriptLoader)mScriptAppDomain.CreateInstanceAndUnwrap(
+            //Create an instance of the script loader which will give access to the script dll
+            mLoader = (ScriptLoader) mScriptAppDomain.CreateInstanceAndUnwrap(
                                                 typeof(ScriptLoader).Assembly.FullName,
                                                 typeof(ScriptLoader).FullName);
 
+            //Load the script DLL into the appdomain
             mLoader.LoadAssembly(scriptDirectory + "\\script.dll");
 
+            //All the scripts use "number of ticks passed" to time their effects
+            //To do this they need to know the number of ticks that represents
+            //the time at which they started
             mInitialMS = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
+            //Start the script polling timer
             activeAppTimer.Start();
         }
 
         private void StopActiveScript()
         {
+            //Stop updating the active script
             activeAppTimer.Stop();
 
+            //If an appdomain has been created containing the active script
             if(null != mScriptAppDomain)
             {
                 try
                 {
+                    //Unplug our active script DLL
                     AppDomain.Unload(mScriptAppDomain);
                 }
                 catch(AppDomainUnloadedException)
@@ -205,29 +262,42 @@ namespace ControlPanel
 
         private void newScriptSelected(object sender, EventArgs e)
         {
+            //Stop the previous active script
             StopActiveScript();
 
+            //Start the newly selected script
             StartActiveScript(((RadioButton) sender).Tag.ToString());
         }
 
         private void newScriptButton_Click(object sender, EventArgs e)
         {
+            //Show a dialog containing a new active script to be compiled
             mCompilerForm.ShowDialog();
+
+            //A new script may have been added to the start of the library
+            //so start the first active scene found in the list
+            activeSceneModeRadioButton_CheckedChanged(this, EventArgs.Empty);
         }
 
         private void editScriptButton_Click(object sender, EventArgs e)
         {
+            //For each script listed on the display
             foreach (RadioButton scriptButton in scriptPanel.Controls)
             {
-                if (scriptButton.Checked)
+                //If the script is selected as the current script
+                if(scriptButton.Checked)
                 {
+                    //Stop running the selected script
                     StopActiveScript();
 
+                    //Load the script up from its source code file
                     String loadedScriptCode = File.ReadAllText(scriptButton.Tag.ToString() + "\\script.cs");
-                    CompilerForm compilerForm = new CompilerForm(scriptButton.Text, loadedScriptCode);
 
+                    //Show the source code in the compiler dialog
+                    CompilerForm compilerForm = new CompilerForm(scriptButton.Text, loadedScriptCode);
                     compilerForm.ShowDialog();
 
+                    //Start showing the edited script
                     StartActiveScript(scriptButton.Tag.ToString());
 
                     break;
@@ -250,23 +320,26 @@ namespace ControlPanel
 
             Bitmap scaledWallpaper = new Bitmap(11, 7);
             Image originalWallpaper;
-
+            
             try
             {
-                FileStream stream = File.OpenRead(wallpaperFilename);
-                originalWallpaper = Bitmap.FromStream(stream);
-                stream.Close();
+                using(FileStream stream = File.OpenRead(wallpaperFilename))
+                {
+                    originalWallpaper = Bitmap.FromStream(stream);
+                }
             }
             catch
             {
                 return;
             }
-
+            
             using (Graphics g = Graphics.FromImage(scaledWallpaper))
             {
                 g.DrawImage(originalWallpaper, 0, 0, 11, 7);
             }
 
+            originalWallpaper.Dispose();
+            
             for (UInt32 i = 0; i < 25; ++i)
             {
                 Rectangle region = RegionManager.Instance().GetRegion(i);
@@ -277,6 +350,8 @@ namespace ControlPanel
                                           i);
             }
 
+            scaledWallpaper.Dispose();
+
             this.ledPreview1.Refresh();
 
             OutputManager.FlushColours();
@@ -286,7 +361,9 @@ namespace ControlPanel
         #region Mode RadioButton Change Functions
         private void staticColoursBackgroundRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (staticColoursBackgroundRadioButton.Checked)
+            this.staticColoursToolStripMenuItem.Checked = staticColoursBackgroundRadioButton.Checked;
+
+            if(staticColoursBackgroundRadioButton.Checked)
             {
                 for (UInt32 pixelIndex = 0; pixelIndex < SettingsManager.StaticColours.Length; ++pixelIndex)
                 {
@@ -308,9 +385,10 @@ namespace ControlPanel
                 this.hsvPicker.Visible = false;
             }
         }
-
+        
         private void activeSceneModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            this.activeSceneToolStripMenuItem.Checked = this.activeSceneModeRadioButton.Checked;
             scriptPanel.Visible = activeSceneModeRadioButton.Checked;
 
             if(activeSceneModeRadioButton.Checked)
@@ -368,6 +446,8 @@ namespace ControlPanel
         
         private void wallpaperBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            this.wallpaperToolStripMenuItem.Checked = this.wallpaperBackgroundModeRadioButton.Checked;
+
             if(wallpaperBackgroundModeRadioButton.Checked)
             {
                 RegionManager.Instance().Resize(new Rectangle(0, 0, 11, 7));
@@ -384,6 +464,8 @@ namespace ControlPanel
 
         private void capturedBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            this.activeSceneToolStripMenuItem.Checked = this.capturedBackgroundModeRadioButton.Checked;
+
             if(capturedBackgroundModeRadioButton.Checked)
             {
                 RegionManager.Instance().Resize();
@@ -452,11 +534,8 @@ namespace ControlPanel
 
             do
             {
-                //for(int appIndex = 0; appIndex < activeAppListView.Items.Count; ++appIndex)
                 foreach (ProcessIndex runningProcess in activeProcesses)
                 {
-                    //ProcessIndex processIndex = (ProcessIndex) activeAppListView.Items[appIndex].Tag;
-
                     if (foregroundWindow == runningProcess.process.MainWindowHandle)
                     {
                         //This window is the highest level window of one of our active applications
@@ -473,10 +552,16 @@ namespace ControlPanel
                         {
                             TestLeftBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
                             TestRightBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+                            TestTopBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+                            TestBottomBorder(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
 
                             rectangle.X += GetLeftBorder();
                             rectangle.Width -= GetLeftBorder();
                             rectangle.Width -= GetRightBorder();
+
+                            rectangle.Y += GetTopBorder();
+                            rectangle.Height -= GetTopBorder();
+                            rectangle.Height -= GetBottomBorder();
 
                             RegionManager.Instance().Resize(rectangle);
                             break;
@@ -570,9 +655,7 @@ namespace ControlPanel
             Icon icon = Icon.ExtractAssociatedIcon(processIndex.exeName);
             mAppImageList.Images.Add(icon);
 
-            //ProcessIndex processIndex = new ProcessIndex();
             processIndex.processName = Path.GetFileNameWithoutExtension(exeFile.FullName);
-            //processIndex.exeName = exeFile.FullName;
 
             ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFile.FullName));
             appItem.Tag = processIndex;
@@ -630,8 +713,17 @@ namespace ControlPanel
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
-            Show();
-            WindowState = FormWindowState.Normal;
+            if(WindowState == FormWindowState.Normal)
+            {
+                Hide();
+                this.WindowState = FormWindowState.Minimized;
+            }
+            else
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+                this.Activate();
+            }
         }
 
         #region Settings Functions
@@ -651,5 +743,52 @@ namespace ControlPanel
             SettingsManager.Contrast = contrastTrackbar.Value / 100.0f;
         }
         #endregion
+
+        private void staticColoursToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.staticColoursBackgroundRadioButton.Checked = true;
+
+            activeSceneToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoCaptureToolStripMenuItem.Checked = false;
+        }
+
+        private void activeSceneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.activeSceneModeRadioButton.Checked = true;
+
+            staticColoursToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoCaptureToolStripMenuItem.Checked = false;
+        }
+
+        private void wallpaperToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.wallpaperBackgroundModeRadioButton.Checked = true;
+
+            staticColoursToolStripMenuItem.Checked = false;
+            activeSceneToolStripMenuItem.Checked = false;
+            videoCaptureToolStripMenuItem.Checked = false;
+        }
+
+        private void videoCaptureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.capturedBackgroundModeRadioButton.Checked = true;
+
+            staticColoursToolStripMenuItem.Checked = false;
+            activeSceneToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void connectButton_Click(object sender, EventArgs e)
+        {
+            AttemptConnection();
+        }
     }
 }

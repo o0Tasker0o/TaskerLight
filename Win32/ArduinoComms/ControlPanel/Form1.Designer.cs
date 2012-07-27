@@ -33,6 +33,7 @@
             this.screenCaptureTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundTab = new System.Windows.Forms.TabPage();
+            this.editScriptButton = new System.Windows.Forms.Button();
             this.scriptPanel = new System.Windows.Forms.Panel();
             this.newScriptButton = new System.Windows.Forms.Button();
             this.hsvPicker = new CSharpGUIElements.Colour_Pickers.HSVPicker();
@@ -72,9 +73,14 @@
             this.wallpaperTimer = new System.Windows.Forms.Timer(this.components);
             this.mOpenExeDialog = new System.Windows.Forms.OpenFileDialog();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.notifyIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.staticColoursToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.activeSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wallpaperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoCaptureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.activeAppTimer = new System.Windows.Forms.Timer(this.components);
-            this.editScriptButton = new System.Windows.Forms.Button();
             this.ledPreview1 = new ControlPanel.LEDPreview();
+            this.connectButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.backgroundTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -90,6 +96,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.oversaturationTrackbar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.notifyIconMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // screenCaptureTimer
@@ -109,6 +116,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(458, 224);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.Visible = false;
             // 
             // backgroundTab
             // 
@@ -127,6 +135,17 @@
             this.backgroundTab.Size = new System.Drawing.Size(450, 198);
             this.backgroundTab.TabIndex = 0;
             this.backgroundTab.Text = "Background";
+            // 
+            // editScriptButton
+            // 
+            this.editScriptButton.Location = new System.Drawing.Point(368, 140);
+            this.editScriptButton.Name = "editScriptButton";
+            this.editScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.editScriptButton.TabIndex = 10;
+            this.editScriptButton.Text = "Edit Script";
+            this.editScriptButton.UseVisualStyleBackColor = true;
+            this.editScriptButton.Visible = false;
+            this.editScriptButton.Click += new System.EventHandler(this.editScriptButton_Click);
             // 
             // scriptPanel
             // 
@@ -323,7 +342,7 @@
             // removeAppButton
             // 
             this.removeAppButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.removeAppButton.Font = new System.Drawing.Font("Copperplate Gothic Bold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.removeAppButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.removeAppButton.Location = new System.Drawing.Point(254, 158);
             this.removeAppButton.Name = "removeAppButton";
             this.removeAppButton.Size = new System.Drawing.Size(25, 23);
@@ -357,7 +376,7 @@
             // addAppButton
             // 
             this.addAppButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addAppButton.Font = new System.Drawing.Font("Copperplate Gothic Bold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.addAppButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addAppButton.Location = new System.Drawing.Point(281, 158);
             this.addAppButton.Name = "addAppButton";
             this.addAppButton.Size = new System.Drawing.Size(25, 23);
@@ -567,26 +586,58 @@
             // 
             // notifyIcon1
             // 
+            this.notifyIcon1.ContextMenuStrip = this.notifyIconMenu;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "TaskerLight";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
+            // notifyIconMenu
+            // 
+            this.notifyIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.staticColoursToolStripMenuItem,
+            this.activeSceneToolStripMenuItem,
+            this.wallpaperToolStripMenuItem,
+            this.videoCaptureToolStripMenuItem});
+            this.notifyIconMenu.Name = "notifyIconMenu";
+            this.notifyIconMenu.Size = new System.Drawing.Size(153, 114);
+            // 
+            // staticColoursToolStripMenuItem
+            // 
+            this.staticColoursToolStripMenuItem.CheckOnClick = true;
+            this.staticColoursToolStripMenuItem.Name = "staticColoursToolStripMenuItem";
+            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.staticColoursToolStripMenuItem.Text = "Static Colours";
+            this.staticColoursToolStripMenuItem.Click += new System.EventHandler(this.staticColoursToolStripMenuItem_Click);
+            // 
+            // activeSceneToolStripMenuItem
+            // 
+            this.activeSceneToolStripMenuItem.CheckOnClick = true;
+            this.activeSceneToolStripMenuItem.Name = "activeSceneToolStripMenuItem";
+            this.activeSceneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.activeSceneToolStripMenuItem.Text = "Active Scene";
+            this.activeSceneToolStripMenuItem.Click += new System.EventHandler(this.activeSceneToolStripMenuItem_Click);
+            // 
+            // wallpaperToolStripMenuItem
+            // 
+            this.wallpaperToolStripMenuItem.CheckOnClick = true;
+            this.wallpaperToolStripMenuItem.Name = "wallpaperToolStripMenuItem";
+            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.wallpaperToolStripMenuItem.Text = "Wallpaper";
+            this.wallpaperToolStripMenuItem.Click += new System.EventHandler(this.wallpaperToolStripMenuItem_Click);
+            // 
+            // videoCaptureToolStripMenuItem
+            // 
+            this.videoCaptureToolStripMenuItem.CheckOnClick = true;
+            this.videoCaptureToolStripMenuItem.Name = "videoCaptureToolStripMenuItem";
+            this.videoCaptureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videoCaptureToolStripMenuItem.Text = "Video Capture";
+            this.videoCaptureToolStripMenuItem.Click += new System.EventHandler(this.videoCaptureToolStripMenuItem_Click);
+            // 
             // activeAppTimer
             // 
             this.activeAppTimer.Interval = 200;
             this.activeAppTimer.Tick += new System.EventHandler(this.activeAppTimer_Tick);
-            // 
-            // editScriptButton
-            // 
-            this.editScriptButton.Location = new System.Drawing.Point(368, 140);
-            this.editScriptButton.Name = "editScriptButton";
-            this.editScriptButton.Size = new System.Drawing.Size(75, 23);
-            this.editScriptButton.TabIndex = 10;
-            this.editScriptButton.Text = "Edit Script";
-            this.editScriptButton.UseVisualStyleBackColor = true;
-            this.editScriptButton.Visible = false;
-            this.editScriptButton.Click += new System.EventHandler(this.editScriptButton_Click);
             // 
             // ledPreview1
             // 
@@ -596,19 +647,34 @@
             this.ledPreview1.Name = "ledPreview1";
             this.ledPreview1.Size = new System.Drawing.Size(238, 199);
             this.ledPreview1.TabIndex = 6;
+            this.ledPreview1.Visible = false;
             this.ledPreview1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ledPreview1_MouseUp);
+            // 
+            // connectButton
+            // 
+            this.connectButton.Location = new System.Drawing.Point(12, 12);
+            this.connectButton.Name = "connectButton";
+            this.connectButton.Size = new System.Drawing.Size(75, 23);
+            this.connectButton.TabIndex = 7;
+            this.connectButton.Text = "Connect";
+            this.connectButton.UseVisualStyleBackColor = true;
+            this.connectButton.Visible = false;
+            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(462, 432);
+            this.Controls.Add(this.connectButton);
             this.Controls.Add(this.ledPreview1);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
+            this.ShowInTaskbar = false;
             this.Text = "TaskerLight Control Panel";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.tabControl1.ResumeLayout(false);
             this.backgroundTab.ResumeLayout(false);
@@ -628,6 +694,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.oversaturationTrackbar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.notifyIconMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -679,6 +746,12 @@
         private System.Windows.Forms.Timer activeAppTimer;
         private System.Windows.Forms.Panel scriptPanel;
         private System.Windows.Forms.Button editScriptButton;
+        private System.Windows.Forms.ContextMenuStrip notifyIconMenu;
+        private System.Windows.Forms.ToolStripMenuItem staticColoursToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem activeSceneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wallpaperToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem videoCaptureToolStripMenuItem;
+        private System.Windows.Forms.Button connectButton;
 
     }
 }

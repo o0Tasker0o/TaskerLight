@@ -79,11 +79,12 @@ namespace ControlPanel
 
                     foreach (CompilerError error in results.Errors)
                     {
-                        errorTextbox.Text = error.ToString();
+                        errorTextbox.Text += error.ToString() + "\r\n";
                     }
                 }
                 else
                 {
+                    errorTextbox.Text = "Compilation completed Successfully";
                     File.WriteAllText("./" + filenameTextbox.Text + "/script.cs", codeTextbox.Text);
                 }
             }

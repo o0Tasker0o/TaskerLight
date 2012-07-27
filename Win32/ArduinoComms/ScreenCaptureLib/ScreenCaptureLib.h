@@ -22,8 +22,13 @@ extern "C"
 	DECLDIR void TestLeftBorder(int x, int y, int width, int height);
 	DECLDIR void TestRightBorder(int x, int y, int width, int height);
 	
+	DECLDIR void TestTopBorder(int x, int y, int width, int height);
+	DECLDIR void TestBottomBorder(int x, int y, int width, int height);
+	
 	DECLDIR int GetLeftBorder(void);
 	DECLDIR int GetRightBorder(void);
+	DECLDIR int GetTopBorder(void);
+	DECLDIR int GetBottomBorder(void);
 }
 
 #endif
