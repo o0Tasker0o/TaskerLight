@@ -48,8 +48,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.removeAppButton = new System.Windows.Forms.Button();
             this.activeAppListView = new System.Windows.Forms.ListView();
+            this.mAppImageList = new System.Windows.Forms.ImageList(this.components);
             this.addAppButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.arduinoComPortUpDown = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -76,6 +79,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bottomMarginUpDown)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.arduinoComPortUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.contrastTrackbar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -90,9 +94,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.backgroundTab);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
@@ -119,9 +123,8 @@
             // 
             // hsvPicker
             // 
-            this.hsvPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.hsvPicker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.hsvPicker.HueBarWidth = 30;
             this.hsvPicker.Location = new System.Drawing.Point(6, 6);
             this.hsvPicker.Name = "hsvPicker";
@@ -237,8 +240,8 @@
             // 
             // topMarginUpDown
             // 
-            this.topMarginUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.topMarginUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.topMarginUpDown.Location = new System.Drawing.Point(52, 19);
             this.topMarginUpDown.Maximum = new decimal(new int[] {
             1000,
@@ -257,8 +260,8 @@
             // 
             // bottomMarginUpDown
             // 
-            this.bottomMarginUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.bottomMarginUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.bottomMarginUpDown.Location = new System.Drawing.Point(52, 45);
             this.bottomMarginUpDown.Maximum = new decimal(new int[] {
             1000,
@@ -277,9 +280,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.removeAppButton);
             this.groupBox1.Controls.Add(this.activeAppListView);
             this.groupBox1.Controls.Add(this.addAppButton);
@@ -305,17 +308,24 @@
             // 
             // activeAppListView
             // 
-            this.activeAppListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.activeAppListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.activeAppListView.BackColor = System.Drawing.Color.Black;
             this.activeAppListView.ForeColor = System.Drawing.Color.White;
+            this.activeAppListView.LargeImageList = this.mAppImageList;
             this.activeAppListView.Location = new System.Drawing.Point(6, 17);
             this.activeAppListView.Name = "activeAppListView";
             this.activeAppListView.Size = new System.Drawing.Size(300, 137);
             this.activeAppListView.TabIndex = 0;
             this.activeAppListView.UseCompatibleStateImageBehavior = false;
             this.activeAppListView.SelectedIndexChanged += new System.EventHandler(this.activeAppListView_SelectedIndexChanged);
+            // 
+            // mAppImageList
+            // 
+            this.mAppImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.mAppImageList.ImageSize = new System.Drawing.Size(32, 32);
+            this.mAppImageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // addAppButton
             // 
@@ -332,6 +342,8 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.label11);
+            this.tabPage2.Controls.Add(this.arduinoComPortUpDown);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Controls.Add(this.label9);
@@ -353,11 +365,33 @@
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Settings";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 6);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(258, 13);
+            this.label11.TabIndex = 15;
+            this.label11.Text = "Arduino COM port (changing this may take a moment)";
+            // 
+            // arduinoComPortUpDown
+            // 
+            this.arduinoComPortUpDown.Location = new System.Drawing.Point(270, 4);
+            this.arduinoComPortUpDown.Name = "arduinoComPortUpDown";
+            this.arduinoComPortUpDown.Size = new System.Drawing.Size(120, 20);
+            this.arduinoComPortUpDown.TabIndex = 14;
+            this.arduinoComPortUpDown.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.arduinoComPortUpDown.ValueChanged += new System.EventHandler(this.arduinoComPortUpDown_ValueChanged);
+            // 
             // label7
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(386, 120);
+            this.label7.Location = new System.Drawing.Point(386, 144);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(33, 13);
             this.label7.TabIndex = 13;
@@ -367,7 +401,7 @@
             // 
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(210, 120);
+            this.label8.Location = new System.Drawing.Point(210, 144);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(33, 13);
             this.label8.TabIndex = 12;
@@ -376,7 +410,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(40, 120);
+            this.label9.Location = new System.Drawing.Point(40, 144);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(21, 13);
             this.label9.TabIndex = 11;
@@ -385,7 +419,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 70);
+            this.label10.Location = new System.Drawing.Point(6, 94);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(46, 13);
             this.label10.TabIndex = 10;
@@ -393,10 +427,10 @@
             // 
             // contrastTrackbar
             // 
-            this.contrastTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.contrastTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.contrastTrackbar.AutoSize = false;
-            this.contrastTrackbar.Location = new System.Drawing.Point(35, 86);
+            this.contrastTrackbar.Location = new System.Drawing.Point(35, 110);
             this.contrastTrackbar.Maximum = 200;
             this.contrastTrackbar.Name = "contrastTrackbar";
             this.contrastTrackbar.Size = new System.Drawing.Size(377, 34);
@@ -408,7 +442,7 @@
             // pictureBox3
             // 
             this.pictureBox3.BackgroundImage = global::ControlPanel.Properties.Resources.ContrastLow;
-            this.pictureBox3.Location = new System.Drawing.Point(6, 82);
+            this.pictureBox3.Location = new System.Drawing.Point(6, 106);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(34, 34);
             this.pictureBox3.TabIndex = 9;
@@ -418,7 +452,7 @@
             // 
             this.pictureBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox4.BackgroundImage = global::ControlPanel.Properties.Resources.ContrastHigh;
-            this.pictureBox4.Location = new System.Drawing.Point(410, 82);
+            this.pictureBox4.Location = new System.Drawing.Point(410, 106);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(34, 34);
             this.pictureBox4.TabIndex = 8;
@@ -428,7 +462,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(386, 56);
+            this.label6.Location = new System.Drawing.Point(386, 80);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(33, 13);
             this.label6.TabIndex = 6;
@@ -438,7 +472,7 @@
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(210, 56);
+            this.label5.Location = new System.Drawing.Point(210, 80);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(33, 13);
             this.label5.TabIndex = 5;
@@ -447,7 +481,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(40, 56);
+            this.label4.Location = new System.Drawing.Point(40, 80);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(21, 13);
             this.label4.TabIndex = 4;
@@ -456,7 +490,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 6);
+            this.label3.Location = new System.Drawing.Point(6, 30);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 3;
@@ -464,10 +498,10 @@
             // 
             // oversaturationTrackbar
             // 
-            this.oversaturationTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.oversaturationTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.oversaturationTrackbar.AutoSize = false;
-            this.oversaturationTrackbar.Location = new System.Drawing.Point(35, 22);
+            this.oversaturationTrackbar.Location = new System.Drawing.Point(35, 46);
             this.oversaturationTrackbar.Maximum = 200;
             this.oversaturationTrackbar.Name = "oversaturationTrackbar";
             this.oversaturationTrackbar.Size = new System.Drawing.Size(377, 34);
@@ -479,7 +513,7 @@
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = global::ControlPanel.Properties.Resources.SaturationLow;
-            this.pictureBox2.Location = new System.Drawing.Point(6, 18);
+            this.pictureBox2.Location = new System.Drawing.Point(6, 42);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(34, 34);
             this.pictureBox2.TabIndex = 2;
@@ -489,7 +523,7 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackgroundImage = global::ControlPanel.Properties.Resources.SaturationHigh;
-            this.pictureBox1.Location = new System.Drawing.Point(410, 18);
+            this.pictureBox1.Location = new System.Drawing.Point(410, 42);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(34, 34);
             this.pictureBox1.TabIndex = 1;
@@ -544,6 +578,7 @@
             this.groupBox1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.arduinoComPortUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.contrastTrackbar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
@@ -594,6 +629,9 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.CheckBox marginsFullscreenCheckbox;
         private CSharpGUIElements.Colour_Pickers.HSVPicker hsvPicker;
+        private System.Windows.Forms.ImageList mAppImageList;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown arduinoComPortUpDown;
 
     }
 }

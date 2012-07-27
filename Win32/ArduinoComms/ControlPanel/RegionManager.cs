@@ -21,20 +21,6 @@ namespace ControlPanel
             mRegions = new RectangleF[25];
 
             Resize();
-
-            /*
-            for (int i = 0; i < 25; ++i)
-            {
-                Form testForm = new Form();
-                testForm.StartPosition = FormStartPosition.Manual;
-                testForm.Location = new Point((int) mRegions[i].Left, (int) mRegions[i].Top);
-                testForm.Size = new Size((int) mRegions[i].Width, (int) mRegions[i].Height);
-                testForm.FormBorderStyle = FormBorderStyle.None;
-                Label x = new Label();
-                x.Text = i.ToString();
-                testForm.Controls.Add(x);
-                testForm.Show();
-            }*/
         }
 
         public static RegionManager Instance()

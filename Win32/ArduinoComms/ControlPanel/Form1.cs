@@ -16,7 +16,7 @@ namespace ControlPanel
     {
         #region DLL Imports
         [DllImport("ArduinoCommsLib.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern UInt32 InitialiseArduinoComms();
+        private static extern UInt32 InitialiseArduinoComms(String comPort);
 
         [DllImport("ArduinoCommsLib.dll", CallingConvention=CallingConvention.Cdecl)]
         private static extern UInt32 ShutdownArduinoComms();
@@ -74,9 +74,7 @@ namespace ControlPanel
         private const UInt32 GW_HWNDNEXT = 0x02;
         #endregion
 
-        private Color [] mStaticColours;
-
-        private ImageList mAppImageList;
+        //private Color [] mStaticColours;
 
         internal struct ProcessIndex
         {
@@ -86,37 +84,39 @@ namespace ControlPanel
             internal int topMargin;
             internal int bottomMargin;
         };
-
+        
         public Form1()
         {
             InitializeComponent();
+
+            InitialiseArduinoComms("\\\\.\\com" + arduinoComPortUpDown.Value.ToString());
+
+            InitialiseScreenCapture();
             
-            if(0 != InitialiseArduinoComms())
-            {
-                Console.WriteLine("ERROR");
-            }
-
-            if(0 != InitialiseScreenCapture())
-            {
-                Console.WriteLine("ERROR");
-            }
-
             SettingsManager.LoadSettings();
             
-            mAppImageList = new ImageList();
-            mAppImageList.ColorDepth = ColorDepth.Depth32Bit;
-            mAppImageList.ImageSize = new Size(32, 32);
-            this.activeAppListView.LargeImageList = mAppImageList;
-
             foreach(ProcessIndex activeApp in SettingsManager.GetActiveApps())
             {
                 AddActiveApp(activeApp);
             }
 
-            mStaticColours = SettingsManager.GetStaticColours();
+            //mStaticColours = SettingsManager.GetStaticColours();
             
-            this.oversaturationTrackbar.Value = (int) (SettingsManager.GetSaturation() * 100.0f);
-            this.contrastTrackbar.Value = (int) (SettingsManager.GetContrast() * 100.0f);
+            this.oversaturationTrackbar.Value = (int) (SettingsManager.Saturation * 100.0f);
+            this.contrastTrackbar.Value = (int) (SettingsManager.Contrast * 100.0f);
+
+            switch(SettingsManager.Mode)
+            {
+                case 0:
+                    staticColoursBackgroundRadioButton.Checked = true;
+                  break;
+                case 2:
+                    wallpaperBackgroundModeRadioButton.Checked = true;
+                  break;
+                case 3:
+                    capturedBackgroundModeRadioButton.Checked = true;
+                  break;
+            }
 
             staticColoursBackgroundRadioButton_CheckedChanged(this, EventArgs.Empty);
             wallpaperBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
@@ -176,8 +176,8 @@ namespace ControlPanel
                 Rectangle region = RegionManager.Instance().GetRegion(i);
                 this.ledPreview1.SetPixel(OutputManager.SetLED(scaledWallpaper.GetPixel(region.X, region.Y),
                                                                i,
-                                                               SettingsManager.GetSaturation(),
-                                                               SettingsManager.GetContrast()),
+                                                               SettingsManager.Saturation,
+                                                               SettingsManager.Contrast),
                                           i);
             }
 
@@ -310,9 +310,9 @@ namespace ControlPanel
                                                                           (UInt32) region.Width, (UInt32) region.Height));
 
                 this.ledPreview1.SetPixel(OutputManager.SetLED(colour, 
-                                                               i, 
-                                                               SettingsManager.GetSaturation(),
-                                                               SettingsManager.GetContrast()),
+                                                               i,
+                                                               SettingsManager.Saturation,
+                                                               SettingsManager.Contrast),
                                           i);
             }
 
@@ -325,11 +325,11 @@ namespace ControlPanel
         {
             if(staticColoursBackgroundRadioButton.Checked)
             {
-                for(UInt32 pixelIndex = 0; pixelIndex < mStaticColours.Length; ++pixelIndex)
+                for(UInt32 pixelIndex = 0; pixelIndex < SettingsManager.StaticColours.Length; ++pixelIndex)
                 {
-                    this.ledPreview1.SetPixel(mStaticColours[pixelIndex], pixelIndex);
+                    this.ledPreview1.SetPixel(SettingsManager.StaticColours[pixelIndex], pixelIndex);
 
-                    OutputManager.SetLED(mStaticColours[pixelIndex], pixelIndex);
+                    OutputManager.SetLED(SettingsManager.StaticColours[pixelIndex], pixelIndex);
                 }
 
                 this.ledPreview1.Refresh();
@@ -337,13 +337,15 @@ namespace ControlPanel
                 OutputManager.FlushColours();
 
                 this.hsvPicker.Visible = true;
+
+                SettingsManager.Mode = 0;
             }
             else
             {
                 this.hsvPicker.Visible = false;
             }
         }
-        
+
         private void wallpaperBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             if(wallpaperBackgroundModeRadioButton.Checked)
@@ -351,6 +353,8 @@ namespace ControlPanel
                 RegionManager.Instance().Resize(new Rectangle(0, 0, 11, 7));
                 LoadWallpaper();
                 wallpaperTimer.Start();
+
+                SettingsManager.Mode = 2;
             }
             else
             {
@@ -365,6 +369,8 @@ namespace ControlPanel
                 RegionManager.Instance().Resize();
                 StartCapturing(true);
                 screenCaptureTimer.Start();
+
+                SettingsManager.Mode = 3;
             }
             else
             {
@@ -378,11 +384,11 @@ namespace ControlPanel
         {
             if(staticColoursBackgroundRadioButton.Checked)
             {
-                mStaticColours = (Color []) this.ledPreview1.GetPixels().Clone();
+                SettingsManager.StaticColours = (Color[])this.ledPreview1.GetPixels().Clone();
                 
                 UInt32 pixelIndex = 0;
 
-                foreach(Color pixel in mStaticColours)
+                foreach(Color pixel in SettingsManager.StaticColours)
                 {
                     OutputManager.SetLED(pixel, pixelIndex++);
                 }
@@ -393,7 +399,6 @@ namespace ControlPanel
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            SettingsManager.SetStaticColours(mStaticColours);
             SettingsManager.SetActiveApps(activeAppListView.Items);
 
             SettingsManager.SaveSettings();
@@ -469,17 +474,23 @@ namespace ControlPanel
 
         private void oversaturationTrackbar_ValueChanged(object sender, EventArgs e)
         {
-            SettingsManager.SetSaturation(oversaturationTrackbar.Value / 100.0f);
+            SettingsManager.Saturation = oversaturationTrackbar.Value / 100.0f;
         }
 
         private void contrastTrackbar_ValueChanged(object sender, EventArgs e)
         {
-            SettingsManager.SetContrast(contrastTrackbar.Value / 100.0f);
+            SettingsManager.Contrast = contrastTrackbar.Value / 100.0f;
         }
 
         private void hsvPicker_ColourChanged(object sender, EventArgs e)
         {
             this.ledPreview1.ActiveColour = this.hsvPicker.Colour;
+        }
+
+        private void arduinoComPortUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ShutdownArduinoComms();
+            InitialiseArduinoComms("\\\\.\\com" + arduinoComPortUpDown.Value.ToString());
         }
     }
 }

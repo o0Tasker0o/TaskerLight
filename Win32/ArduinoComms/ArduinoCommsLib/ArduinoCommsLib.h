@@ -8,15 +8,10 @@
 #define TASKERLIGHT_OK		0x00
 #define TASKERLIGHT_ERROR	0x01
 
-struct LEDColour
-{
-	unsigned char r, g, b;
-};
-
 //Exported functions
 extern "C"
 {
-    DECLDIR unsigned int InitialiseArduinoComms(void);
+    DECLDIR unsigned int InitialiseArduinoComms(char *pComPort);
 
 	DECLDIR unsigned int ShutdownArduinoComms(void);
 	

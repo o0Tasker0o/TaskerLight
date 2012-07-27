@@ -6,7 +6,7 @@
 
 int main()
 {
-	if(TASKERLIGHT_OK != InitialiseArduinoComms())
+	if(TASKERLIGHT_OK != InitialiseArduinoComms("\\\\.\\COM3"))
 	{
 		return -1;
 	}

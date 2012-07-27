@@ -84,6 +84,8 @@ namespace ControlPanel
 
                 e.Graphics.FillRectangle(new SolidBrush(mLEDColours[pixelIndex]),
                                          ledRegion);
+
+                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(64, 0, 0, 0), 0.25f), ledRegion);
             }
         }
         

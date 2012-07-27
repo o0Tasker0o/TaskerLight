@@ -14,19 +14,7 @@ namespace ControlPanel
 
         static Color [] mStaticColours = new Color[25];
         static List<Form1.ProcessIndex> mActiveProcesses = new List<Form1.ProcessIndex>();
-        static float mOverSaturation;
-        static float mContrast;
-
-        internal static void SetStaticColours(Color[] colours)
-        {
-            mStaticColours = (Color []) colours.Clone();
-        }
-
-        internal static Color [] GetStaticColours()
-        {
-            return (Color []) mStaticColours.Clone();
-        }
-
+        
         internal static void SetActiveApps(ListView.ListViewItemCollection appItems)
         {
             mActiveProcesses.Clear();
@@ -42,24 +30,25 @@ namespace ControlPanel
             return mActiveProcesses;
         }
 
-        internal static void SetSaturation(float saturation)
+        internal static Color [] StaticColours
         {
-            mOverSaturation = saturation;
+            get { return mStaticColours; }
+            set { mStaticColours = value; }
         }
 
-        internal static float GetSaturation()
+        internal static Int32 Mode
         {
-            return mOverSaturation;
+            get; set;
         }
         
-        internal static void SetContrast(float contrast)
+        internal static Single Saturation
         {
-            mContrast = contrast;
+            get; set;
         }
 
-        internal static float GetContrast()
+        internal static Single Contrast
         {
-            return mContrast;
+            get; set;
         }
 
         internal static void SaveSettings()
@@ -73,6 +62,8 @@ namespace ControlPanel
                 mSettingsBytes.Add(mStaticColours[i].G);
                 mSettingsBytes.Add(mStaticColours[i].B);
             }
+
+            mSettingsBytes.AddRange(BitConverter.GetBytes(Mode));
 
             //Save active application settings
             mSettingsBytes.AddRange(BitConverter.GetBytes(mActiveProcesses.Count));
@@ -90,8 +81,8 @@ namespace ControlPanel
                 mSettingsBytes.AddRange(BitConverter.GetBytes(activeProcess.bottomMargin));
             }
 
-            mSettingsBytes.AddRange(BitConverter.GetBytes(mOverSaturation));
-            mSettingsBytes.AddRange(BitConverter.GetBytes(mContrast));
+            mSettingsBytes.AddRange(BitConverter.GetBytes(Saturation));
+            mSettingsBytes.AddRange(BitConverter.GetBytes(Contrast));
 
             File.WriteAllBytes(mFilename,
                                mSettingsBytes.ToArray());
@@ -111,6 +102,9 @@ namespace ControlPanel
                                                        settingsBytes[byteIndex++],
                                                        settingsBytes[byteIndex++]);
                 }
+
+                Mode = BitConverter.ToInt32(settingsBytes, byteIndex);
+                byteIndex += 4;
 
                 mActiveProcesses.Clear();
 
@@ -141,10 +135,10 @@ namespace ControlPanel
                     mActiveProcesses.Add(processIndex);
                 }
 
-                mOverSaturation = BitConverter.ToSingle(settingsBytes, byteIndex);
+                Saturation = BitConverter.ToSingle(settingsBytes, byteIndex);
                 byteIndex += 4;
 
-                mContrast = BitConverter.ToSingle(settingsBytes, byteIndex);
+                Contrast = BitConverter.ToSingle(settingsBytes, byteIndex);
                 byteIndex += 4;
             }
             catch(FileNotFoundException) { }

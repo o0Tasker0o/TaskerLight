@@ -4,15 +4,20 @@
 
 #define NUMBER_OF_LEDS 25
 
+struct LEDColour
+{
+	unsigned char r, g, b;
+};
+
 HANDLE g_arduinoHandle(NULL);
 LEDColour g_Pixels[NUMBER_OF_LEDS];
 
 extern "C"
 {
-    DECLDIR unsigned int InitialiseArduinoComms(void)
+    DECLDIR unsigned int InitialiseArduinoComms(char *pComPort)
 	{
 		//Open the arduino's serial port for reading and writing
-		g_arduinoHandle = CreateFile("COM3",
+		g_arduinoHandle = CreateFile(pComPort,
 									 GENERIC_READ | GENERIC_WRITE,
 									 0,
 									 NULL,
@@ -20,6 +25,8 @@ extern "C"
 									 FILE_ATTRIBUTE_NORMAL,
 									 NULL);
 	
+		//If you can't read from or write to the Arduino in 500ms then
+		//something has probably gone wrong
 		COMMTIMEOUTS timeouts;		
 		timeouts.ReadTotalTimeoutConstant = 500;
 		timeouts.ReadTotalTimeoutMultiplier = 1;
@@ -38,7 +45,7 @@ extern "C"
 
 			return TASKERLIGHT_ERROR;
 		}
-		else
+		else //You are now connected to the Arduino
 		{
 			DCB dcbSerialParams = {0};
 
@@ -54,7 +61,7 @@ extern "C"
 			}
 			else
 			{
-				//Define serial connection parameters for the arduino board
+				//Define serial connection parameters for the Arduino board
 				dcbSerialParams.BaudRate=CBR_115200;
 				dcbSerialParams.ByteSize=8;
 				dcbSerialParams.StopBits=ONESTOPBIT;
@@ -72,7 +79,8 @@ extern "C"
 				}
 				else
 				{
-					//We wait 1s as the arduino board will be resetting
+					//We wait 3s as the Arduino resets whenever a connection
+					//is made. This gives it time to boot
 					Sleep(3000);
 				}
 			}
@@ -113,6 +121,7 @@ extern "C"
 		//Send the pixel colours to the Arduino
 		WriteFile(g_arduinoHandle, g_Pixels, NUMBER_OF_LEDS * 3, &bytesSent, NULL);
 		
+		//If not all the RGB values of the LEDs were written to the Arduino
 		if(NUMBER_OF_LEDS * 3 != bytesSent)
 		{
 			return TASKERLIGHT_ERROR;
@@ -123,6 +132,7 @@ extern "C"
 		//Wait until the Arduino responds
 		ReadFile(g_arduinoHandle, &response, 1, &bytesReceived, NULL);
 
+		//If the Arduino did not respond correctly or just didn't respond
 		if(0 != response || 1 != bytesReceived)
 		{
 			return TASKERLIGHT_ERROR;
