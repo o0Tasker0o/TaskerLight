@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.IO;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace ControlPanel
 {
@@ -41,7 +36,7 @@ namespace ControlPanel
         private AppDomain mScriptAppDomain;
         private ScriptLoader mLoader;
         private long mInitialMS;
-        private WallpaperEffectGenerator wallpaperEffectGenerator;
+        private WallpaperEffectGenerator mWallpaperEffectGenerator;
         private VideoEffectGenerator mVideoEffectGenerator;
         #endregion
 
@@ -87,7 +82,7 @@ namespace ControlPanel
             this.oversaturationTrackbar.Value = (int) (SettingsManager.Saturation * 100.0f);
             this.contrastTrackbar.Value = (int) (SettingsManager.Contrast * 100.0f);
 
-            wallpaperEffectGenerator = new WallpaperEffectGenerator(this.ledPreview1);
+            mWallpaperEffectGenerator = new WallpaperEffectGenerator(this.ledPreview1);
             mVideoEffectGenerator = new VideoEffectGenerator(this.ledPreview1, this.activeAppListView.Items);
 
             switch(SettingsManager.Mode)
@@ -105,8 +100,7 @@ namespace ControlPanel
                     capturedBackgroundModeRadioButton.Checked = true;
                   break;
             }
-
-
+            
             staticColoursBackgroundRadioButton_CheckedChanged(this, EventArgs.Empty);
             activeSceneModeRadioButton_CheckedChanged(this, EventArgs.Empty);
             wallpaperBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
@@ -115,7 +109,7 @@ namespace ControlPanel
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            wallpaperEffectGenerator.Stop();
+            mWallpaperEffectGenerator.Stop();
             mVideoEffectGenerator.Stop();
 
             SettingsManager.SetActiveApps(activeAppListView.Items);
@@ -260,8 +254,6 @@ namespace ControlPanel
                     OutputManager.SetLED(SettingsManager.StaticColours[pixelIndex], pixelIndex);
                 }
 
-                this.ledPreview1.Refresh();
-
                 OutputManager.FlushColours();
 
                 this.hsvPicker.Visible = true;
@@ -336,13 +328,13 @@ namespace ControlPanel
         {
             if(wallpaperBackgroundModeRadioButton.Checked)
             {
-                wallpaperEffectGenerator.Start();
+                mWallpaperEffectGenerator.Start();
 
                 SettingsManager.Mode = 2;
             }
             else
             {
-                wallpaperEffectGenerator.Stop();
+                mWallpaperEffectGenerator.Stop();
             }
         }
 
@@ -381,7 +373,6 @@ namespace ControlPanel
                 this.ledPreview1.SetPixel(OutputManager.SetLED(colours[i], i), i);
             }
 
-            this.ledPreview1.Refresh();
             OutputManager.FlushColours();
         }
 
