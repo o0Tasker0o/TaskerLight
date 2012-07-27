@@ -25,3 +25,11 @@ Version 0.0.3
 
 Implemented Arduino-side fades
 Slight improvement of C# region placements
+
+
+Version 0.0.4
+================
+
+Add static colour, wallpaper-capture & screen-capture background controls to control panel
+Add saved settings to control panel
+Corrected fade error in Arduino (error in calculations casting "millis()" values from unsigned long to other types)

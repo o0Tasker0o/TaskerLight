@@ -29,6 +29,11 @@ bool g_runCaptureThread;
 
 unsigned char *g_pCapturedPixelBits;
 
+bool g_useDirectX;
+LPBITMAPINFO g_lpbi;
+
+HDC g_getDC;
+
 DWORD WINAPI CaptureFunction(void* pParams)
 { 
 	ResetEvent(g_captureThreadRunningLock);
@@ -198,16 +203,27 @@ extern "C"
 		return 0;
 	}
 
-	DECLDIR unsigned int StartCapturing(void)
+	DECLDIR unsigned int StartCapturing(bool useDirectX)
 	{
-		g_runCaptureThread = true;
+		g_useDirectX = useDirectX;
+
+		if(useDirectX)
+		{
+			g_runCaptureThread = true;
 		
-		CreateThread( NULL, 
-					  0, 
-					  CaptureFunction, 
-					  NULL, 
-					  0, 
-					  NULL);
+			CreateThread( NULL, 
+						  0, 
+						  CaptureFunction, 
+						  NULL, 
+						  0, 
+						  NULL);
+		}
+		else
+		{
+			g_getDC = GetDC(0);
+
+			g_lpbi = (LPBITMAPINFO) (new char[sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD)]);
+		}
 
 		return 0;
 	}
@@ -215,6 +231,8 @@ extern "C"
 	DECLDIR unsigned int StopCapturing(void)
 	{
 		g_runCaptureThread = false;
+
+		ReleaseDC(NULL, g_getDC);
 
 		WaitForSingleObject(g_captureThreadRunningLock, 1000);
 
@@ -224,34 +242,131 @@ extern "C"
 	DECLDIR unsigned int GetAverageColour(unsigned int x, unsigned int y,
 										  unsigned int width, unsigned int height)
 	{
-		unsigned int r = 0;
-		unsigned int g = 0;
-		unsigned int b = 0;
 
-		unsigned int count(0);
-
-		for(unsigned int yPos = y; yPos < y + height; ++yPos)
+		if(g_useDirectX)
 		{
-			for(unsigned int xPos = x * 4; xPos < (x + width) * 4; xPos += 4)
-			{
-				b += ((unsigned char *) g_pCapturedPixelBits)[xPos + (yPos * 1680 * 4)];
-				g += ((unsigned char *) g_pCapturedPixelBits)[xPos + (yPos * 1680 * 4) + 1];
-				r += ((unsigned char *) g_pCapturedPixelBits)[xPos + (yPos * 1680 * 4) + 2];
-				
-				++count;
-			}
-		}
-	
-		r /= count;
-		g /= count;
-		b /= count;
-		
-		unsigned int colour = r;
-		colour <<= 8;
-		colour |= g;
-		colour <<= 8;
-		colour |= b;
+			unsigned int r = 0;
+			unsigned int g = 0;
+			unsigned int b = 0;
 
-		return colour;
+			unsigned int count(0);
+
+			for(unsigned int yPos = y; yPos < y + height; ++yPos)
+			{
+				for(unsigned int xPos = x * 4; xPos < (x + width) * 4; xPos += 4)
+				{
+					b += ((unsigned char *) g_pCapturedPixelBits)[xPos + (yPos * 1680 * 4)];
+					g += ((unsigned char *) g_pCapturedPixelBits)[xPos + (yPos * 1680 * 4) + 1];
+					r += ((unsigned char *) g_pCapturedPixelBits)[xPos + (yPos * 1680 * 4) + 2];
+				
+					++count;
+				}
+			}
+	
+			if(count == 0)
+			{
+				return 0;
+			}
+
+			r /= count;
+			g /= count;
+			b /= count;
+		
+			unsigned int colour = r;
+			colour <<= 8;
+			colour |= g;
+			colour <<= 8;
+			colour |= b;
+
+			return colour;
+		}
+		else
+		{
+			DWORD tickCount(GetTickCount());
+			HDC bitmapDC = CreateCompatibleDC(0);
+
+			HBITMAP bitmap = CreateCompatibleBitmap(g_getDC, width, height);
+	
+			SelectObject(bitmapDC, bitmap);
+			BitBlt(bitmapDC, 0, 0, width, height, g_getDC, x, y, SRCCOPY);	//BitBlts are expensive!
+
+			HBITMAP OffscrBmp = NULL;
+			HDC OffscrDC = NULL;
+
+			if ((OffscrBmp = CreateCompatibleBitmap(bitmapDC, width, height)) == NULL)
+			{
+				return 0;
+			}
+	
+			if ((OffscrDC = CreateCompatibleDC(bitmapDC)) == NULL)
+			{
+				return 0;
+			}
+	
+			HBITMAP OldBmp = (HBITMAP) SelectObject(OffscrDC, OffscrBmp);
+
+			BitBlt(OffscrDC, 0, 0, width, height, bitmapDC, 0, 0, SRCCOPY);
+		
+			ZeroMemory(&g_lpbi->bmiHeader, sizeof(BITMAPINFOHEADER));
+			g_lpbi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+			SelectObject(OffscrDC, OldBmp);
+			if (!GetDIBits(OffscrDC, OffscrBmp, 0, height, NULL, g_lpbi, DIB_RGB_COLORS))
+			{
+				return 0;
+			}
+	
+			LPVOID lpvb;
+
+			//Create space to store this buffer
+			if((lpvb = new char[g_lpbi->bmiHeader.biSizeImage]) == NULL)
+			{
+				return 0;
+			}
+
+			if(!GetDIBits(OffscrDC, OffscrBmp, 0, height, lpvb, g_lpbi, DIB_RGB_COLORS))
+			{
+				return 0;
+			}
+	
+			unsigned int averageR(0);
+			unsigned int averageG(0);
+			unsigned int averageB(0);
+			unsigned int pixelCount(0);
+	
+			for(y = 0; y < height; ++y)
+			{
+				for(x = 0; x < width * 4; x += 4)
+				{
+					unsigned char b = ((unsigned char*) lpvb)[0 + x + (y * width * 4)];
+					unsigned char g = ((unsigned char*) lpvb)[1 + x + (y * width * 4)];
+					unsigned char r = ((unsigned char*) lpvb)[2 + x + (y * width * 4)];
+					//unsigned char a = ((unsigned char*) lpvBits)[3 + x + (y * width * 4)];
+
+					averageR += r;
+					averageG += g;
+					averageB += b;
+
+					++pixelCount;
+				}
+			}
+	
+			averageR /= pixelCount;
+			averageG /= pixelCount;
+			averageB /= pixelCount;
+
+			unsigned int colour = averageR;
+			colour <<= 8;
+			colour |= averageG;
+			colour <<= 8;
+			colour |= averageB;
+
+			DeleteDC(OffscrDC);
+			DeleteObject(OffscrBmp);
+	
+			DeleteObject(bitmap);
+			DeleteDC(bitmapDC);
+
+			return colour;
+		}
 	}
 }

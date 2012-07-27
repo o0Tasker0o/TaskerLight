@@ -12,7 +12,7 @@ extern "C"
 
 	DECLDIR unsigned int ShutdownScreenCapture(void);
 
-	DECLDIR unsigned int StartCapturing(void);
+	DECLDIR unsigned int StartCapturing(bool useDirectX);
 
 	DECLDIR unsigned int StopCapturing(void);
 

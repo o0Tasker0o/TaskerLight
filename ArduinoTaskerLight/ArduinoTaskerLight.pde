@@ -1,8 +1,8 @@
 #include "WS2801.h"
 
 #define FADE_TIME_MS 200
-#define DATA_PIN 2
-#define CLOCK_PIN 3     
+#define DATA_PIN 2    //Yellow cable
+#define CLOCK_PIN 3   //Green cable
 #define NUM_OF_PIXELS 25
 
 //Buffer to contain pixels streamed via the USB
@@ -130,10 +130,10 @@ void loop()
                sourceColour >>= 8;
                byte srcR = sourceColour & 255;
                
-               int differenceR = destR - srcR;
-               int differenceG = destG - srcG;
-               int differenceB = destB - srcB;
-                              
+               long differenceR = destR - srcR;
+               long differenceG = destG - srcG;
+               long differenceB = destB - srcB;
+                      
                differenceR *= timeSinceLastUpdate;  
                differenceR /= FADE_TIME_MS;               
                differenceG *= timeSinceLastUpdate;  

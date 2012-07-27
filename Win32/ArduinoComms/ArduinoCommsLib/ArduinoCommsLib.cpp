@@ -71,8 +71,8 @@ extern "C"
 				}
 				else
 				{
-					//We wait 4s as the arduino board will be resetting
-					Sleep(4000);
+					//We wait 1s as the arduino board will be resetting
+					Sleep(3000);
 				}
 			}
 		}

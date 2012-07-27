@@ -7,19 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace ControlPanel
 {
     public partial class Form1 : Form
     {
+        #region DLL Imports
         [DllImport("ArduinoCommsLib.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern UInt32 InitialiseArduinoComms();
-
-        [DllImport("ArduinoCommsLib.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern UInt32 SetLED(Byte red, Byte green, Byte blue, UInt32 pixelIndex);
-
-        [DllImport("ArduinoCommsLib.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern UInt32 FlushColours();
 
         [DllImport("ArduinoCommsLib.dll", CallingConvention=CallingConvention.Cdecl)]
         private static extern UInt32 ShutdownArduinoComms();
@@ -31,16 +27,30 @@ namespace ControlPanel
         private static extern UInt32 ShutdownScreenCapture();
 
         [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern UInt32 StartCapturing();
+        private static extern UInt32 StartCapturing(bool useDirectX);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern UInt32 StopCapturing();
 
         [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern UInt32 GetAverageColour(UInt32 x, UInt32 y,
                                                       UInt32 width, UInt32 height);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern int SystemParametersInfo(UInt32 uAction, 
+                                                       int uParam,
+                                                       String lpvParam, 
+                                                       int fuWinIni);
+        
+        private const UInt32 SPI_GETDESKWALLPAPER = 0x73;
+        #endregion
+
+        private Color [] mStaticColours;
+
         public Form1()
         {
             InitializeComponent();
-
+            
             if(0 != InitialiseArduinoComms())
             {
                 Console.WriteLine("ERROR");
@@ -51,11 +61,59 @@ namespace ControlPanel
                 Console.WriteLine("ERROR");
             }
 
-            StartCapturing();
+            SettingsManager.LoadSettings();
 
-            screenCaptureTimer.Start();
+            mStaticColours = SettingsManager.GetStaticColours();
+
+            staticColoursBackgroundRadioButton_CheckedChanged(this, EventArgs.Empty);
+            wallpaperBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
+            capturedBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
         }
         
+        internal void LoadWallpaper()
+        {
+            String wallpaperFilename = new String(' ', 256);
+
+            SystemParametersInfo(SPI_GETDESKWALLPAPER,
+                                 wallpaperFilename.Length,
+                                 wallpaperFilename,
+                                 0);
+
+            wallpaperFilename = wallpaperFilename.Substring(0, wallpaperFilename.IndexOf('\0'));
+
+            Bitmap scaledWallpaper = new Bitmap(11, 7);
+            Image originalWallpaper;
+
+            try
+            {
+                FileStream stream = File.OpenRead(wallpaperFilename);
+                originalWallpaper = Bitmap.FromStream(stream);
+                stream.Close();
+            }
+            catch
+            {
+                return;
+            }
+            
+            using(Graphics g = Graphics.FromImage(scaledWallpaper))
+            {
+                g.DrawImage(originalWallpaper, 0, 0, 11, 7);
+            }
+
+            for(UInt32 i = 0; i < 25; ++i)
+            {
+                Rectangle region = RegionManager.Instance().GetRegion(i);
+                this.ledPreview1.SetPixel(OutputManager.SetLED(scaledWallpaper.GetPixel(region.X, region.Y),
+                                                               i,
+                                                               1.0f),
+                                          i);
+            }
+
+            this.ledPreview1.Refresh();
+
+            OutputManager.FlushColours();
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             ShutdownArduinoComms();
@@ -67,67 +125,108 @@ namespace ControlPanel
 
         private void screenCaptureTimer_Tick(object sender, EventArgs e)
         {
-            Color colour = ConvertToColor(GetAverageColour(1240, 900,
-                                                           150, 150));
+            float saturation = 1.6f;
 
-            SetLED(Convert.ToByte(colour.R),
-                   Convert.ToByte(colour.G),
-                   Convert.ToByte(colour.B),
-                   0);
-
-            for (UInt32 i = 1; i < 8; ++i)
+            for (UInt32 i = 0; i < 25; ++i)
             {
-                colour = ConvertToColor(GetAverageColour(1390, 1050 - (i * 150), 
-                                                         150, 150));
+                Rectangle region = RegionManager.Instance().GetRegion(i);
+                Color colour = ColourUtil.ConvertToColor(GetAverageColour((UInt32) region.X, (UInt32) region.Y,
+                                                                          (UInt32) region.Width, (UInt32) region.Height));
 
-                SetLED(Convert.ToByte(colour.R),
-                       Convert.ToByte(colour.G),
-                       Convert.ToByte(colour.B),
-                       i);
+                this.ledPreview1.SetPixel(OutputManager.SetLED(colour, i, saturation), i);
             }
 
-            for (UInt32 i = 17; i < 24; ++i)
-            {
-                colour = ConvertToColor(GetAverageColour(290, (i - 17) * 150,
-                                                         150, 150));
+            OutputManager.FlushColours();
 
-                SetLED(Convert.ToByte(colour.R),
-                       Convert.ToByte(colour.G),
-                       Convert.ToByte(colour.B),
-                       i);
-            }
-
-            for (UInt32 i = 8; i < 17; ++i)
-            {
-                colour = ConvertToColor(GetAverageColour(1400 - ((i - 8) * 120), 0,
-                                                         120, 120));
-
-                SetLED(Convert.ToByte(colour.R),
-                       Convert.ToByte(colour.G),
-                       Convert.ToByte(colour.B),
-                       i);
-            }
-
-            colour = ConvertToColor(GetAverageColour(290, 900,
-                                                     150, 150));
-
-            SetLED(Convert.ToByte(colour.R),
-                   Convert.ToByte(colour.G),
-                   Convert.ToByte(colour.B),
-                   24);
-
-            FlushColours();
+            this.ledPreview1.Refresh();
         }
 
-        Color ConvertToColor(UInt32 colour)
+        private void hsvPicker1_ColourChanged(object sender, EventArgs e)
         {
-            UInt32 blue = colour & 255;
-            colour >>= 8;
-            UInt32 green = colour & 255;
-            colour >>= 8;
-            UInt32 red = colour & 255;
+            this.ledPreview1.ActiveColour = this.hsvPicker1.GetColour();
+        }
 
-            return Color.FromArgb((int) red, (int) green, (int) blue);
+        private void staticColoursBackgroundRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if(staticColoursBackgroundRadioButton.Checked)
+            {
+                for(UInt32 pixelIndex = 0; pixelIndex < mStaticColours.Length; ++pixelIndex)
+                {
+                    this.ledPreview1.SetPixel(mStaticColours[pixelIndex], pixelIndex);
+
+                    OutputManager.SetLED(mStaticColours[pixelIndex], pixelIndex);
+                }
+
+                this.ledPreview1.Refresh();
+
+                OutputManager.FlushColours();
+
+                this.hsvPicker1.Visible = true;
+            }
+            else
+            {
+                this.hsvPicker1.Visible = false;
+            }
+        }
+        
+        private void wallpaperBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if(wallpaperBackgroundModeRadioButton.Checked)
+            {
+                RegionManager.Instance().Resize(new Rectangle(0, 0, 11, 7));
+                LoadWallpaper();
+                wallpaperTimer.Start();
+            }
+            else
+            {
+                wallpaperTimer.Stop();
+            }
+        }
+
+        private void capturedBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if(capturedBackgroundModeRadioButton.Checked)
+            {
+                RegionManager.Instance().Resize();
+                StartCapturing(true);
+                screenCaptureTimer.Start();
+            }
+            else
+            {
+                screenCaptureTimer.Stop();
+
+                StopCapturing();
+            }
+        }
+
+        private void ledPreview1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if(staticColoursBackgroundRadioButton.Checked)
+            {
+                mStaticColours = (Color []) this.ledPreview1.GetPixels().Clone();
+                
+                UInt32 pixelIndex = 0;
+
+                foreach(Color pixel in mStaticColours)
+                {
+                    OutputManager.SetLED(pixel, pixelIndex++);
+                }
+
+                OutputManager.FlushColours();
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            SettingsManager.SetStaticColours(mStaticColours);
+            SettingsManager.SaveSettings();
+
+            base.OnFormClosing(e);
+        }
+
+        private void wallpaperTimer_Tick(object sender, EventArgs e)
+        {
+            LoadWallpaper();
         }
     }
 }
