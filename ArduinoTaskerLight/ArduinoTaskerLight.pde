@@ -15,6 +15,29 @@ void setup()
   
   strip.begin();
 
+  int startupDelay = 15;
+
+  for(int i = 0; i < 25; ++i)
+  {
+      strip.setPixelColor(i, Colour(255, 0, 0));
+      strip.show();
+      delay(startupDelay);
+  }
+  
+  for(int i = 0; i < 25; ++i)
+  {
+      strip.setPixelColor(i, Colour(0, 255, 0));
+      strip.show();
+      delay(startupDelay);
+  }
+  
+  for(int i = 0; i < 25; ++i)
+  {
+      strip.setPixelColor(i, Colour(0, 0, 255));
+      strip.show();
+      delay(startupDelay);
+  }
+  
   // Update the strip, to start they are all 'off'
   strip.show();
 }
@@ -49,7 +72,7 @@ void loop()
     
     strip.show();
     
-    Serial.write(128);
+    Serial.write(0);
 }
 
 /* Helper functions */
