@@ -18,3 +18,10 @@ Version 0.0.2
 
 Increased baud rate from 9600 to 115200
 Implemented basic, fixed region screen capture
+
+
+Version 0.0.3
+================
+
+Implemented Arduino-side fades
+Slight improvement of C# region placements

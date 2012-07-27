@@ -67,8 +67,8 @@ namespace ControlPanel
 
         private void screenCaptureTimer_Tick(object sender, EventArgs e)
         {
-            Color colour = ConvertToColor(GetAverageColour(1500, 970,
-                                                           80, 80));
+            Color colour = ConvertToColor(GetAverageColour(1240, 900,
+                                                           150, 150));
 
             SetLED(Convert.ToByte(colour.R),
                    Convert.ToByte(colour.G),
@@ -77,8 +77,8 @@ namespace ControlPanel
 
             for (UInt32 i = 1; i < 8; ++i)
             {
-                colour = ConvertToColor(GetAverageColour(1460, 1050 - (i * 150), 
-                                                         80, 80));
+                colour = ConvertToColor(GetAverageColour(1390, 1050 - (i * 150), 
+                                                         150, 150));
 
                 SetLED(Convert.ToByte(colour.R),
                        Convert.ToByte(colour.G),
@@ -88,8 +88,8 @@ namespace ControlPanel
 
             for (UInt32 i = 17; i < 24; ++i)
             {
-                colour = ConvertToColor(GetAverageColour(140, (i - 17) * 150,
-                                                         80, 80));
+                colour = ConvertToColor(GetAverageColour(290, (i - 17) * 150,
+                                                         150, 150));
 
                 SetLED(Convert.ToByte(colour.R),
                        Convert.ToByte(colour.G),
@@ -99,8 +99,8 @@ namespace ControlPanel
 
             for (UInt32 i = 8; i < 17; ++i)
             {
-                colour = ConvertToColor(GetAverageColour(1432 - ((i - 8) * 168), 0,
-                                                         80, 80));
+                colour = ConvertToColor(GetAverageColour(1400 - ((i - 8) * 120), 0,
+                                                         120, 120));
 
                 SetLED(Convert.ToByte(colour.R),
                        Convert.ToByte(colour.G),
@@ -108,8 +108,8 @@ namespace ControlPanel
                        i);
             }
 
-            colour = ConvertToColor(GetAverageColour(180, 970,
-                                                     80, 80));
+            colour = ConvertToColor(GetAverageColour(290, 900,
+                                                     150, 150));
 
             SetLED(Convert.ToByte(colour.R),
                    Convert.ToByte(colour.G),
