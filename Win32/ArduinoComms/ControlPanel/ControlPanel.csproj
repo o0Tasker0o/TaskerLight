@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveScriptEffectGenerator.cs" />
     <Compile Include="ColourUtil.cs" />
     <Compile Include="CompilerForm.cs">
       <SubType>Form</SubType>

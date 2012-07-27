@@ -76,7 +76,6 @@
             this.activeSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wallpaperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoCaptureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.activeAppTimer = new System.Windows.Forms.Timer(this.components);
             this.ledPreview1 = new ControlPanel.LEDPreview();
             this.connectButton = new System.Windows.Forms.Button();
             this.ledPreviewTimer = new System.Windows.Forms.Timer(this.components);
@@ -624,11 +623,6 @@
             this.videoCaptureToolStripMenuItem.Text = "Video Capture";
             this.videoCaptureToolStripMenuItem.Click += new System.EventHandler(this.videoCaptureToolStripMenuItem_Click);
             // 
-            // activeAppTimer
-            // 
-            this.activeAppTimer.Interval = 200;
-            this.activeAppTimer.Tick += new System.EventHandler(this.activeAppTimer_Tick);
-            // 
             // ledPreview1
             // 
             this.ledPreview1.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -736,7 +730,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown arduinoComPortUpDown;
         private System.Windows.Forms.Button newScriptButton;
-        private System.Windows.Forms.Timer activeAppTimer;
         private System.Windows.Forms.Panel scriptPanel;
         private System.Windows.Forms.Button editScriptButton;
         private System.Windows.Forms.ContextMenuStrip notifyIconMenu;

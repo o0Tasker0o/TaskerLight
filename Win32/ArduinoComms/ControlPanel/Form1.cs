@@ -33,9 +33,7 @@ namespace ControlPanel
 
         #region Member Variables
         private CompilerForm mCompilerForm;
-        private AppDomain mScriptAppDomain;
-        private ScriptLoader mLoader;
-        private long mInitialMS;
+        private ActiveScriptEffectGenerator mActiveScriptEffectGenerator;
         private WallpaperEffectGenerator mWallpaperEffectGenerator;
         private VideoEffectGenerator mVideoEffectGenerator;
         #endregion
@@ -82,6 +80,7 @@ namespace ControlPanel
             this.oversaturationTrackbar.Value = (int) (SettingsManager.Saturation * 100.0f);
             this.contrastTrackbar.Value = (int) (SettingsManager.Contrast * 100.0f);
 
+            mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(this.ledPreview1);
             mWallpaperEffectGenerator = new WallpaperEffectGenerator(this.ledPreview1);
             mVideoEffectGenerator = new VideoEffectGenerator(this.ledPreview1, this.activeAppListView.Items);
 
@@ -109,6 +108,7 @@ namespace ControlPanel
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            mActiveScriptEffectGenerator.Stop();
             mWallpaperEffectGenerator.Stop();
             mVideoEffectGenerator.Stop();
 
@@ -150,57 +150,12 @@ namespace ControlPanel
         #endregion
 
         #region Script Functions
-        private void StartActiveScript(String scriptDirectory)
-        {
-            //In order to load and unload the script DLLs at runtime,
-            //the DLLs need to be loaded into a seperate appdomain...
-            //which we create here
-            mScriptAppDomain = AppDomain.CreateDomain("TaskerLightScriptDomain");
-
-            //Create an instance of the script loader which will give access to the script dll
-            mLoader = (ScriptLoader) mScriptAppDomain.CreateInstanceAndUnwrap(
-                                                typeof(ScriptLoader).Assembly.FullName,
-                                                typeof(ScriptLoader).FullName);
-
-            //Load the script DLL into the appdomain
-            mLoader.LoadAssembly(scriptDirectory + "\\script.dll");
-
-            //All the scripts use "number of ticks passed" to time their effects
-            //To do this they need to know the number of ticks that represents
-            //the time at which they started
-            mInitialMS = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
-            //Start the script polling timer
-            activeAppTimer.Start();
-        }
-
-        private void StopActiveScript()
-        {
-            //Stop updating the active script
-            activeAppTimer.Stop();
-
-            //If an appdomain has been created containing the active script
-            if(null != mScriptAppDomain)
-            {
-                try
-                {
-                    //Unplug our active script DLL
-                    AppDomain.Unload(mScriptAppDomain);
-                }
-                catch(AppDomainUnloadedException)
-                {
-
-                }
-            }
-        }
 
         private void newScriptSelected(object sender, EventArgs e)
         {
-            //Stop the previous active script
-            StopActiveScript();
-
-            //Start the newly selected script
-            StartActiveScript(((RadioButton) sender).Tag.ToString());
+            mActiveScriptEffectGenerator.Stop();
+            mActiveScriptEffectGenerator.SetCurrentScriptDirectory(((RadioButton) sender).Tag.ToString());
+            mActiveScriptEffectGenerator.Start();
         }
 
         private void newScriptButton_Click(object sender, EventArgs e)
@@ -222,7 +177,7 @@ namespace ControlPanel
                 if(scriptButton.Checked)
                 {
                     //Stop running the selected script
-                    StopActiveScript();
+                    mActiveScriptEffectGenerator.Stop();
 
                     //Load the script up from its source code file
                     String loadedScriptCode = File.ReadAllText(scriptButton.Tag.ToString() + "\\script.cs");
@@ -231,8 +186,10 @@ namespace ControlPanel
                     CompilerForm compilerForm = new CompilerForm(scriptButton.Text, loadedScriptCode);
                     compilerForm.ShowDialog();
 
+                    mActiveScriptEffectGenerator.SetCurrentScriptDirectory(scriptButton.Tag.ToString());
+                    
                     //Start showing the edited script
-                    StartActiveScript(scriptButton.Tag.ToString());
+                    mActiveScriptEffectGenerator.Start();
 
                     break;
                 }
@@ -312,12 +269,7 @@ namespace ControlPanel
             }
             else
             {
-                activeAppTimer.Stop();
-
-                if(null != mScriptAppDomain)
-                {
-                    AppDomain.Unload(mScriptAppDomain);
-                }
+                mActiveScriptEffectGenerator.Stop();
             }
 
             this.newScriptButton.Visible = activeSceneModeRadioButton.Checked;
@@ -354,30 +306,7 @@ namespace ControlPanel
             }
         }
         #endregion
-
-        #region Timer Tick Functions
-        private void activeAppTimer_Tick(object sender, EventArgs e)
-        {
-            long millisecondDifference = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            millisecondDifference -= mInitialMS;
-
-            Color[] colours = new Color[25];
-            colours = (Color[])mLoader.ExecuteStaticMethod("TaskerLightScript",
-                                                           "TickLighting",
-                                                           millisecondDifference);
-
-            for (UInt32 i = 0; i < 25; ++i)
-            {
-                Rectangle region = RegionManager.Instance().GetRegion(i);
-
-                this.ledPreview1.SetPixel(OutputManager.SetLED(colours[i], i), i);
-            }
-
-            OutputManager.FlushColours();
-        }
-
-        #endregion
-
+        
         private void Form1_Resize(object sender, EventArgs e)
         {
             if (FormWindowState.Minimized == WindowState)
