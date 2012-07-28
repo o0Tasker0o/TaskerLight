@@ -1,3 +1,10 @@
+Version 1.0.0
+================
+Extracted effect generation functionality from Form code into seperate classes
+Created installer
+Modified code so that only a single instance of the application can run
+Minor code fixes/cleanup
+
 Version 0.0.8
 ================
 Add automatic Top & Bottom border detection
