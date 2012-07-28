@@ -68,19 +68,25 @@ namespace ControlPanel
 
         private const UInt32 GW_HWNDNEXT = 0x02;
 
-        private ListView.ListViewItemCollection mActiveAppsList;
+        private List<Form1.ProcessIndex> mActiveAppsList;
         private bool mUseMarginsFullscreen;
 
         public VideoEffectGenerator(LEDPreview ledPreview,
                                     ListView.ListViewItemCollection activeApps)
             : base(ledPreview)
         {
+            mActiveAppsList = new List<Form1.ProcessIndex>();
             SetActiveApps(activeApps);
         }
 
         internal void SetActiveApps(ListView.ListViewItemCollection activeApps)
         {
-            mActiveAppsList = activeApps;
+            mActiveAppsList.Clear();
+
+            for(int appIndex = 0; appIndex < activeApps.Count; ++appIndex)
+            {
+                mActiveAppsList.Add((Form1.ProcessIndex) activeApps[appIndex].Tag);
+            }
         }
 
         internal void UseMarginsFullscreen(bool useMargins)
@@ -101,7 +107,7 @@ namespace ControlPanel
 
                 for (int appIndex = 0; appIndex < mActiveAppsList.Count; ++appIndex)
                 {
-                    Form1.ProcessIndex processIndex = (Form1.ProcessIndex)mActiveAppsList[appIndex].Tag;
+                    Form1.ProcessIndex processIndex = mActiveAppsList[appIndex];
                     Process[] processes = Process.GetProcessesByName(processIndex.processName);
 
                     if (processes.Length > 0)
@@ -109,8 +115,6 @@ namespace ControlPanel
                         processIndex.process = processes[0];
                         activeProcesses.Add(processIndex);
                     }
-
-                    mActiveAppsList[appIndex].Tag = processIndex;
                 }
 
                 IntPtr foregroundWindow = GetForegroundWindow();

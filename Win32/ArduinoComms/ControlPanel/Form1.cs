@@ -90,7 +90,7 @@ namespace ControlPanel
                     staticColoursBackgroundRadioButton.Checked = true;
                   break;
                 case 1:
-                    wallpaperBackgroundModeRadioButton.Checked = true;
+                    activeSceneModeRadioButton.Checked = true;
                   break;
                 case 2:
                     wallpaperBackgroundModeRadioButton.Checked = true;
@@ -99,11 +99,6 @@ namespace ControlPanel
                     capturedBackgroundModeRadioButton.Checked = true;
                   break;
             }
-            
-            staticColoursBackgroundRadioButton_CheckedChanged(this, EventArgs.Empty);
-            activeSceneModeRadioButton_CheckedChanged(this, EventArgs.Empty);
-            wallpaperBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
-            capturedBackgroundModeRadioButton_CheckedChanged(this, EventArgs.Empty);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -370,6 +365,8 @@ namespace ControlPanel
             ProcessIndex processIndex = (ProcessIndex) activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag;
             processIndex.topMargin = (int) topMarginUpDown.Value;
             activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag = processIndex;
+
+            mVideoEffectGenerator.SetActiveApps(activeAppListView.Items);
         }
 
         private void bottomMarginUpDown_ValueChanged(object sender, EventArgs e)
@@ -377,6 +374,8 @@ namespace ControlPanel
             ProcessIndex processIndex = (ProcessIndex)activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag;
             processIndex.bottomMargin = (int) bottomMarginUpDown.Value;
             activeAppListView.Items[this.activeAppListView.SelectedIndices[0]].Tag = processIndex;
+
+            mVideoEffectGenerator.SetActiveApps(activeAppListView.Items);
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)

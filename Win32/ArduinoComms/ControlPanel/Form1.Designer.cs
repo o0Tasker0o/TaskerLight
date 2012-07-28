@@ -76,9 +76,9 @@
             this.activeSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wallpaperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoCaptureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ledPreview1 = new ControlPanel.LEDPreview();
             this.connectButton = new System.Windows.Forms.Button();
             this.ledPreviewTimer = new System.Windows.Forms.Timer(this.components);
+            this.ledPreview1 = new ControlPanel.LEDPreview();
             this.tabControl1.SuspendLayout();
             this.backgroundTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -149,6 +149,7 @@
             this.scriptPanel.Name = "scriptPanel";
             this.scriptPanel.Size = new System.Drawing.Size(337, 186);
             this.scriptPanel.TabIndex = 9;
+            this.scriptPanel.Visible = false;
             // 
             // newScriptButton
             // 
@@ -170,18 +171,17 @@
             this.hsvPicker.Name = "hsvPicker";
             this.hsvPicker.Size = new System.Drawing.Size(221, 186);
             this.hsvPicker.TabIndex = 6;
+            this.hsvPicker.Visible = false;
             this.hsvPicker.ColourChanged += new System.EventHandler(this.hsvPicker_ColourChanged);
             // 
             // staticColoursBackgroundRadioButton
             // 
             this.staticColoursBackgroundRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.staticColoursBackgroundRadioButton.AutoSize = true;
-            this.staticColoursBackgroundRadioButton.Checked = true;
             this.staticColoursBackgroundRadioButton.Location = new System.Drawing.Point(354, 6);
             this.staticColoursBackgroundRadioButton.Name = "staticColoursBackgroundRadioButton";
             this.staticColoursBackgroundRadioButton.Size = new System.Drawing.Size(90, 17);
             this.staticColoursBackgroundRadioButton.TabIndex = 3;
-            this.staticColoursBackgroundRadioButton.TabStop = true;
             this.staticColoursBackgroundRadioButton.Text = "Static Colours";
             this.staticColoursBackgroundRadioButton.UseVisualStyleBackColor = true;
             this.staticColoursBackgroundRadioButton.CheckedChanged += new System.EventHandler(this.staticColoursBackgroundRadioButton_CheckedChanged);
@@ -589,13 +589,13 @@
             this.wallpaperToolStripMenuItem,
             this.videoCaptureToolStripMenuItem});
             this.notifyIconMenu.Name = "notifyIconMenu";
-            this.notifyIconMenu.Size = new System.Drawing.Size(153, 114);
+            this.notifyIconMenu.Size = new System.Drawing.Size(150, 92);
             // 
             // staticColoursToolStripMenuItem
             // 
             this.staticColoursToolStripMenuItem.CheckOnClick = true;
             this.staticColoursToolStripMenuItem.Name = "staticColoursToolStripMenuItem";
-            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.staticColoursToolStripMenuItem.Text = "Static Colours";
             this.staticColoursToolStripMenuItem.Click += new System.EventHandler(this.staticColoursToolStripMenuItem_Click);
             // 
@@ -603,7 +603,7 @@
             // 
             this.activeSceneToolStripMenuItem.CheckOnClick = true;
             this.activeSceneToolStripMenuItem.Name = "activeSceneToolStripMenuItem";
-            this.activeSceneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.activeSceneToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.activeSceneToolStripMenuItem.Text = "Active Scene";
             this.activeSceneToolStripMenuItem.Click += new System.EventHandler(this.activeSceneToolStripMenuItem_Click);
             // 
@@ -611,7 +611,7 @@
             // 
             this.wallpaperToolStripMenuItem.CheckOnClick = true;
             this.wallpaperToolStripMenuItem.Name = "wallpaperToolStripMenuItem";
-            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.wallpaperToolStripMenuItem.Text = "Wallpaper";
             this.wallpaperToolStripMenuItem.Click += new System.EventHandler(this.wallpaperToolStripMenuItem_Click);
             // 
@@ -619,20 +619,9 @@
             // 
             this.videoCaptureToolStripMenuItem.CheckOnClick = true;
             this.videoCaptureToolStripMenuItem.Name = "videoCaptureToolStripMenuItem";
-            this.videoCaptureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videoCaptureToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.videoCaptureToolStripMenuItem.Text = "Video Capture";
             this.videoCaptureToolStripMenuItem.Click += new System.EventHandler(this.videoCaptureToolStripMenuItem_Click);
-            // 
-            // ledPreview1
-            // 
-            this.ledPreview1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.ledPreview1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ledPreview1.BackgroundImage")));
-            this.ledPreview1.Location = new System.Drawing.Point(112, 2);
-            this.ledPreview1.Name = "ledPreview1";
-            this.ledPreview1.Size = new System.Drawing.Size(238, 199);
-            this.ledPreview1.TabIndex = 6;
-            this.ledPreview1.Visible = false;
-            this.ledPreview1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ledPreview1_MouseUp);
             // 
             // connectButton
             // 
@@ -649,6 +638,17 @@
             // 
             this.ledPreviewTimer.Interval = 50;
             this.ledPreviewTimer.Tick += new System.EventHandler(this.ledPreviewTimer_Tick);
+            // 
+            // ledPreview1
+            // 
+            this.ledPreview1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ledPreview1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ledPreview1.BackgroundImage")));
+            this.ledPreview1.Location = new System.Drawing.Point(112, 2);
+            this.ledPreview1.Name = "ledPreview1";
+            this.ledPreview1.Size = new System.Drawing.Size(238, 199);
+            this.ledPreview1.TabIndex = 6;
+            this.ledPreview1.Visible = false;
+            this.ledPreview1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ledPreview1_MouseUp);
             // 
             // Form1
             // 
