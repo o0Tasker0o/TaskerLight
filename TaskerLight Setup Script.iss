@@ -32,7 +32,8 @@ UninstallDisplayIcon={app}\ControlPanel.exe
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked 
+Name: "startupicon"; Description: "Run on startup"; GroupDescription: "Startup Options:";
 
 [Files]
 Source: ".\Win32\ArduinoComms\Out\Release\ControlPanel.exe"; DestDir: "{app}"; Flags: ignoreversion
