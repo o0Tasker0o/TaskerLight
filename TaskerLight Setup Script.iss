@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TaskerLight"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "TaskerCode"
 #define MyAppURL "http://taskercode.wordpress.com"
 #define MyAppExeName "ControlPanel.exe"
@@ -27,6 +27,7 @@ OutputBaseFilename=TaskerLight Setup
 Compression=lzma
 SolidCompression=yes  
 UninstallDisplayIcon={app}\ControlPanel.exe
+PrivilegesRequired=admin
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -48,6 +49,7 @@ Source: ".\Win32\ArduinoComms\Out\Release\Rainbow\*"; DestDir: "{app}\Rainbow"; 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startupicon
 
 
 [Run]
