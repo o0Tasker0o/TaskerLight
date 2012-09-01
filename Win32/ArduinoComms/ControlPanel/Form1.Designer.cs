@@ -79,6 +79,8 @@
             this.connectButton = new System.Windows.Forms.Button();
             this.ledPreviewTimer = new System.Windows.Forms.Timer(this.components);
             this.ledPreview1 = new ControlPanel.LEDPreview();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.backgroundTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -587,15 +589,17 @@
             this.staticColoursToolStripMenuItem,
             this.activeSceneToolStripMenuItem,
             this.wallpaperToolStripMenuItem,
-            this.videoCaptureToolStripMenuItem});
+            this.videoCaptureToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
             this.notifyIconMenu.Name = "notifyIconMenu";
-            this.notifyIconMenu.Size = new System.Drawing.Size(150, 92);
+            this.notifyIconMenu.Size = new System.Drawing.Size(153, 142);
             // 
             // staticColoursToolStripMenuItem
             // 
             this.staticColoursToolStripMenuItem.CheckOnClick = true;
             this.staticColoursToolStripMenuItem.Name = "staticColoursToolStripMenuItem";
-            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.staticColoursToolStripMenuItem.Text = "Static Colours";
             this.staticColoursToolStripMenuItem.Click += new System.EventHandler(this.staticColoursToolStripMenuItem_Click);
             // 
@@ -603,7 +607,7 @@
             // 
             this.activeSceneToolStripMenuItem.CheckOnClick = true;
             this.activeSceneToolStripMenuItem.Name = "activeSceneToolStripMenuItem";
-            this.activeSceneToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.activeSceneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.activeSceneToolStripMenuItem.Text = "Active Scene";
             this.activeSceneToolStripMenuItem.Click += new System.EventHandler(this.activeSceneToolStripMenuItem_Click);
             // 
@@ -611,7 +615,7 @@
             // 
             this.wallpaperToolStripMenuItem.CheckOnClick = true;
             this.wallpaperToolStripMenuItem.Name = "wallpaperToolStripMenuItem";
-            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.wallpaperToolStripMenuItem.Text = "Wallpaper";
             this.wallpaperToolStripMenuItem.Click += new System.EventHandler(this.wallpaperToolStripMenuItem_Click);
             // 
@@ -619,7 +623,7 @@
             // 
             this.videoCaptureToolStripMenuItem.CheckOnClick = true;
             this.videoCaptureToolStripMenuItem.Name = "videoCaptureToolStripMenuItem";
-            this.videoCaptureToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.videoCaptureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.videoCaptureToolStripMenuItem.Text = "Video Capture";
             this.videoCaptureToolStripMenuItem.Click += new System.EventHandler(this.videoCaptureToolStripMenuItem_Click);
             // 
@@ -649,6 +653,18 @@
             this.ledPreview1.TabIndex = 6;
             this.ledPreview1.Visible = false;
             this.ledPreview1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ledPreview1_MouseUp);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -739,6 +755,8 @@
         private System.Windows.Forms.ToolStripMenuItem videoCaptureToolStripMenuItem;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.Timer ledPreviewTimer;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 
     }
 }

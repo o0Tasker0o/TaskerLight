@@ -34,7 +34,7 @@ namespace ControlPanel
             set { mStaticColours = value; }
         }
 
-        internal static Int32 Mode
+        internal static Form1.EffectMode Mode
         {
             get; set;
         }
@@ -61,7 +61,7 @@ namespace ControlPanel
                 mSettingsBytes.Add(mStaticColours[i].B);
             }
 
-            mSettingsBytes.AddRange(BitConverter.GetBytes(Mode));
+            mSettingsBytes.AddRange(BitConverter.GetBytes((int) Mode));
 
             //Save active application settings
             mSettingsBytes.AddRange(BitConverter.GetBytes(mActiveProcesses.Count));
@@ -101,7 +101,7 @@ namespace ControlPanel
                                                        settingsBytes[byteIndex++]);
                 }
 
-                Mode = BitConverter.ToInt32(settingsBytes, byteIndex);
+                Mode = (Form1.EffectMode) BitConverter.ToInt32(settingsBytes, byteIndex);
                 byteIndex += 4;
 
                 mActiveProcesses.Clear();

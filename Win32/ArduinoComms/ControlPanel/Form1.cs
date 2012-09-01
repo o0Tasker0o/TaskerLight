@@ -22,6 +22,14 @@ namespace ControlPanel
         const uint TASKERLIGHT_ERROR    = 0x01;
         #endregion
 
+        public enum EffectMode
+        {
+            Static,
+            Active,
+            Wallpaper,
+            Video
+        };
+
         internal struct ProcessIndex
         {
             internal String processName;
@@ -84,21 +92,7 @@ namespace ControlPanel
             mWallpaperEffectGenerator = new WallpaperEffectGenerator(this.ledPreview1);
             mVideoEffectGenerator = new VideoEffectGenerator(this.ledPreview1, this.activeAppListView.Items);
 
-            switch(SettingsManager.Mode)
-            {
-                case 0:
-                    staticColoursBackgroundRadioButton.Checked = true;
-                  break;
-                case 1:
-                    activeSceneModeRadioButton.Checked = true;
-                  break;
-                case 2:
-                    wallpaperBackgroundModeRadioButton.Checked = true;
-                  break;
-                case 3:
-                    capturedBackgroundModeRadioButton.Checked = true;
-                  break;
-            }
+            SetMode(SettingsManager.Mode);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -195,10 +189,12 @@ namespace ControlPanel
         #region Mode RadioButton Change Functions
         private void staticColoursBackgroundRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.staticColoursToolStripMenuItem.Checked = staticColoursBackgroundRadioButton.Checked;
+            staticColoursToolStripMenuItem.Checked = staticColoursBackgroundRadioButton.Checked;
 
             if(staticColoursBackgroundRadioButton.Checked)
             {
+                SettingsManager.Mode = EffectMode.Static;
+
                 for (UInt32 pixelIndex = 0; pixelIndex < SettingsManager.StaticColours.Length; ++pixelIndex)
                 {
                     this.ledPreview1.SetPixel(SettingsManager.StaticColours[pixelIndex], pixelIndex);
@@ -209,8 +205,6 @@ namespace ControlPanel
                 OutputManager.FlushColours();
 
                 this.hsvPicker.Visible = true;
-
-                SettingsManager.Mode = 0;
             }
             else
             {
@@ -220,11 +214,14 @@ namespace ControlPanel
         
         private void activeSceneModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.activeSceneToolStripMenuItem.Checked = this.activeSceneModeRadioButton.Checked;
+            activeSceneToolStripMenuItem.Checked = activeSceneModeRadioButton.Checked;
+
             scriptPanel.Visible = activeSceneModeRadioButton.Checked;
 
             if(activeSceneModeRadioButton.Checked)
             {
+                SettingsManager.Mode = EffectMode.Active;
+
                 scriptPanel.Controls.Clear();
 
                 int yPos = 2;
@@ -259,8 +256,6 @@ namespace ControlPanel
 
                     yPos += 24;
                 }
-
-                SettingsManager.Mode = 1;
             }
             else
             {
@@ -273,11 +268,13 @@ namespace ControlPanel
         
         private void wallpaperBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            wallpaperToolStripMenuItem.Checked = wallpaperBackgroundModeRadioButton.Checked;
+
             if(wallpaperBackgroundModeRadioButton.Checked)
             {
-                mWallpaperEffectGenerator.Start();
+                SettingsManager.Mode = EffectMode.Wallpaper;
 
-                SettingsManager.Mode = 2;
+                mWallpaperEffectGenerator.Start();
             }
             else
             {
@@ -287,13 +284,13 @@ namespace ControlPanel
 
         private void capturedBackgroundModeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.activeSceneToolStripMenuItem.Checked = this.capturedBackgroundModeRadioButton.Checked;
+            videoCaptureToolStripMenuItem.Checked = capturedBackgroundModeRadioButton.Checked;
 
             if(capturedBackgroundModeRadioButton.Checked)
             {
-                mVideoEffectGenerator.Start();
+                SettingsManager.Mode = EffectMode.Video;
 
-                SettingsManager.Mode = 3;
+                mVideoEffectGenerator.Start();
             }
             else
             {
@@ -413,38 +410,22 @@ namespace ControlPanel
 
         private void staticColoursToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.staticColoursBackgroundRadioButton.Checked = true;
-
-            activeSceneToolStripMenuItem.Checked = false;
-            wallpaperToolStripMenuItem.Checked = false;
-            videoCaptureToolStripMenuItem.Checked = false;
+            SetMode(EffectMode.Static);
         }
 
         private void activeSceneToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.activeSceneModeRadioButton.Checked = true;
-
-            staticColoursToolStripMenuItem.Checked = false;
-            wallpaperToolStripMenuItem.Checked = false;
-            videoCaptureToolStripMenuItem.Checked = false;
+            SetMode(EffectMode.Active);
         }
 
         private void wallpaperToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.wallpaperBackgroundModeRadioButton.Checked = true;
-
-            staticColoursToolStripMenuItem.Checked = false;
-            activeSceneToolStripMenuItem.Checked = false;
-            videoCaptureToolStripMenuItem.Checked = false;
+            SetMode(EffectMode.Wallpaper);
         }
 
         private void videoCaptureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.capturedBackgroundModeRadioButton.Checked = true;
-
-            staticColoursToolStripMenuItem.Checked = false;
-            activeSceneToolStripMenuItem.Checked = false;
-            wallpaperToolStripMenuItem.Checked = false;
+            SetMode(EffectMode.Video);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -461,6 +442,43 @@ namespace ControlPanel
         private void ledPreviewTimer_Tick(object sender, EventArgs e)
         {
             ledPreview1.Refresh();
+        }
+
+        private void SetMode(EffectMode mode)
+        {
+            staticColoursToolStripMenuItem.Checked = false;
+            activeSceneToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoCaptureToolStripMenuItem.Checked = false;
+
+            switch(mode)
+            {
+                case EffectMode.Static:
+                    staticColoursBackgroundRadioButton.Checked = true;
+
+                    staticColoursToolStripMenuItem.Checked = true;
+                    break;
+                case EffectMode.Active:
+                    activeSceneModeRadioButton.Checked = true;
+
+                    activeSceneToolStripMenuItem.Checked = true;
+                    break;
+                case EffectMode.Wallpaper:
+                    wallpaperBackgroundModeRadioButton.Checked = true;
+
+                    wallpaperToolStripMenuItem.Checked = true;
+                    break;
+                case EffectMode.Video:
+                    capturedBackgroundModeRadioButton.Checked = true;
+
+                    videoCaptureToolStripMenuItem.Checked = true;
+                    break;
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
