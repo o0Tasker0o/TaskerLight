@@ -1,4 +1,5 @@
 ﻿using System.IO.Ports;
+using System;
 
 namespace ControlPanel
 {
@@ -18,6 +19,16 @@ namespace ControlPanel
         public void Connect()
         {
             mArduinoComPort.Open();
+        }
+
+        public void Write(Byte buffer)
+        {
+            mArduinoComPort.Write(new byte[] { buffer }, 0, 1);
+        }
+
+        public byte Read()
+        {
+           return (byte) mArduinoComPort.ReadByte();
         }
 
         public void Disconnect()
