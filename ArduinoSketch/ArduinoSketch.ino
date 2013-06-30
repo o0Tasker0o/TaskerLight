@@ -37,21 +37,23 @@ void loop()
 {     
   if(Serial.available() > 0)
   {  
-    char colourBuffer[75];
-    Serial.readBytes(colourBuffer, 75);
+    char serialBuffer[76];
+    Serial.readBytes(serialBuffer, 76);
       
     int pixelsRead = 0;
       
     for(int bufferIndex = 0; bufferIndex < 75; )
     {
-      mDstBuffer[pixelsRead] = Color(colourBuffer[bufferIndex++], 
-                                      colourBuffer[bufferIndex++], 
-                                      colourBuffer[bufferIndex++]);
+      mDstBuffer[pixelsRead] = Color(serialBuffer[bufferIndex++], 
+                                     serialBuffer[bufferIndex++], 
+                                     serialBuffer[bufferIndex++]);
                                       
       mSrcBuffer[pixelsRead] = mCurrentBuffer[pixelsRead];
       
       pixelsRead++;
     }  
+    
+    mFadeRate = serialBuffer[75];
     
     Serial.write(0);
   }
