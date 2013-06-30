@@ -21,9 +21,9 @@ namespace ControlPanel
             mArduinoComPort.Open();
         }
 
-        public void Write(Byte buffer)
+        public void Write(Byte [] buffer)
         {
-            mArduinoComPort.Write(new byte[] { buffer }, 0, 1);
+            mArduinoComPort.Write(buffer, 0, buffer.Length);
         }
 
         public byte Read()
