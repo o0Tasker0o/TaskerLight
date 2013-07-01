@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Threading;
 
 namespace ControlPanel
 {
@@ -6,55 +8,37 @@ namespace ControlPanel
     {
         public static void Main(string[] args)
         {
-            SerialCommunicator serialCommunicator = new SerialCommunicator();
-
-            serialCommunicator.Connect();
-
-            int sleepTime = 1500;
-            
-            for(int repeat = 0; repeat < 50; ++repeat)
+            using(ColourOutputManager colourOutputManager = new ColourOutputManager(new SerialCommunicator()))
             {
-                byte[] buffer = new byte[76];
+                int sleepTime = 1500;
 
-                for(int i = 0; i < 75; )
+                for(int repeat = 0; repeat < 50; ++repeat)
                 {
-                    buffer[i++] = 255;
-                    buffer[i++] = 0;
-                    buffer[i++] = 0;
-                }
+                    for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                    {
+                        colourOutputManager.SetPixel(pixelIndex, Color.Red);
+                    }
 
-                buffer[75] = (byte) (repeat + 1);
+                    colourOutputManager.FlushColours();
+                    Thread.Sleep(sleepTime);
 
-                serialCommunicator.Write(buffer);
-                serialCommunicator.Read();
-                System.Threading.Thread.Sleep(sleepTime);
-                
-                for (int i = 0; i < 75; )
-                {
-                    buffer[i++] = 0;
-                    buffer[i++] = 255;
-                    buffer[i++] = 0;
-                }
-                
-                serialCommunicator.Write(buffer);
-                serialCommunicator.Read();
-                System.Threading.Thread.Sleep(sleepTime);
-                
-                for (int i = 0; i < 75; )
-                {
-                    buffer[i++] = 0;
-                    buffer[i++] = 0;
-                    buffer[i++] = 255;
-                }
-                
-                serialCommunicator.Write(buffer);
-                serialCommunicator.Read();
-                System.Threading.Thread.Sleep(sleepTime);
+                    for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                    {
+                        colourOutputManager.SetPixel(pixelIndex, Color.Green);
+                    }
 
-                Console.WriteLine(repeat + 1);
+                    colourOutputManager.FlushColours();
+                    Thread.Sleep(sleepTime);
+
+                    for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                    {
+                        colourOutputManager.SetPixel(pixelIndex, Color.Blue);
+                    }
+
+                    colourOutputManager.FlushColours();
+                    Thread.Sleep(sleepTime);
+                }
             }
-
-            serialCommunicator.Disconnect();
         }
     }
 }

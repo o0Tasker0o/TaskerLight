@@ -1,9 +1,9 @@
-﻿using System.IO.Ports;
-using System;
+﻿using System;
+using System.IO.Ports;
 
 namespace ControlPanel
 {
-    public class SerialCommunicator
+    public class SerialCommunicator : ISerialCommunicator
     {
         private SerialPort mArduinoComPort;
 
