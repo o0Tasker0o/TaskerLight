@@ -8,9 +8,16 @@ namespace ControlPanel
         private ISerialCommunicator mSerialCommunicator;
         private Color [] mColourBuffer;
 
+        public UInt16 FadeTimeMs
+        {
+            get;
+            set;
+        }
+
         public ColourOutputManager(ISerialCommunicator serialCommunicator)
         {
             mColourBuffer = new Color[25];
+            FadeTimeMs = 500;
 
             mSerialCommunicator = serialCommunicator;
             mSerialCommunicator.Connect();
@@ -40,8 +47,10 @@ namespace ControlPanel
                 outputBuffer[(pixelIndex * 3) + 2] = mColourBuffer[pixelIndex].B;
             }
 
-            outputBuffer[75] = 244;
-            outputBuffer[76] = 1;
+            byte[] fadeTimeBytes = BitConverter.GetBytes(FadeTimeMs);
+
+            outputBuffer[75] = fadeTimeBytes[0];
+            outputBuffer[76] = fadeTimeBytes[1];
 
             mSerialCommunicator.Write(outputBuffer);
             mSerialCommunicator.Read();

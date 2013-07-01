@@ -26,8 +26,11 @@ namespace ControlPanelTests
                 }
 
                 CollectionAssert.AreEqual(new byte[77], serialCommunicator.OutputBuffer);
+                Assert.AreEqual(500, colourOutputManager.FadeTimeMs);
 
                 Assert.AreEqual(0U, serialCommunicator.ReadAmount);
+
+                colourOutputManager.FadeTimeMs = 123;
 
                 colourOutputManager.FlushColours();
 
@@ -38,8 +41,10 @@ namespace ControlPanelTests
                     Assert.AreEqual(0, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
                 }
 
-                Assert.AreEqual(244, serialCommunicator.OutputBuffer[75]);
-                Assert.AreEqual(1, serialCommunicator.OutputBuffer[76]);
+                byte [] fadeTimeBytes = BitConverter.GetBytes(colourOutputManager.FadeTimeMs);
+
+                Assert.AreEqual(fadeTimeBytes[0], serialCommunicator.OutputBuffer[75]);
+                Assert.AreEqual(fadeTimeBytes[1], serialCommunicator.OutputBuffer[76]);
                 Assert.AreEqual(1U, serialCommunicator.ReadAmount);
             }
 
