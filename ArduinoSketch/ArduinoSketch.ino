@@ -8,24 +8,21 @@
 
 Adafruit_WS2801 m_strip = Adafruit_WS2801(NUM_OF_PIXELS, DATA_PIN, CLOCK_PIN);
 
-int mFadeRate = 40;
+byte mFadeRate = 40;
 unsigned long mLastUpdate;
 
-uint32_t mSrcBuffer[NUM_OF_PIXELS];
 uint32_t mDstBuffer[NUM_OF_PIXELS];
 uint32_t mCurrentBuffer[NUM_OF_PIXELS];
 
 void setup() 
 {
   Serial.begin(115200); 
-        
-  randomSeed(1);
-  
+          
   m_strip.begin();  
   
   for(int bufferIndex = 0; bufferIndex < m_strip.numPixels(); ++bufferIndex)
   {
-    mCurrentBuffer[bufferIndex] = 16711680;
+    mCurrentBuffer[bufferIndex] = 0;
   }
     
   WriteBufferToLeds();
@@ -44,12 +41,10 @@ void loop()
       
     for(int bufferIndex = 0; bufferIndex < 75; )
     {
-      mDstBuffer[pixelsRead] = Color(serialBuffer[bufferIndex++], 
-                                     serialBuffer[bufferIndex++], 
-                                     serialBuffer[bufferIndex++]);
-                                      
-      mSrcBuffer[pixelsRead] = mCurrentBuffer[pixelsRead];
-      
+      mDstBuffer[pixelsRead] = BytesToColour(serialBuffer[bufferIndex++], 
+                                             serialBuffer[bufferIndex++], 
+                                             serialBuffer[bufferIndex++]);
+                                            
       pixelsRead++;
     }  
     
@@ -62,36 +57,21 @@ void loop()
   {
     for(int pixelIndex = 0; pixelIndex < m_strip.numPixels(); ++pixelIndex)
     {      
-      uint32_t destinationColour = mDstBuffer[pixelIndex];
-      byte destB = destinationColour & 255;
-      destinationColour >>= 8;
-      byte destG = destinationColour & 255;
-      destinationColour >>= 8;
-      byte destR = destinationColour & 255;
+      byte currentR, currentG, currentB;
+      byte destR, destG, destB;
+            
+      ColourToBytes(mCurrentBuffer[pixelIndex], &currentR, &currentG, &currentB);
+      ColourToBytes(mDstBuffer[pixelIndex], &destR, &destG, &destB);
       
-      uint32_t sourceColour = mSrcBuffer[pixelIndex];
-      byte srcB = sourceColour & 255;
-      sourceColour >>= 8;
-      byte srcG = sourceColour & 255;
-      sourceColour >>= 8;
-      byte srcR = sourceColour & 255;
-      
-      int differenceR = destR - srcR;
-      int differenceG = destG - srcG;
-      int differenceB = destB - srcB;
+      int differenceR = destR - currentR;
+      int differenceG = destG - currentG;
+      int differenceB = destB - currentB;
       
       normaliseToOne(&differenceR, &differenceG, &differenceB);
       differenceR *= mFadeRate;
       differenceG *= mFadeRate;
       differenceB *= mFadeRate;
-      
-      uint32_t currentColour = mCurrentBuffer[pixelIndex];
-      byte currentB = currentColour & 255;
-      currentColour >>= 8;
-      byte currentG = currentColour & 255;
-      currentColour >>= 8;
-      byte currentR = currentColour & 255;
-      
+
       if(currentR + differenceR >= 0 &&
          currentR + differenceR <= 255 &&
          currentG + differenceG >= 0 &&
@@ -103,7 +83,7 @@ void loop()
         currentG += differenceG;
         currentB += differenceB;
         
-        mCurrentBuffer[pixelIndex] = Color(currentR, currentG, currentB);
+        mCurrentBuffer[pixelIndex] = BytesToColour(currentR, currentG, currentB);
       }
       else
       {
@@ -151,13 +131,25 @@ void normaliseToOne(int *r, int *g, int *b)
   *b = *b / minimum;
 }
 
-uint32_t Color(byte r, byte g, byte b)
+void ColourToBytes(uint32_t colour, byte *r, byte *g, byte *b)
 {
-  uint32_t c;
-  c = r;
-  c <<= 8;
-  c |= g;
-  c <<= 8;
-  c |= b;
-  return c;
+  *b = colour & 255;
+  colour >>= 8;
+  *g = colour & 255;
+  colour >>= 8;
+  *r = colour & 255;
+}
+
+uint32_t BytesToColour(byte r, byte g, byte b)
+{
+  uint32_t returnColour;
+  
+  returnColour = r;
+  returnColour <<= 8;
+  
+  returnColour |= g;
+  returnColour <<= 8;
+  
+  returnColour |= b;
+  return returnColour;
 }
