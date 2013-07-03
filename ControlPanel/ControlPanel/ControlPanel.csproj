@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColourOutputManager.cs" />
+    <Compile Include="EffectGenerator.cs" />
     <Compile Include="ISerialCommunicator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
