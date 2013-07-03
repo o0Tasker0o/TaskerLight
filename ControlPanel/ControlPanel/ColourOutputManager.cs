@@ -31,7 +31,7 @@ namespace ControlPanel
 
         public void FlushColours()
         {
-            byte[] outputBuffer = new byte[(mColourBuffer.Length * 3) + 1];
+            byte[] outputBuffer = new byte[(mColourBuffer.Length * 3) + 2];
 
             for(int pixelIndex = 0; pixelIndex < mColourBuffer.Length; ++pixelIndex)
             {
@@ -40,7 +40,8 @@ namespace ControlPanel
                 outputBuffer[(pixelIndex * 3) + 2] = mColourBuffer[pixelIndex].B;
             }
 
-            outputBuffer[75] = 20;
+            outputBuffer[75] = 244;
+            outputBuffer[76] = 1;
 
             mSerialCommunicator.Write(outputBuffer);
             mSerialCommunicator.Read();

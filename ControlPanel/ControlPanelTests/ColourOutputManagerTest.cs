@@ -25,7 +25,7 @@ namespace ControlPanelTests
                     colourOutputManager.SetPixel(pixelIndex, Color.FromArgb((Int32) pixelIndex, 0, 0));
                 }
 
-                CollectionAssert.AreEqual(new byte[76], serialCommunicator.OutputBuffer);
+                CollectionAssert.AreEqual(new byte[77], serialCommunicator.OutputBuffer);
 
                 Assert.AreEqual(0U, serialCommunicator.ReadAmount);
 
@@ -38,7 +38,8 @@ namespace ControlPanelTests
                     Assert.AreEqual(0, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
                 }
 
-                Assert.AreEqual(20, serialCommunicator.OutputBuffer[75]);
+                Assert.AreEqual(244, serialCommunicator.OutputBuffer[75]);
+                Assert.AreEqual(1, serialCommunicator.OutputBuffer[76]);
                 Assert.AreEqual(1U, serialCommunicator.ReadAmount);
             }
 
@@ -54,7 +55,7 @@ namespace ControlPanelTests
             {
                 colourOutputManager.SetPixel(26, Color.Black);
 
-                CollectionAssert.AreEqual(new byte[76], serialCommunicator.OutputBuffer);
+                CollectionAssert.AreEqual(new byte[77], serialCommunicator.OutputBuffer);
                 Assert.AreEqual(0U, serialCommunicator.ReadAmount);
             }
         }

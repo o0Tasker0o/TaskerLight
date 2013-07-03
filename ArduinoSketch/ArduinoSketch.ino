@@ -8,11 +8,11 @@
 
 Adafruit_WS2801 m_strip = Adafruit_WS2801(NUM_OF_PIXELS, DATA_PIN, CLOCK_PIN);
 
-byte mFadeRate = 40;
-unsigned long mLastUpdate;
+long mFadeTime = 500;
+long mLastUpdate;
 
-uint32_t mDstBuffer[NUM_OF_PIXELS];
-uint32_t mCurrentBuffer[NUM_OF_PIXELS];
+long mSrcBuffer[NUM_OF_PIXELS];
+long mDstBuffer[NUM_OF_PIXELS];
 
 void setup() 
 {
@@ -22,122 +22,88 @@ void setup()
   
   for(int bufferIndex = 0; bufferIndex < m_strip.numPixels(); ++bufferIndex)
   {
-    mCurrentBuffer[bufferIndex] = 0;
+    mSrcBuffer[bufferIndex] = 0;
+    mDstBuffer[bufferIndex] = 0;
   }
     
-  WriteBufferToLeds();
+  m_strip.show();
   
   mLastUpdate = millis();
 }
 
 void loop() 
 {     
-  if(Serial.available() > 0)
-  {  
-    char serialBuffer[76];
-    Serial.readBytes(serialBuffer, 76);
-      
-    int pixelsRead = 0;
-      
-    for(int bufferIndex = 0; bufferIndex < 75; )
-    {
-      mDstBuffer[pixelsRead] = BytesToColour(serialBuffer[bufferIndex++], 
-                                             serialBuffer[bufferIndex++], 
-                                             serialBuffer[bufferIndex++]);
-                                            
-      pixelsRead++;
-    }  
-    
-    mFadeRate = serialBuffer[75];
-    
-    Serial.write(0);
-  }
-  
-  if(millis() - mLastUpdate > 25)
+  for(;;)
   {
-    for(int pixelIndex = 0; pixelIndex < m_strip.numPixels(); ++pixelIndex)
-    {      
-      byte currentR, currentG, currentB;
-      byte destR, destG, destB;
-            
-      ColourToBytes(mCurrentBuffer[pixelIndex], &currentR, &currentG, &currentB);
-      ColourToBytes(mDstBuffer[pixelIndex], &destR, &destG, &destB);
-      
-      int differenceR = destR - currentR;
-      int differenceG = destG - currentG;
-      int differenceB = destB - currentB;
-      
-      normaliseToOne(&differenceR, &differenceG, &differenceB);
-      differenceR *= mFadeRate;
-      differenceG *= mFadeRate;
-      differenceB *= mFadeRate;
-
-      if(currentR + differenceR >= 0 &&
-         currentR + differenceR <= 255 &&
-         currentG + differenceG >= 0 &&
-         currentG + differenceG <= 255 &&
-         currentB + differenceB >= 0 &&
-         currentB + differenceB <= 255)
-      {
-        currentR += differenceR;
-        currentG += differenceG;
-        currentB += differenceB;
+    if(Serial.available() > 0)
+    {  
+      char serialBuffer[77];
+      Serial.readBytes(serialBuffer, 77);
         
-        mCurrentBuffer[pixelIndex] = BytesToColour(currentR, currentG, currentB);
-      }
-      else
+      int pixelsRead = 0;
+        
+      for(int bufferIndex = 0; bufferIndex < 75; )
       {
-        mCurrentBuffer[pixelIndex] = mDstBuffer[pixelIndex];
-      }
+        mSrcBuffer[pixelsRead] = mDstBuffer[pixelsRead];
+        mDstBuffer[pixelsRead] = BytesToColour(serialBuffer[bufferIndex++], 
+                                               serialBuffer[bufferIndex++], 
+                                               serialBuffer[bufferIndex++]);
+                                             
+        pixelsRead++;
+      }  
+      
+      mFadeTime = word(serialBuffer[76], serialBuffer[75]);
+      
+      Serial.write(0);
+      mLastUpdate = millis();
     }
     
-    WriteBufferToLeds();
-    mLastUpdate = millis();
-  }
-}
-
-void WriteBufferToLeds()
-{
-  for(int pixelIndex = 0; pixelIndex < m_strip.numPixels(); ++pixelIndex)
-  {                           
-    m_strip.setPixelColor(pixelIndex, 
-                          mCurrentBuffer[pixelIndex]); 
-  } 
-  
-  m_strip.show();
-}
-
-void normaliseToOne(int *r, int *g, int *b)
-{
-  int minimum = 256;
-  
-  if(*r > 0 && *r < minimum)
-  {
-    minimum = *r;
-  }
-  
-  if(*g > 0 && *g < minimum)
-  {
-    minimum = *g;
-  }
-  
-  if(*b > 0 && *b < minimum)
-  {
-    minimum = *b;
-  }
+    long timeSinceLastUpdate = millis() - mLastUpdate;
     
-  *r = *r / minimum;
-  *g = *g / minimum;
-  *b = *b / minimum;
-}
-
-void ColourToBytes(uint32_t colour, byte *r, byte *g, byte *b)
-{
-  *b = colour & 255;
-  colour >>= 8;
-  *g = colour & 255;
-  colour >>= 8;
-  *r = colour & 255;
+    if(timeSinceLastUpdate > 25)
+    {
+      long srcColour, destColour, finalColour;
+      long srcR, srcG, srcB;
+      long destR, destG, destB;
+      long finalR, finalG, finalB;
+            
+      for(int pixelIndex = 0; pixelIndex < m_strip.numPixels(); ++pixelIndex)
+      {   
+        if(timeSinceLastUpdate >= mFadeTime)
+        {
+          m_strip.setPixelColor(pixelIndex,             
+                                mDstBuffer[pixelIndex]);
+        }
+        else
+        {
+          srcColour = mSrcBuffer[pixelIndex];     
+          srcB = srcColour & 255;
+          srcColour >>= 8;
+          srcG = srcColour & 255;
+          srcColour >>= 8;
+          srcR = srcColour & 255;
+          
+          destColour = mDstBuffer[pixelIndex]; 
+          destB = destColour & 255;
+          destColour >>= 8;
+          destG = destColour & 255;
+          destColour >>= 8;
+          destR = destColour & 255;
+          
+          finalR = srcR + (((destR - srcR) * timeSinceLastUpdate) / mFadeTime);
+          finalG = srcG + (((destG - srcG) * timeSinceLastUpdate) / mFadeTime);
+          finalB = srcB + (((destB - srcB) * timeSinceLastUpdate) / mFadeTime);
+                    
+          finalColour = BytesToColour(finalR & 255, finalG & 255, finalB & 255);
+          
+          m_strip.setPixelColor(pixelIndex,             
+                                finalColour); 
+        }
+      }
+      
+      m_strip.show();
+    }
+  }
 }
 
 uint32_t BytesToColour(byte r, byte g, byte b)

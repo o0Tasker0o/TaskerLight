@@ -27,7 +27,7 @@ namespace ControlPanelTests
         {
             IsConnected = false;
 
-            OutputBuffer = new byte[76];
+            OutputBuffer = new byte[77];
         }
         
         public void Connect()
