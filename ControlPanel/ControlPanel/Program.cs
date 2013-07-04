@@ -10,34 +10,15 @@ namespace ControlPanel
         {
             using(ColourOutputManager colourOutputManager = new ColourOutputManager(new SerialCommunicator()))
             {
-                int sleepTime = 1500;
+                colourOutputManager.FadeTimeMs = 1000;
 
-                for(int repeat = 0; repeat < 50; ++repeat)
-                {
-                    for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
-                    {
-                        colourOutputManager.SetPixel(pixelIndex, Color.Red);
-                    }
+                WallpaperEffectGenerator wallpaperEffectGenerator = new WallpaperEffectGenerator(colourOutputManager);
 
-                    colourOutputManager.FlushColours();
-                    Thread.Sleep(sleepTime);
+                wallpaperEffectGenerator.Start();
 
-                    for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
-                    {
-                        colourOutputManager.SetPixel(pixelIndex, Color.Green);
-                    }
+                Console.ReadLine();
 
-                    colourOutputManager.FlushColours();
-                    Thread.Sleep(sleepTime);
-
-                    for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
-                    {
-                        colourOutputManager.SetPixel(pixelIndex, Color.Blue);
-                    }
-
-                    colourOutputManager.FlushColours();
-                    Thread.Sleep(sleepTime);
-                }
+                wallpaperEffectGenerator.Stop();
             }
         }
     }

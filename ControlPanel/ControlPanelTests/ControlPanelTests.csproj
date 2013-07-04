@@ -54,6 +54,7 @@
     <Compile Include="ColourOutputManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSerialCommunicator.cs" />
+    <Compile Include="WallpaperEffectGeneratorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ControlPanel\ControlPanel.csproj">

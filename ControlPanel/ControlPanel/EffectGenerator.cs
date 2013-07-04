@@ -2,7 +2,7 @@
 
 namespace ControlPanel
 {
-    internal abstract class EffectGenerator
+    public abstract class EffectGenerator
     {
         private Thread mTickThread;
         protected bool mRunning;
@@ -12,8 +12,8 @@ namespace ControlPanel
         {
             mOutputManager = outputManager;
         }
-        
-        internal void Start()
+
+        public void Start()
         {
             if(!mRunning)
             {
@@ -23,7 +23,7 @@ namespace ControlPanel
             }
         }
 
-        internal void Stop()
+        public void Stop()
         {
             if (mRunning)
             {
