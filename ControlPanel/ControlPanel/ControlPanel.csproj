@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveScriptEffectGenerator.cs" />
     <Compile Include="ActiveScriptLoader.cs" />
     <Compile Include="ColourOutputManager.cs" />
     <Compile Include="EffectGenerator.cs" />

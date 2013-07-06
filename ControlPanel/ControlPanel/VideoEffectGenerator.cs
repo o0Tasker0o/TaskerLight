@@ -70,7 +70,7 @@ namespace ControlPanel
 
                 mOutputManager.FlushColours();
 
-                Thread.Sleep(100);
+                Thread.Sleep(mOutputManager.FadeTimeMs);
             }
 
             StopCapturing();

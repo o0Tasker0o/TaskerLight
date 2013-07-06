@@ -91,7 +91,7 @@ namespace ControlPanel
 
                 mOutputManager.FlushColours();
 
-                Thread.Sleep(1000);
+                Thread.Sleep(mOutputManager.FadeTimeMs);
             }
         } 
     }
