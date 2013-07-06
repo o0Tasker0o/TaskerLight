@@ -39,11 +39,16 @@ namespace ControlPanel
 
             scriptLoader.LoadAssembly(Path.Combine(CurrentScriptDirectory.FullName, "script.dll"));
             
+            long initialMS = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
             while (mRunning)
             {
+                long millisecondDifference = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                millisecondDifference -= initialMS;
+
                 Color[] outputPixelColours = (Color []) scriptLoader.ExecuteStaticMethod("TaskerLightScript",
                                                                                          "TickLighting",
-                                                                                         null);
+                                                                                         new object[] { millisecondDifference });
 
                 if(null != outputPixelColours)
                 {

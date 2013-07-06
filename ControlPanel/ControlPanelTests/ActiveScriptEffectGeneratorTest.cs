@@ -16,18 +16,16 @@ namespace ControlPanelTests
                                            "class TaskerLightScript" +
                                            "{" +
                                            "    private static Color[] mLEDColors = new Color[25];" +
-                                           "    private static bool mShowRed = true;" +
-                                           "    public static Color [] TickLighting()" +
+                                           "    public static Color [] TickLighting(long elapsedMS)" +
                                            "    {" +
                                            "        for(int ledIndex = 0; ledIndex < 25; ++ledIndex)" +
                                            "        {" +
-                                           "            mLEDColors[ledIndex] = mShowRed ? Color.Red : Color.Blue;" +
+                                           "            mLEDColors[ledIndex] = Color.FromArgb((int) (elapsedMS % 255), 0, 0);" +
                                            "        }" +
-                                           "        mShowRed = !mShowRed;" +
                                            "        return mLEDColors;" +
                                            "    }" +
                                            "};";
-
+        
         [TestCleanup()]
         public void Cleanup()
         {
@@ -99,7 +97,7 @@ namespace ControlPanelTests
         }
 
         [TestMethod()]
-        public void ActiveScriptEffectGeneratorRedBlueScriptTest()
+        public void ActiveScriptEffectGeneratorWorkingScriptTest()
         {
             TestSerialCommunicator testSerialCommunicator = new TestSerialCommunicator();
 
@@ -119,7 +117,7 @@ namespace ControlPanelTests
 
                 for(int bufferIndex = 0; bufferIndex < 75;)
                 {
-                    Assert.AreEqual(255, testSerialCommunicator.OutputBuffer[bufferIndex++]);
+                    Assert.IsTrue(testSerialCommunicator.OutputBuffer[bufferIndex++] < 50);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                 }
@@ -131,9 +129,9 @@ namespace ControlPanelTests
 
                 for (int bufferIndex = 0; bufferIndex < 75; )
                 {
+                    Assert.IsTrue(testSerialCommunicator.OutputBuffer[bufferIndex++] > 200);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
-                    Assert.AreEqual(255, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                 }
 
                 Assert.AreEqual(fadeBytes[0], testSerialCommunicator.OutputBuffer[75]);
