@@ -29,7 +29,7 @@ namespace ControlPanel
 
         protected override void ThreadTick()
         {
-            mOutputManager.FadeTimeMs = 90;
+            mOutputManager.FadeTimeMs = 110;
 
             InitialiseScreenCapture();
             StartCapturing();
