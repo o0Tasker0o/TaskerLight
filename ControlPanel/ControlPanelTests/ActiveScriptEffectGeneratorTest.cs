@@ -47,14 +47,14 @@ namespace ControlPanelTests
 
                 Thread.Sleep(150);
 
-                byte[] fadeBytes = BitConverter.GetBytes((UInt16)200);
-
                 for (int bufferIndex = 0; bufferIndex < 75; )
                 {
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                 }
+
+                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 180);
 
                 Assert.AreEqual(fadeBytes[0], testSerialCommunicator.OutputBuffer[75]);
                 Assert.AreEqual(fadeBytes[1], testSerialCommunicator.OutputBuffer[76]);
@@ -79,15 +79,15 @@ namespace ControlPanelTests
                 activeScriptEffectGenerator.Start();
 
                 Thread.Sleep(150);
-
-                byte[] fadeBytes = BitConverter.GetBytes((UInt16)200);
-
+                
                 for (int bufferIndex = 0; bufferIndex < 75; )
                 {
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                 }
+
+                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 180);
 
                 Assert.AreEqual(fadeBytes[0], testSerialCommunicator.OutputBuffer[75]);
                 Assert.AreEqual(fadeBytes[1], testSerialCommunicator.OutputBuffer[76]);
@@ -114,14 +114,14 @@ namespace ControlPanelTests
 
                 Thread.Sleep(150);
 
-                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 200);
-
                 for(int bufferIndex = 0; bufferIndex < 75;)
                 {
                     Assert.IsTrue(testSerialCommunicator.OutputBuffer[bufferIndex++] < 50);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                 }
+
+                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 180);
 
                 Assert.AreEqual(fadeBytes[0], testSerialCommunicator.OutputBuffer[75]);
                 Assert.AreEqual(fadeBytes[1], testSerialCommunicator.OutputBuffer[76]);
