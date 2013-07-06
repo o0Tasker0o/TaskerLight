@@ -25,7 +25,7 @@ namespace ControlPanel
 
         protected override void ThreadTick()
         {
-            mOutputManager.FadeTimeMs = 200;
+            mOutputManager.FadeTimeMs = 180;
 
             AppDomainSetup appSetup = new AppDomainSetup();
             appSetup.ApplicationBase = Directory.GetCurrentDirectory();
