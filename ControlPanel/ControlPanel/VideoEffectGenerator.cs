@@ -25,11 +25,12 @@ namespace ControlPanel
         
         public VideoEffectGenerator(ColourOutputManager colourOutputManager) : base(colourOutputManager)
         {
-            colourOutputManager.FadeTimeMs = 90;
         }
 
         protected override void ThreadTick()
         {
+            mOutputManager.FadeTimeMs = 90;
+
             InitialiseScreenCapture();
             StartCapturing();
 

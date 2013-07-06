@@ -21,11 +21,12 @@ namespace ControlPanel
             : base(colourOutputManager)
         {
             CurrentScriptDirectory = new DirectoryInfo("./");
-            colourOutputManager.FadeTimeMs = 200;
         }
 
         protected override void ThreadTick()
         {
+            mOutputManager.FadeTimeMs = 200;
+
             AppDomainSetup appSetup = new AppDomainSetup();
             appSetup.ApplicationBase = Directory.GetCurrentDirectory();
 

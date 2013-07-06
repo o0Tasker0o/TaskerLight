@@ -21,11 +21,12 @@ namespace ControlPanel
 
         public WallpaperEffectGenerator(ColourOutputManager colourOutputManager) : base(colourOutputManager)
         {
-            colourOutputManager.FadeTimeMs = 1000;
         }
 
         protected override void ThreadTick()
         {
+            mOutputManager.FadeTimeMs = 1000;
+
             while(mRunning)
             {
                 String wallpaperFilename = new String(' ', 256);

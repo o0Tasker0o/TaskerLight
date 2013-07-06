@@ -22,7 +22,7 @@ namespace ControlPanelTests
 
                 wallpaperGenerator.Start();
 
-                Thread.Sleep(50);
+                Thread.Sleep(100);
 
                 byte[] fadeBytes = BitConverter.GetBytes((UInt16) 1000);
 
