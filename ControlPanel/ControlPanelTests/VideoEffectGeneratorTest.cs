@@ -1,22 +1,21 @@
-﻿using ControlPanel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Threading;
+using ControlPanel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ControlPanelTests
 {
     [TestClass()]
-    public class WallpaperEffectGeneratorTest
+    public class VideoEffectGeneratorTest
     {
         [TestMethod()]
-        [DeploymentItem("ControlPanel.exe")]
-        public void WallpaperEffectGeneratorConstructorTest()
+        public void VideoEffectGeneratorConstructorTest()
         {
             TestSerialCommunicator testSerialCommunicator = new TestSerialCommunicator();
 
             using(ColourOutputManager colourOutputManager = new ColourOutputManager(testSerialCommunicator))
             {
-                WallpaperEffectGenerator wallpaperGenerator = new WallpaperEffectGenerator(colourOutputManager);
+                VideoEffectGenerator wallpaperGenerator = new VideoEffectGenerator(colourOutputManager);
 
                 CollectionAssert.AreEqual(new byte[77], testSerialCommunicator.OutputBuffer);
 
@@ -24,7 +23,7 @@ namespace ControlPanelTests
 
                 Thread.Sleep(50);
 
-                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 1000);
+                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 90);
 
                 Assert.AreEqual(fadeBytes[0], testSerialCommunicator.OutputBuffer[75]);
                 Assert.AreEqual(fadeBytes[1], testSerialCommunicator.OutputBuffer[76]);

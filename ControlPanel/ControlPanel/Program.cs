@@ -10,15 +10,13 @@ namespace ControlPanel
         {
             using(ColourOutputManager colourOutputManager = new ColourOutputManager(new SerialCommunicator()))
             {
-                colourOutputManager.FadeTimeMs = 1000;
+                VideoEffectGenerator videoEffectGenerator = new VideoEffectGenerator(colourOutputManager);
 
-                WallpaperEffectGenerator wallpaperEffectGenerator = new WallpaperEffectGenerator(colourOutputManager);
-
-                wallpaperEffectGenerator.Start();
+                videoEffectGenerator.Start();
 
                 Console.ReadLine();
 
-                wallpaperEffectGenerator.Stop();
+                videoEffectGenerator.Stop();
             }
         }
     }
