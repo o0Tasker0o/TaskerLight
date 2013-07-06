@@ -103,7 +103,8 @@ namespace ControlPanelTests
 
             using (ColourOutputManager colourOutputManager = new ColourOutputManager(testSerialCommunicator))
             {
-                CompileScript(cTestScript);
+                ActiveScriptCompiler.CompileScript(cTestScript, 
+                                                   new DirectoryInfo(Directory.GetCurrentDirectory()));
 
                 ActiveScriptEffectGenerator activeScriptEffectGenerator = new ActiveScriptEffectGenerator(colourOutputManager);
 
@@ -138,22 +139,6 @@ namespace ControlPanelTests
                 Assert.AreEqual(fadeBytes[1], testSerialCommunicator.OutputBuffer[76]);
 
                 activeScriptEffectGenerator.Stop();
-            }
-        }
-
-        private void CompileScript(String sourceCode)
-        {
-            using (CSharpCodeProvider compiler = new CSharpCodeProvider())
-            {
-                // Create some parameters for the compiler
-                CompilerParameters compilerParameters = new CompilerParameters();
-                compilerParameters.OutputAssembly = "./script.dll";
-                compilerParameters.GenerateExecutable = false;
-                compilerParameters.GenerateInMemory = false;
-
-                compilerParameters.ReferencedAssemblies.Add("System.Drawing.dll");
-
-                CompilerResults results = compiler.CompileAssemblyFromSource(compilerParameters, sourceCode);
             }
         }
     }

@@ -11,8 +11,16 @@ namespace ControlPanelTests
     [TestClass()]
     public class ActiveScriptLoaderTest
     {
-        const String mScriptName = "testScript";
         AppDomain mScriptAppDomain;
+
+        private const String cScriptSource = "using System;" +
+                                             "class TestScript" +
+                                             "{" +
+                                             "    public static Int32 TestFunction()" +
+                                             "    {" +
+                                             "        return 0;" +
+                                             "    }" +
+                                             "}";
 
         [TestInitialize()]
         public void Initialize()
@@ -70,20 +78,11 @@ namespace ControlPanelTests
         [TestMethod()]
         public void ActiveScriptLoaderExecuteStaticMethodWithBadParametersTest()
         {
-            String scriptSource = "using System;" +
-                                  "class TestScript" +
-                                  "{" +
-                                  "    public static Int32 TestFunction()" +
-                                  "    {" +
-                                  "        return 0;" +
-                                  "    }" +
-                                  "}";
-
-            CompileScript(scriptSource);
+            ActiveScriptCompiler.CompileScript(cScriptSource, new DirectoryInfo("./"));
 
             ActiveScriptLoader scriptLoader = CreateActiveScriptLoader();
 
-            scriptLoader.LoadAssembly("./" + mScriptName + ".dll");
+            scriptLoader.LoadAssembly("./script.dll");
 
             Assert.IsNull(scriptLoader.ExecuteStaticMethod("BADTYPENAME",
                                                            "TestFunction",
@@ -101,20 +100,11 @@ namespace ControlPanelTests
         [TestMethod()]
         public void ActiveScriptLoaderExecuteStaticMethodNoParametersTest()
         {
-            String scriptSource = "using System;" +
-                                  "class TestScript" +
-                                  "{" +
-                                  "    public static Int32 TestFunction()" +
-                                  "    {" +
-                                  "        return 0;" +
-                                  "    }" +
-                                  "}";
-
-            CompileScript(scriptSource);
+            ActiveScriptCompiler.CompileScript(cScriptSource, new DirectoryInfo("./"));
 
             ActiveScriptLoader scriptLoader = CreateActiveScriptLoader();
 
-            scriptLoader.LoadAssembly("./" + mScriptName + ".dll");
+            scriptLoader.LoadAssembly("./script.dll");
 
             Int32 result = (Int32) scriptLoader.ExecuteStaticMethod("TestScript",
                                                                     "TestFunction",
@@ -135,11 +125,11 @@ namespace ControlPanelTests
                                   "    }" +
                                   "}";
 
-            CompileScript(scriptSource);
+            ActiveScriptCompiler.CompileScript(scriptSource, new DirectoryInfo("./"));
 
             ActiveScriptLoader scriptLoader = CreateActiveScriptLoader();
 
-            scriptLoader.LoadAssembly("./" + mScriptName + ".dll");
+            scriptLoader.LoadAssembly("./script.dll");
 
             Int32 inputParameter = 123;
             Object[] parameterArray = new Object[] { inputParameter };
@@ -155,22 +145,6 @@ namespace ControlPanelTests
             return (ActiveScriptLoader)mScriptAppDomain.CreateInstanceAndUnwrap(
                                                     typeof(ActiveScriptLoader).Assembly.FullName,
                                                     typeof(ActiveScriptLoader).FullName);
-        }
-
-        private void CompileScript(String sourceCode)
-        {
-            using (CSharpCodeProvider compiler = new CSharpCodeProvider())
-            {
-                // Create some parameters for the compiler
-                CompilerParameters compilerParameters = new CompilerParameters();
-                compilerParameters.OutputAssembly = "./" + mScriptName + ".dll";
-                compilerParameters.GenerateExecutable = false;
-                compilerParameters.GenerateInMemory = false;
-
-                compilerParameters.ReferencedAssemblies.Add("System.Drawing.dll");
-                
-                CompilerResults results = compiler.CompileAssemblyFromSource(compilerParameters, sourceCode);
-            }
         }
     }
 }
