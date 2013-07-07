@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlPanel));
             this.wallpaperRadioButton = new System.Windows.Forms.RadioButton();
             this.activeScriptRadioButton = new System.Windows.Forms.RadioButton();
             this.videoRadioButton = new System.Windows.Forms.RadioButton();
@@ -37,7 +38,7 @@
             // 
             this.wallpaperRadioButton.AutoSize = true;
             this.wallpaperRadioButton.Checked = true;
-            this.wallpaperRadioButton.Location = new System.Drawing.Point(12, 12);
+            this.wallpaperRadioButton.Location = new System.Drawing.Point(12, 35);
             this.wallpaperRadioButton.Name = "wallpaperRadioButton";
             this.wallpaperRadioButton.Size = new System.Drawing.Size(73, 17);
             this.wallpaperRadioButton.TabIndex = 0;
@@ -49,7 +50,7 @@
             // activeScriptRadioButton
             // 
             this.activeScriptRadioButton.AutoSize = true;
-            this.activeScriptRadioButton.Location = new System.Drawing.Point(12, 35);
+            this.activeScriptRadioButton.Location = new System.Drawing.Point(12, 12);
             this.activeScriptRadioButton.Name = "activeScriptRadioButton";
             this.activeScriptRadioButton.Size = new System.Drawing.Size(85, 17);
             this.activeScriptRadioButton.TabIndex = 1;
@@ -76,8 +77,9 @@
             this.Controls.Add(this.videoRadioButton);
             this.Controls.Add(this.activeScriptRadioButton);
             this.Controls.Add(this.wallpaperRadioButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ControlPanel";
-            this.Text = "TaskerLight";
+            this.Text = "TaskerLight Control Panel";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlPanel_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
