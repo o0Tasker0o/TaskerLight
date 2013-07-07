@@ -130,7 +130,7 @@ namespace ControlPanelTests
 
                 for (int bufferIndex = 0; bufferIndex < 75; )
                 {
-                    Assert.IsTrue(testSerialCommunicator.OutputBuffer[bufferIndex++] > 200);
+                    Assert.IsTrue(testSerialCommunicator.OutputBuffer[bufferIndex++] > 150);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                     Assert.AreEqual(0, testSerialCommunicator.OutputBuffer[bufferIndex++]);
                 }
