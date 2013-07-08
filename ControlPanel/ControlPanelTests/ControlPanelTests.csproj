@@ -51,6 +51,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveScriptBrowserTest.cs" />
     <Compile Include="ActiveScriptCompilerTest.cs" />
     <Compile Include="ActiveScriptEffectGeneratorTest.cs" />
     <Compile Include="ActiveScriptLoaderTest.cs" />
