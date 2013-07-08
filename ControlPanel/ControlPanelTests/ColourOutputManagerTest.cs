@@ -2,6 +2,7 @@
 using System.Drawing;
 using ControlPanel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace ControlPanelTests
 {
@@ -22,7 +23,9 @@ namespace ControlPanelTests
 
                 for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
-                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb((Int32) pixelIndex, 0, 0));
+                    Color inputColour = Color.FromArgb((Int32) pixelIndex, 0, 0);
+                    colourOutputManager.SetPixel(pixelIndex, inputColour);
+                    Assert.AreEqual(inputColour, colourOutputManager.GetPixel(pixelIndex));
                 }
 
                 CollectionAssert.AreEqual(new byte[77], serialCommunicator.OutputBuffer);

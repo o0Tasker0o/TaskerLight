@@ -26,6 +26,8 @@ namespace ControlPanelUI
             mSerialCommunicator = new SerialCommunicator();
             mColourOutputManager = new ColourOutputManager(mSerialCommunicator);
 
+            ledPreview1.ColourOutputManager = mColourOutputManager;
+
             mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager);
             mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
             mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager);
@@ -33,31 +35,47 @@ namespace ControlPanelUI
             mWallpaperEffectGenerator.Start();
         }
 
-        private void modeRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
+        private void ControlPanel_FormClosing(object sender, FormClosingEventArgs e)
+        {            
             mWallpaperEffectGenerator.Stop();
             mActiveScriptEffectGenerator.Stop();
             mVideoEffectGenerator.Stop();
+        }
 
-            if(wallpaperRadioButton.Checked)
-            {
-                mWallpaperEffectGenerator.Start();
-            }
-            else if(activeScriptRadioButton.Checked)
+        private void activeScriptRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (activeScriptRadioButton.Checked)
             {
                 mActiveScriptEffectGenerator.Start();
             }
-            else if(videoRadioButton.Checked)
+            else
             {
-                mVideoEffectGenerator.Start();
+                mActiveScriptEffectGenerator.Stop();
             }
         }
 
-        private void ControlPanel_FormClosing(object sender, FormClosingEventArgs e)
+        private void wallpaperRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            mWallpaperEffectGenerator.Stop();
-            mActiveScriptEffectGenerator.Stop();
-            mVideoEffectGenerator.Stop();
+            if (wallpaperRadioButton.Checked)
+            {
+                mWallpaperEffectGenerator.Start();
+            }
+            else
+            {
+                mWallpaperEffectGenerator.Stop();
+            }
+        }
+
+        private void videoRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (videoRadioButton.Checked)
+            {
+                mVideoEffectGenerator.Start();
+            }
+            else
+            {
+                mVideoEffectGenerator.Stop();
+            }
         }
     }
 }

@@ -28,6 +28,11 @@ namespace ControlPanel
             mSerialCommunicator.Disconnect();
         }
 
+        public Color GetPixel(UInt32 pixelIndex)
+        {
+            return mColourBuffer[pixelIndex];
+        }
+
         public void SetPixel(UInt32 pixelIndex, Color pixelColour)
         {
             if(pixelIndex < mColourBuffer.Length)
