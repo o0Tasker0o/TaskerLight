@@ -33,6 +33,7 @@
             this.activeScriptRadioButton = new System.Windows.Forms.RadioButton();
             this.videoRadioButton = new System.Windows.Forms.RadioButton();
             this.ledPreview1 = new ControlPanelUI.LedPreview();
+            this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.SuspendLayout();
             // 
             // wallpaperRadioButton
@@ -72,16 +73,26 @@
             // 
             // ledPreview1
             // 
-            this.ledPreview1.Location = new System.Drawing.Point(12, 12);
+            this.ledPreview1.Location = new System.Drawing.Point(130, 12);
             this.ledPreview1.Name = "ledPreview1";
             this.ledPreview1.Size = new System.Drawing.Size(150, 150);
             this.ledPreview1.TabIndex = 3;
+            // 
+            // activeScriptBrowserControl1
+            // 
+            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(12, 140);
+            this.activeScriptBrowserControl1.Name = "activeScriptBrowserControl1";
+            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(150, 117);
+            this.activeScriptBrowserControl1.TabIndex = 4;
+            this.activeScriptBrowserControl1.Visible = false;
+            this.activeScriptBrowserControl1.ScriptSelectionChanged += new ControlPanelUI.ActiveScriptBrowserControl.ScriptSelectionChangedEventHandler(this.activeScriptBrowserControl1_ScriptSelectionChanged);
             // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 269);
+            this.Controls.Add(this.activeScriptBrowserControl1);
             this.Controls.Add(this.ledPreview1);
             this.Controls.Add(this.videoRadioButton);
             this.Controls.Add(this.activeScriptRadioButton);
@@ -101,6 +112,7 @@
         private System.Windows.Forms.RadioButton activeScriptRadioButton;
         private System.Windows.Forms.RadioButton videoRadioButton;
         private LedPreview ledPreview1;
+        private ActiveScriptBrowserControl activeScriptBrowserControl1;
     }
 }
 

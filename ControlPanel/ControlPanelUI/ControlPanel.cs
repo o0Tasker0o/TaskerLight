@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ControlPanel;
+using System.IO;
 
 namespace ControlPanelUI
 {
@@ -46,10 +47,12 @@ namespace ControlPanelUI
         {
             if (activeScriptRadioButton.Checked)
             {
+                activeScriptBrowserControl1.Visible = true;
                 mActiveScriptEffectGenerator.Start();
             }
             else
             {
+                activeScriptBrowserControl1.Visible = false;
                 mActiveScriptEffectGenerator.Stop();
             }
         }
@@ -76,6 +79,13 @@ namespace ControlPanelUI
             {
                 mVideoEffectGenerator.Stop();
             }
+        }
+
+        private void activeScriptBrowserControl1_ScriptSelectionChanged(DirectoryInfo scriptDirectory)
+        {
+            mActiveScriptEffectGenerator.Stop();
+            mActiveScriptEffectGenerator.CurrentScriptDirectory = scriptDirectory;
+            mActiveScriptEffectGenerator.Start();
         }
     }
 }
