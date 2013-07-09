@@ -32,15 +32,17 @@
             this.wallpaperRadioButton = new System.Windows.Forms.RadioButton();
             this.activeScriptRadioButton = new System.Windows.Forms.RadioButton();
             this.videoRadioButton = new System.Windows.Forms.RadioButton();
-            this.ledPreview1 = new ControlPanelUI.LedPreview();
+            this.staticColourRadioButton = new System.Windows.Forms.RadioButton();
+            this.hsvPicker1 = new CSharpGUIElements.Colour_Pickers.HSVPicker();
             this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
+            this.ledPreview1 = new ControlPanelUI.LedPreview();
             this.SuspendLayout();
             // 
             // wallpaperRadioButton
             // 
             this.wallpaperRadioButton.AutoSize = true;
             this.wallpaperRadioButton.Checked = true;
-            this.wallpaperRadioButton.Location = new System.Drawing.Point(195, 217);
+            this.wallpaperRadioButton.Location = new System.Drawing.Point(249, 276);
             this.wallpaperRadioButton.Name = "wallpaperRadioButton";
             this.wallpaperRadioButton.Size = new System.Drawing.Size(73, 17);
             this.wallpaperRadioButton.TabIndex = 0;
@@ -52,7 +54,7 @@
             // activeScriptRadioButton
             // 
             this.activeScriptRadioButton.AutoSize = true;
-            this.activeScriptRadioButton.Location = new System.Drawing.Point(195, 194);
+            this.activeScriptRadioButton.Location = new System.Drawing.Point(249, 253);
             this.activeScriptRadioButton.Name = "activeScriptRadioButton";
             this.activeScriptRadioButton.Size = new System.Drawing.Size(85, 17);
             this.activeScriptRadioButton.TabIndex = 1;
@@ -63,7 +65,7 @@
             // videoRadioButton
             // 
             this.videoRadioButton.AutoSize = true;
-            this.videoRadioButton.Location = new System.Drawing.Point(195, 240);
+            this.videoRadioButton.Location = new System.Drawing.Point(249, 299);
             this.videoRadioButton.Name = "videoRadioButton";
             this.videoRadioButton.Size = new System.Drawing.Size(52, 17);
             this.videoRadioButton.TabIndex = 2;
@@ -71,32 +73,60 @@
             this.videoRadioButton.UseVisualStyleBackColor = true;
             this.videoRadioButton.CheckedChanged += new System.EventHandler(this.videoRadioButton_CheckedChanged);
             // 
-            // ledPreview1
+            // staticColourRadioButton
             // 
-            this.ledPreview1.Location = new System.Drawing.Point(130, 12);
-            this.ledPreview1.Name = "ledPreview1";
-            this.ledPreview1.Size = new System.Drawing.Size(150, 150);
-            this.ledPreview1.TabIndex = 3;
+            this.staticColourRadioButton.AutoSize = true;
+            this.staticColourRadioButton.Location = new System.Drawing.Point(249, 230);
+            this.staticColourRadioButton.Name = "staticColourRadioButton";
+            this.staticColourRadioButton.Size = new System.Drawing.Size(90, 17);
+            this.staticColourRadioButton.TabIndex = 6;
+            this.staticColourRadioButton.TabStop = true;
+            this.staticColourRadioButton.Text = "Static Colours";
+            this.staticColourRadioButton.UseVisualStyleBackColor = true;
+            this.staticColourRadioButton.CheckedChanged += new System.EventHandler(this.staticColourRadioButton_CheckedChanged);
+            // 
+            // hsvPicker1
+            // 
+            this.hsvPicker1.HueBarWidth = 30;
+            this.hsvPicker1.Location = new System.Drawing.Point(12, 141);
+            this.hsvPicker1.Name = "hsvPicker1";
+            this.hsvPicker1.Size = new System.Drawing.Size(210, 176);
+            this.hsvPicker1.TabIndex = 7;
+            this.hsvPicker1.Visible = false;
+            this.hsvPicker1.ColourChanged += new System.EventHandler(this.hsvPicker1_ColourChanged);
             // 
             // activeScriptBrowserControl1
             // 
-            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(12, 140);
+            this.activeScriptBrowserControl1.AutoScroll = true;
+            this.activeScriptBrowserControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(12, 142);
             this.activeScriptBrowserControl1.Name = "activeScriptBrowserControl1";
-            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(150, 117);
+            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(210, 175);
             this.activeScriptBrowserControl1.TabIndex = 4;
             this.activeScriptBrowserControl1.Visible = false;
             this.activeScriptBrowserControl1.ScriptSelectionChanged += new ControlPanelUI.ActiveScriptBrowserControl.ScriptSelectionChangedEventHandler(this.activeScriptBrowserControl1_ScriptSelectionChanged);
+            // 
+            // ledPreview1
+            // 
+            this.ledPreview1.AllowInput = false;
+            this.ledPreview1.InputColour = System.Drawing.Color.Empty;
+            this.ledPreview1.Location = new System.Drawing.Point(135, 12);
+            this.ledPreview1.Name = "ledPreview1";
+            this.ledPreview1.Size = new System.Drawing.Size(90, 70);
+            this.ledPreview1.TabIndex = 5;
             // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 269);
-            this.Controls.Add(this.activeScriptBrowserControl1);
+            this.ClientSize = new System.Drawing.Size(345, 329);
+            this.Controls.Add(this.hsvPicker1);
+            this.Controls.Add(this.staticColourRadioButton);
             this.Controls.Add(this.ledPreview1);
             this.Controls.Add(this.videoRadioButton);
             this.Controls.Add(this.activeScriptRadioButton);
             this.Controls.Add(this.wallpaperRadioButton);
+            this.Controls.Add(this.activeScriptBrowserControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ControlPanel";
             this.Text = "TaskerLight Control Panel";
@@ -111,8 +141,10 @@
         private System.Windows.Forms.RadioButton wallpaperRadioButton;
         private System.Windows.Forms.RadioButton activeScriptRadioButton;
         private System.Windows.Forms.RadioButton videoRadioButton;
-        private LedPreview ledPreview1;
         private ActiveScriptBrowserControl activeScriptBrowserControl1;
+        private LedPreview ledPreview1;
+        private System.Windows.Forms.RadioButton staticColourRadioButton;
+        private CSharpGUIElements.Colour_Pickers.HSVPicker hsvPicker1;
     }
 }
 

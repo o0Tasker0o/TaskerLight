@@ -42,6 +42,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.DoubleBuffered = true;
             this.Name = "LedPreview";
+            this.Size = new System.Drawing.Size(90, 70);
             this.ResumeLayout(false);
 
         }

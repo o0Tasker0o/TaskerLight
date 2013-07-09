@@ -87,5 +87,16 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator.CurrentScriptDirectory = scriptDirectory;
             mActiveScriptEffectGenerator.Start();
         }
+
+        private void staticColourRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            ledPreview1.AllowInput = staticColourRadioButton.Checked;
+            hsvPicker1.Visible = staticColourRadioButton.Checked;
+        }
+
+        private void hsvPicker1_ColourChanged(object sender, EventArgs e)
+        {
+            ledPreview1.InputColour = hsvPicker1.Colour;
+        }
     }
 }
