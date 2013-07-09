@@ -52,6 +52,7 @@
     <Compile Include="ActiveScriptEffectGenerator.cs" />
     <Compile Include="ActiveScriptLoader.cs" />
     <Compile Include="ColourOutputManager.cs" />
+    <Compile Include="ColourUtilities.cs" />
     <Compile Include="EffectGenerator.cs" />
     <Compile Include="ISerialCommunicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

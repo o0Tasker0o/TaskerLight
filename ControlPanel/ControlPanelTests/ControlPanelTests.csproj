@@ -56,6 +56,7 @@
     <Compile Include="ActiveScriptEffectGeneratorTest.cs" />
     <Compile Include="ActiveScriptLoaderTest.cs" />
     <Compile Include="ColourOutputManagerTest.cs" />
+    <Compile Include="ColourUtilitiesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSerialCommunicator.cs" />
     <Compile Include="VideoEffectGeneratorTest.cs" />
