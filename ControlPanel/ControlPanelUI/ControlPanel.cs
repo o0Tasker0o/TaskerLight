@@ -98,5 +98,15 @@ namespace ControlPanelUI
         {
             ledPreview1.InputColour = hsvPicker1.Colour;
         }
+
+        private void saturationTrackbar_ValueChanged(object sender, EventArgs e)
+        {
+            mColourOutputManager.SaturationMultiplier = (float) saturationTrackbar.Value / 100.0f;
+        }
+
+        private void contrastTrackbar_ValueChanged(object sender, EventArgs e)
+        {
+            mColourOutputManager.ContrastMultiplier = (float) contrastTrackbar.Value / 100.0f;
+        }
     }
 }

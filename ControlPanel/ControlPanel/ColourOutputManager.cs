@@ -14,10 +14,24 @@ namespace ControlPanel
             set;
         }
 
+        public float SaturationMultiplier
+        {
+            get;
+            set;
+        }
+
+        public float ContrastMultiplier
+        {
+            get;
+            set;
+        }
+
         public ColourOutputManager(ISerialCommunicator serialCommunicator)
         {
             mColourBuffer = new Color[25];
             FadeTimeMs = 500;
+            SaturationMultiplier = 1.0f;
+            ContrastMultiplier = 1.0f;
 
             mSerialCommunicator = serialCommunicator;
             mSerialCommunicator.Connect();
@@ -30,7 +44,8 @@ namespace ControlPanel
 
         public Color GetPixel(UInt32 pixelIndex)
         {
-            return mColourBuffer[pixelIndex];
+            Color adjustedColour = AdjustSaturation(mColourBuffer[pixelIndex]);
+            return AdjustContrast(adjustedColour);
         }
 
         public void SetPixel(UInt32 pixelIndex, Color pixelColour)
@@ -47,9 +62,12 @@ namespace ControlPanel
 
             for(int pixelIndex = 0; pixelIndex < mColourBuffer.Length; ++pixelIndex)
             {
-                outputBuffer[pixelIndex * 3] = mColourBuffer[pixelIndex].R;
-                outputBuffer[(pixelIndex * 3) + 1] = mColourBuffer[pixelIndex].G;
-                outputBuffer[(pixelIndex * 3) + 2] = mColourBuffer[pixelIndex].B;
+                Color adjustedColour = AdjustSaturation(mColourBuffer[pixelIndex]);
+                adjustedColour = AdjustContrast(adjustedColour);
+
+                outputBuffer[pixelIndex * 3] = adjustedColour.R;
+                outputBuffer[(pixelIndex * 3) + 1] = adjustedColour.G;
+                outputBuffer[(pixelIndex * 3) + 2] = adjustedColour.B;
             }
 
             byte[] fadeTimeBytes = BitConverter.GetBytes(FadeTimeMs);
@@ -59,6 +77,43 @@ namespace ControlPanel
 
             mSerialCommunicator.Write(outputBuffer);
             mSerialCommunicator.Read();
+        }
+
+        private Color AdjustSaturation(Color inputColour)
+        {
+            float hue = 0.0f;
+            float saturation = 0.0f;
+            float value = 0.0f;
+
+            ColourUtilities.ColorToHSV(inputColour, ref hue, ref saturation, ref value);
+
+            return ColourUtilities.HSVToColor(hue, saturation * SaturationMultiplier, value);
+        }
+
+        private Color AdjustContrast(Color inputColour)
+        {
+            Int32 redDifference = inputColour.R - 127;
+            Int32 greenDifference = inputColour.G - 127;
+            Int32 blueDifference = inputColour.B - 127;
+
+            redDifference = (Int32) (redDifference * ContrastMultiplier);
+            greenDifference = (Int32) (greenDifference * ContrastMultiplier);
+            blueDifference = (Int32) (blueDifference * ContrastMultiplier);
+
+            Int32 adjustedRed = 127 + redDifference;
+            Int32 adjustedGreen = 127 + greenDifference;
+            Int32 adjustedBlue = 127 + blueDifference;
+
+            adjustedRed = Math.Max(adjustedRed, 0);
+            adjustedRed = Math.Min(adjustedRed, 255);
+
+            adjustedGreen = Math.Max(adjustedGreen, 0);
+            adjustedGreen = Math.Min(adjustedGreen, 255);
+
+            adjustedBlue = Math.Max(adjustedBlue, 0);
+            adjustedBlue = Math.Min(adjustedBlue, 255);
+
+            return Color.FromArgb((int) adjustedRed, (int) adjustedGreen, (int) adjustedBlue);
         }
     }
 }

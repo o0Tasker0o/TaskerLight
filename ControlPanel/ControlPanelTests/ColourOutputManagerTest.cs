@@ -15,9 +15,7 @@ namespace ControlPanelTests
             TestSerialCommunicator serialCommunicator = new TestSerialCommunicator();
             Assert.IsFalse(serialCommunicator.IsConnected);
 
-            ColourOutputManager colourOutputManager;
-
-            using(colourOutputManager = new ColourOutputManager(serialCommunicator))
+            using(ColourOutputManager colourOutputManager = new ColourOutputManager(serialCommunicator))
             {
                 Assert.IsTrue(serialCommunicator.IsConnected);
 
@@ -65,6 +63,130 @@ namespace ControlPanelTests
 
                 CollectionAssert.AreEqual(new byte[77], serialCommunicator.OutputBuffer);
                 Assert.AreEqual(0U, serialCommunicator.ReadAmount);
+            }
+        }
+
+        [TestMethod()]
+        public void ColourOutputManagerOverSaturationTest()
+        {
+            TestSerialCommunicator serialCommunicator = new TestSerialCommunicator();
+            
+            using(ColourOutputManager colourOutputManager = new ColourOutputManager(serialCommunicator))
+            {
+                Assert.AreEqual(1.0f, colourOutputManager.SaturationMultiplier);
+
+                for(UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb(255, 128, 128));
+                    Assert.AreEqual(Color.FromArgb(255, 128, 128), colourOutputManager.GetPixel(pixelIndex));
+                }
+
+                colourOutputManager.FlushColours();
+
+                for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    Assert.AreEqual(255, serialCommunicator.OutputBuffer[pixelIndex * 3]);
+                    Assert.AreEqual(128, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 1]);
+                    Assert.AreEqual(128, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
+                }
+
+                colourOutputManager.SaturationMultiplier = 2.0f;
+                Assert.AreEqual(2.0f, colourOutputManager.SaturationMultiplier);
+
+                for(UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb(255, 128, 128)); 
+                    Assert.AreEqual(Color.FromArgb(255, 1, 1), colourOutputManager.GetPixel(pixelIndex));
+                }
+
+                colourOutputManager.FlushColours();
+
+                for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    Assert.AreEqual(255, serialCommunicator.OutputBuffer[pixelIndex * 3]);
+                    Assert.AreEqual(1, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 1]);
+                    Assert.AreEqual(1, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
+                }
+
+                colourOutputManager.SaturationMultiplier = 0.0f;
+                Assert.AreEqual(0.0f, colourOutputManager.SaturationMultiplier);
+
+                for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb(255, 0, 0));
+                    Assert.AreEqual(Color.FromArgb(255, 255, 255), colourOutputManager.GetPixel(pixelIndex));
+                }
+
+                colourOutputManager.FlushColours();
+
+                for (int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    Assert.AreEqual(255, serialCommunicator.OutputBuffer[pixelIndex * 3]);
+                    Assert.AreEqual(255, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 1]);
+                    Assert.AreEqual(255, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
+                }
+            }
+        }
+
+        [TestMethod()]
+        public void ColourOutputManagerOverContrastTest()
+        {
+            TestSerialCommunicator serialCommunicator = new TestSerialCommunicator();
+
+            using (ColourOutputManager colourOutputManager = new ColourOutputManager(serialCommunicator))
+            {
+                Assert.AreEqual(1.0f, colourOutputManager.ContrastMultiplier);
+
+                for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb(126, 127, 128));
+                    Assert.AreEqual(Color.FromArgb(126, 127, 128), colourOutputManager.GetPixel(pixelIndex));
+                }
+
+                colourOutputManager.FlushColours();
+
+                for (int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    Assert.AreEqual(126, serialCommunicator.OutputBuffer[pixelIndex * 3]);
+                    Assert.AreEqual(127, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 1]);
+                    Assert.AreEqual(128, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
+                }
+
+                colourOutputManager.ContrastMultiplier = 2.0f;
+                Assert.AreEqual(2.0f, colourOutputManager.ContrastMultiplier);
+
+                for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb(126, 127, 128));
+                    Assert.AreEqual(Color.FromArgb(125, 127, 129), colourOutputManager.GetPixel(pixelIndex));
+                }
+
+                colourOutputManager.FlushColours();
+
+                for (int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    Assert.AreEqual(125, serialCommunicator.OutputBuffer[pixelIndex * 3]);
+                    Assert.AreEqual(127, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 1]);
+                    Assert.AreEqual(129, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
+                }
+
+                colourOutputManager.ContrastMultiplier = 0.0f;
+                Assert.AreEqual(0.0f, colourOutputManager.ContrastMultiplier);
+
+                for (UInt32 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    colourOutputManager.SetPixel(pixelIndex, Color.FromArgb(126, 127, 128)); 
+                    Assert.AreEqual(Color.FromArgb(127, 127, 127), colourOutputManager.GetPixel(pixelIndex));
+                }
+
+                colourOutputManager.FlushColours();
+
+                for (int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    Assert.AreEqual(127, serialCommunicator.OutputBuffer[pixelIndex * 3]);
+                    Assert.AreEqual(127, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 1]);
+                    Assert.AreEqual(127, serialCommunicator.OutputBuffer[(pixelIndex * 3) + 2]);
+                }
             }
         }
     }
