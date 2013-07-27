@@ -108,5 +108,19 @@ namespace ControlPanelUI
         {
             mColourOutputManager.ContrastMultiplier = (float) contrastTrackbar.Value / 100.0f;
         }
+
+        private void ControlPanel_Resize(object sender, EventArgs e)
+        {
+            if(FormWindowState.Minimized == WindowState)
+            {
+                Hide();
+            }
+        }
+
+        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+        }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlPanel));
             this.wallpaperRadioButton = new System.Windows.Forms.RadioButton();
             this.activeScriptRadioButton = new System.Windows.Forms.RadioButton();
@@ -51,6 +52,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.saturationTrackbar = new System.Windows.Forms.TrackBar();
             this.contrastTrackbar = new System.Windows.Forms.TrackBar();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.ledPreview1 = new ControlPanelUI.LedPreview();
             this.modePage.SuspendLayout();
@@ -313,6 +315,13 @@
             this.contrastTrackbar.Value = 100;
             this.contrastTrackbar.ValueChanged += new System.EventHandler(this.contrastTrackbar_ValueChanged);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "TaskerLight";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
+            // 
             // activeScriptBrowserControl1
             // 
             this.activeScriptBrowserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -347,6 +356,7 @@
             this.Name = "ControlPanel";
             this.Text = "TaskerLight Control Panel";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlPanel_FormClosing);
+            this.Resize += new System.EventHandler(this.ControlPanel_Resize);
             this.modePage.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -388,6 +398,7 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 
