@@ -55,6 +55,13 @@
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.ledPreview1 = new ControlPanelUI.LedPreview();
+            this.notifyIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.staticColoursToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.activeScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wallpaperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.modePage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.settingsPage.SuspendLayout();
@@ -64,6 +71,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.saturationTrackbar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.contrastTrackbar)).BeginInit();
+            this.notifyIconMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // wallpaperRadioButton
@@ -317,6 +325,7 @@
             // 
             // notifyIcon
             // 
+            this.notifyIcon.ContextMenuStrip = this.notifyIconMenu;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "TaskerLight";
             this.notifyIcon.Visible = true;
@@ -345,6 +354,64 @@
             this.ledPreview1.Size = new System.Drawing.Size(90, 70);
             this.ledPreview1.TabIndex = 5;
             // 
+            // notifyIconMenu
+            // 
+            this.notifyIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.staticColoursToolStripMenuItem,
+            this.activeScriptToolStripMenuItem,
+            this.wallpaperToolStripMenuItem,
+            this.videoToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
+            this.notifyIconMenu.Name = "notifyIconMenu";
+            this.notifyIconMenu.Size = new System.Drawing.Size(153, 142);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // staticColoursToolStripMenuItem
+            // 
+            this.staticColoursToolStripMenuItem.CheckOnClick = true;
+            this.staticColoursToolStripMenuItem.Name = "staticColoursToolStripMenuItem";
+            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.staticColoursToolStripMenuItem.Text = "Static Colours";
+            this.staticColoursToolStripMenuItem.Click += new System.EventHandler(this.staticColoursToolStripMenuItem_Click);
+            // 
+            // activeScriptToolStripMenuItem
+            // 
+            this.activeScriptToolStripMenuItem.CheckOnClick = true;
+            this.activeScriptToolStripMenuItem.Name = "activeScriptToolStripMenuItem";
+            this.activeScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.activeScriptToolStripMenuItem.Text = "Active Script";
+            this.activeScriptToolStripMenuItem.Click += new System.EventHandler(this.activeScriptToolStripMenuItem_Click);
+            // 
+            // wallpaperToolStripMenuItem
+            // 
+            this.wallpaperToolStripMenuItem.Checked = true;
+            this.wallpaperToolStripMenuItem.CheckOnClick = true;
+            this.wallpaperToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.wallpaperToolStripMenuItem.Name = "wallpaperToolStripMenuItem";
+            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.wallpaperToolStripMenuItem.Text = "Wallpaper";
+            this.wallpaperToolStripMenuItem.Click += new System.EventHandler(this.wallpaperToolStripMenuItem_Click);
+            // 
+            // videoToolStripMenuItem
+            // 
+            this.videoToolStripMenuItem.CheckOnClick = true;
+            this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
+            this.videoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videoToolStripMenuItem.Text = "Video";
+            this.videoToolStripMenuItem.Click += new System.EventHandler(this.videoToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -368,6 +435,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.saturationTrackbar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.contrastTrackbar)).EndInit();
+            this.notifyIconMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -399,6 +467,13 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.ContextMenuStrip notifyIconMenu;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem staticColoursToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem activeScriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wallpaperToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem videoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

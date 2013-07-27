@@ -43,8 +43,24 @@ namespace ControlPanelUI
             mVideoEffectGenerator.Stop();
         }
 
+        private void staticColourRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            staticColoursToolStripMenuItem.Checked = true;
+            activeScriptToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoToolStripMenuItem.Checked = false;
+
+            ledPreview1.AllowInput = staticColourRadioButton.Checked;
+            hsvPicker1.Visible = staticColourRadioButton.Checked;
+        }
+
         private void activeScriptRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            staticColoursToolStripMenuItem.Checked = false;
+            activeScriptToolStripMenuItem.Checked = activeScriptRadioButton.Checked;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoToolStripMenuItem.Checked = false;
+
             if (activeScriptRadioButton.Checked)
             {
                 activeScriptBrowserControl1.Visible = true;
@@ -59,6 +75,11 @@ namespace ControlPanelUI
 
         private void wallpaperRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            staticColoursToolStripMenuItem.Checked = false;
+            activeScriptToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = wallpaperRadioButton.Checked;
+            videoToolStripMenuItem.Checked = false;
+
             if (wallpaperRadioButton.Checked)
             {
                 mWallpaperEffectGenerator.Start();
@@ -71,6 +92,11 @@ namespace ControlPanelUI
 
         private void videoRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            staticColoursToolStripMenuItem.Checked = false;
+            activeScriptToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoToolStripMenuItem.Checked = videoRadioButton.Checked;
+
             if (videoRadioButton.Checked)
             {
                 mVideoEffectGenerator.Start();
@@ -86,12 +112,6 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator.Stop();
             mActiveScriptEffectGenerator.CurrentScriptDirectory = scriptDirectory;
             mActiveScriptEffectGenerator.Start();
-        }
-
-        private void staticColourRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            ledPreview1.AllowInput = staticColourRadioButton.Checked;
-            hsvPicker1.Visible = staticColourRadioButton.Checked;
         }
 
         private void hsvPicker1_ColourChanged(object sender, EventArgs e)
@@ -121,6 +141,47 @@ namespace ControlPanelUI
         {
             Show();
             WindowState = FormWindowState.Normal;
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void staticColoursToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            activeScriptToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoToolStripMenuItem.Checked = false;
+
+            staticColourRadioButton.Checked = true;
+        }
+
+        private void activeScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            staticColoursToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+            videoToolStripMenuItem.Checked = false;
+
+            activeScriptRadioButton.Checked = true;
+        }
+
+        private void wallpaperToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            staticColoursToolStripMenuItem.Checked = false;
+            activeScriptToolStripMenuItem.Checked = false;
+            videoToolStripMenuItem.Checked = false;
+
+            wallpaperRadioButton.Checked = true;
+        }
+
+        private void videoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            staticColoursToolStripMenuItem.Checked = false;
+            activeScriptToolStripMenuItem.Checked = false;
+            wallpaperToolStripMenuItem.Checked = false;
+
+            videoRadioButton.Checked = true;
         }
     }
 }
