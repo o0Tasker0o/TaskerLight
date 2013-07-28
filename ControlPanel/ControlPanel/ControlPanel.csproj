@@ -56,6 +56,7 @@
     <Compile Include="EffectGenerator.cs" />
     <Compile Include="ISerialCommunicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PixelRegions.cs" />
     <Compile Include="SerialCommunicator.cs" />
     <Compile Include="VideoEffectGenerator.cs" />
     <Compile Include="WallpaperEffectGenerator.cs" />
