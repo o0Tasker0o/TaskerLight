@@ -23,9 +23,14 @@ namespace ControlPanelUI
         public ControlPanel()
         {
             InitializeComponent();
-
+                        
             mSerialCommunicator = new SerialCommunicator();
             mColourOutputManager = new ColourOutputManager(mSerialCommunicator);
+
+            SettingsManager.Load("./settings.xml");
+
+            saturationTrackbar.Value = SettingsManager.OutputSaturation;
+            contrastTrackbar.Value = SettingsManager.OutputContrast;
 
             ledPreview1.ColourOutputManager = mColourOutputManager;
 
@@ -41,6 +46,8 @@ namespace ControlPanelUI
             mWallpaperEffectGenerator.Stop();
             mActiveScriptEffectGenerator.Stop();
             mVideoEffectGenerator.Stop();
+
+            SettingsManager.Save("./settings.xml");
         }
 
         private void staticColourRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -121,11 +128,13 @@ namespace ControlPanelUI
 
         private void saturationTrackbar_ValueChanged(object sender, EventArgs e)
         {
+            SettingsManager.OutputSaturation = (UInt16) saturationTrackbar.Value;
             mColourOutputManager.SaturationMultiplier = (float) saturationTrackbar.Value / 100.0f;
         }
 
         private void contrastTrackbar_ValueChanged(object sender, EventArgs e)
         {
+            SettingsManager.OutputContrast = (UInt16) contrastTrackbar.Value;
             mColourOutputManager.ContrastMultiplier = (float) contrastTrackbar.Value / 100.0f;
         }
 
