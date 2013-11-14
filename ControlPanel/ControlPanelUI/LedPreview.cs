@@ -77,20 +77,37 @@ namespace ControlPanelUI
         {
             base.OnPaint(e);
 
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             if (null != ColourOutputManager)
             {
                 for(UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
+                    RectangleF baseRegion = PixelRegions.Instance.GetRegion(pixelIndex);
+                    Rectangle scaledRegion = new Rectangle((int) (baseRegion.X * Width),
+                                                           (int) (baseRegion.Y * Height),
+                                                           (int) (baseRegion.Width * Width),
+                                                           (int) (baseRegion.Height * Height));
                     e.Graphics.FillRectangle(new SolidBrush(ColourOutputManager.GetPixel(pixelIndex)),
-                                             PixelRegions.Instance.GetRegion(pixelIndex));
+                                             scaledRegion);
+                    e.Graphics.DrawRectangle(new Pen(Color.FromArgb(64, 0, 0, 0)),
+                                             scaledRegion);
                 }
             }
             else
             {
                 for (UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
+                    RectangleF baseRegion = PixelRegions.Instance.GetRegion(pixelIndex);
+                    Rectangle scaledRegion = new Rectangle((int)(baseRegion.X * Width),
+                                                           (int)(baseRegion.Y * Height),
+                                                           (int)(baseRegion.Width * Width),
+                                                           (int)(baseRegion.Height * Height));
+
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black),
-                                             PixelRegions.Instance.GetRegion(pixelIndex));
+                                             scaledRegion);
+                    e.Graphics.DrawRectangle(new Pen(Color.FromArgb(64, 0, 0, 0)),
+                                             scaledRegion);
                 }
             }
         }
@@ -113,7 +130,13 @@ namespace ControlPanelUI
             {
                 for(UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
-                    if (PixelRegions.Instance.GetRegion(pixelIndex).Contains(e.Location))
+                    RectangleF baseRegion = PixelRegions.Instance.GetRegion(pixelIndex);
+                    Rectangle scaledRegion = new Rectangle((int)(baseRegion.X * Width),
+                                                           (int)(baseRegion.Y * Height),
+                                                           (int)(baseRegion.Width * Width),
+                                                           (int)(baseRegion.Height * Height));
+
+                    if (scaledRegion.Contains(e.Location))
                     {
                         StaticPixelColours[pixelIndex] = InputColour;
                         ColourOutputManager.SetPixel(pixelIndex, InputColour);

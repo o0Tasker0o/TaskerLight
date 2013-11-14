@@ -37,7 +37,6 @@
             this.hsvPicker1 = new CSharpGUIElements.Colour_Pickers.HSVPicker();
             this.modePage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.settingsPage = new System.Windows.Forms.TabPage();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -61,6 +60,7 @@
             this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.ledPreview1 = new ControlPanelUI.LedPreview();
             this.modePage.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -76,10 +76,10 @@
             // 
             // wallpaperRadioButton
             // 
-            this.wallpaperRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.wallpaperRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.wallpaperRadioButton.AutoSize = true;
             this.wallpaperRadioButton.Checked = true;
-            this.wallpaperRadioButton.Location = new System.Drawing.Point(243, 169);
+            this.wallpaperRadioButton.Location = new System.Drawing.Point(241, 56);
             this.wallpaperRadioButton.Name = "wallpaperRadioButton";
             this.wallpaperRadioButton.Size = new System.Drawing.Size(73, 17);
             this.wallpaperRadioButton.TabIndex = 0;
@@ -90,9 +90,9 @@
             // 
             // activeScriptRadioButton
             // 
-            this.activeScriptRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.activeScriptRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.activeScriptRadioButton.AutoSize = true;
-            this.activeScriptRadioButton.Location = new System.Drawing.Point(243, 146);
+            this.activeScriptRadioButton.Location = new System.Drawing.Point(241, 33);
             this.activeScriptRadioButton.Name = "activeScriptRadioButton";
             this.activeScriptRadioButton.Size = new System.Drawing.Size(85, 17);
             this.activeScriptRadioButton.TabIndex = 1;
@@ -102,9 +102,9 @@
             // 
             // videoRadioButton
             // 
-            this.videoRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.videoRadioButton.AutoSize = true;
-            this.videoRadioButton.Location = new System.Drawing.Point(243, 192);
+            this.videoRadioButton.Location = new System.Drawing.Point(241, 79);
             this.videoRadioButton.Name = "videoRadioButton";
             this.videoRadioButton.Size = new System.Drawing.Size(52, 17);
             this.videoRadioButton.TabIndex = 2;
@@ -114,9 +114,9 @@
             // 
             // staticColourRadioButton
             // 
-            this.staticColourRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.staticColourRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.staticColourRadioButton.AutoSize = true;
-            this.staticColourRadioButton.Location = new System.Drawing.Point(243, 123);
+            this.staticColourRadioButton.Location = new System.Drawing.Point(241, 10);
             this.staticColourRadioButton.Name = "staticColourRadioButton";
             this.staticColourRadioButton.Size = new System.Drawing.Size(90, 17);
             this.staticColourRadioButton.TabIndex = 6;
@@ -127,11 +127,13 @@
             // 
             // hsvPicker1
             // 
-            this.hsvPicker1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.hsvPicker1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.hsvPicker1.HueBarWidth = 30;
-            this.hsvPicker1.Location = new System.Drawing.Point(6, 23);
+            this.hsvPicker1.Location = new System.Drawing.Point(6, 6);
             this.hsvPicker1.Name = "hsvPicker1";
-            this.hsvPicker1.Size = new System.Drawing.Size(220, 186);
+            this.hsvPicker1.Size = new System.Drawing.Size(220, 188);
             this.hsvPicker1.TabIndex = 7;
             this.hsvPicker1.Visible = false;
             this.hsvPicker1.ColourChanged += new System.EventHandler(this.hsvPicker1_ColourChanged);
@@ -143,10 +145,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.modePage.Controls.Add(this.tabPage1);
             this.modePage.Controls.Add(this.settingsPage);
-            this.modePage.Location = new System.Drawing.Point(0, 88);
+            this.modePage.Location = new System.Drawing.Point(0, 135);
             this.modePage.Name = "modePage";
             this.modePage.SelectedIndex = 0;
-            this.modePage.Size = new System.Drawing.Size(345, 241);
+            this.modePage.Size = new System.Drawing.Size(345, 226);
             this.modePage.TabIndex = 8;
             // 
             // tabPage1
@@ -161,23 +163,9 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(337, 215);
+            this.tabPage1.Size = new System.Drawing.Size(337, 200);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Mode";
-            // 
-            // activeScriptBrowserControl1
-            // 
-            this.activeScriptBrowserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.activeScriptBrowserControl1.AutoScroll = true;
-            this.activeScriptBrowserControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(6, 23);
-            this.activeScriptBrowserControl1.Name = "activeScriptBrowserControl1";
-            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(220, 186);
-            this.activeScriptBrowserControl1.TabIndex = 4;
-            this.activeScriptBrowserControl1.Visible = false;
-            this.activeScriptBrowserControl1.ScriptSelectionChanged += new ControlPanelUI.ActiveScriptBrowserControl.ScriptSelectionChangedEventHandler(this.activeScriptBrowserControl1_ScriptSelectionChanged);
             // 
             // settingsPage
             // 
@@ -199,12 +187,13 @@
             this.settingsPage.Location = new System.Drawing.Point(4, 22);
             this.settingsPage.Name = "settingsPage";
             this.settingsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.settingsPage.Size = new System.Drawing.Size(337, 215);
+            this.settingsPage.Size = new System.Drawing.Size(337, 198);
             this.settingsPage.TabIndex = 1;
             this.settingsPage.Text = "Settings";
             // 
             // pictureBox4
             // 
+            this.pictureBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox4.BackgroundImage = global::ControlPanelUI.Properties.Resources.SaturationHigh;
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox4.Location = new System.Drawing.Point(300, 19);
@@ -225,6 +214,7 @@
             // 
             // pictureBox2
             // 
+            this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox2.BackgroundImage = global::ControlPanelUI.Properties.Resources.ContrastHigh;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox2.Location = new System.Drawing.Point(300, 93);
@@ -245,6 +235,7 @@
             // 
             // label6
             // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(272, 132);
             this.label6.Name = "label6";
@@ -254,6 +245,7 @@
             // 
             // label7
             // 
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(154, 132);
             this.label7.Name = "label7";
@@ -290,6 +282,7 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(272, 58);
             this.label3.Name = "label3";
@@ -299,6 +292,7 @@
             // 
             // label2
             // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(154, 58);
             this.label2.Name = "label2";
@@ -317,6 +311,8 @@
             // 
             // saturationTrackbar
             // 
+            this.saturationTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.saturationTrackbar.Location = new System.Drawing.Point(38, 26);
             this.saturationTrackbar.Maximum = 200;
             this.saturationTrackbar.Name = "saturationTrackbar";
@@ -328,6 +324,8 @@
             // 
             // contrastTrackbar
             // 
+            this.contrastTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.contrastTrackbar.Location = new System.Drawing.Point(38, 100);
             this.contrastTrackbar.Maximum = 200;
             this.contrastTrackbar.Name = "contrastTrackbar";
@@ -355,13 +353,13 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.notifyIconMenu.Name = "notifyIconMenu";
-            this.notifyIconMenu.Size = new System.Drawing.Size(153, 142);
+            this.notifyIconMenu.Size = new System.Drawing.Size(148, 120);
             // 
             // staticColoursToolStripMenuItem
             // 
             this.staticColoursToolStripMenuItem.CheckOnClick = true;
             this.staticColoursToolStripMenuItem.Name = "staticColoursToolStripMenuItem";
-            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.staticColoursToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.staticColoursToolStripMenuItem.Text = "Static Colours";
             this.staticColoursToolStripMenuItem.Click += new System.EventHandler(this.staticColoursToolStripMenuItem_Click);
             // 
@@ -369,7 +367,7 @@
             // 
             this.activeScriptToolStripMenuItem.CheckOnClick = true;
             this.activeScriptToolStripMenuItem.Name = "activeScriptToolStripMenuItem";
-            this.activeScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.activeScriptToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.activeScriptToolStripMenuItem.Text = "Active Script";
             this.activeScriptToolStripMenuItem.Click += new System.EventHandler(this.activeScriptToolStripMenuItem_Click);
             // 
@@ -379,7 +377,7 @@
             this.wallpaperToolStripMenuItem.CheckOnClick = true;
             this.wallpaperToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.wallpaperToolStripMenuItem.Name = "wallpaperToolStripMenuItem";
-            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.wallpaperToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.wallpaperToolStripMenuItem.Text = "Wallpaper";
             this.wallpaperToolStripMenuItem.Click += new System.EventHandler(this.wallpaperToolStripMenuItem_Click);
             // 
@@ -387,39 +385,56 @@
             // 
             this.videoToolStripMenuItem.CheckOnClick = true;
             this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
-            this.videoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videoToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.videoToolStripMenuItem.Text = "Video";
             this.videoToolStripMenuItem.Click += new System.EventHandler(this.videoToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // activeScriptBrowserControl1
+            // 
+            this.activeScriptBrowserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.activeScriptBrowserControl1.AutoScroll = true;
+            this.activeScriptBrowserControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(9, 10);
+            this.activeScriptBrowserControl1.Name = "activeScriptBrowserControl1";
+            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(216, 182);
+            this.activeScriptBrowserControl1.TabIndex = 4;
+            this.activeScriptBrowserControl1.Visible = false;
+            this.activeScriptBrowserControl1.ScriptSelectionChanged += new ControlPanelUI.ActiveScriptBrowserControl.ScriptSelectionChangedEventHandler(this.activeScriptBrowserControl1_ScriptSelectionChanged);
             // 
             // ledPreview1
             // 
             this.ledPreview1.AllowInput = false;
+            this.ledPreview1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ledPreview1.BackgroundImage")));
+            this.ledPreview1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ledPreview1.InputColour = System.Drawing.Color.Empty;
-            this.ledPreview1.Location = new System.Drawing.Point(135, 12);
+            this.ledPreview1.Location = new System.Drawing.Point(102, 12);
             this.ledPreview1.Name = "ledPreview1";
-            this.ledPreview1.Size = new System.Drawing.Size(90, 70);
+            this.ledPreview1.Size = new System.Drawing.Size(149, 125);
             this.ledPreview1.TabIndex = 5;
             // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(345, 329);
-            this.Controls.Add(this.modePage);
+            this.ClientSize = new System.Drawing.Size(345, 361);
             this.Controls.Add(this.ledPreview1);
+            this.Controls.Add(this.modePage);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(355, 364);
             this.Name = "ControlPanel";
             this.ShowInTaskbar = false;
             this.Text = "TaskerLight Control Panel";

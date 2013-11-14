@@ -74,6 +74,13 @@ namespace ControlPanelUI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Monitor {
+            get {
+                object obj = ResourceManager.GetObject("Monitor", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap SaturationHigh {
             get {
                 object obj = ResourceManager.GetObject("SaturationHigh", resourceCulture);

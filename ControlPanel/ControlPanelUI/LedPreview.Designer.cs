@@ -40,9 +40,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::ControlPanelUI.Properties.Resources.Monitor;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.DoubleBuffered = true;
             this.Name = "LedPreview";
-            this.Size = new System.Drawing.Size(90, 70);
+            this.Size = new System.Drawing.Size(214, 182);
             this.ResumeLayout(false);
 
         }

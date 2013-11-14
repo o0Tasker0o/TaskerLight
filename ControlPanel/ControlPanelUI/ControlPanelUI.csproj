@@ -112,6 +112,7 @@
     <None Include="Resources\ContrastLow.png" />
     <None Include="Resources\SaturationHigh.png" />
     <None Include="Resources\SaturationLow.png" />
+    <None Include="Resources\Monitor.png" />
     <Content Include="TaskerLight.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
