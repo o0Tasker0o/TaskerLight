@@ -20,11 +20,25 @@ namespace ControlPanel
         private static extern UInt32 StopCapturing();
 
         [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern UInt32 GetAverageColour(UInt32 x, UInt32 y,
-                                                      UInt32 width, UInt32 height);
-        
-        public VideoEffectGenerator(ColourOutputManager colourOutputManager) : base(colourOutputManager)
+        private static extern UInt32 GetAverageColour(int left, int right, int top, int bottom);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern UInt32 GetLeftPadding(int left, int right, int top, int bottom);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern UInt32 GetRightPadding(int left, int right, int top, int bottom);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern UInt32 GetTopPadding(int left, int right, int top, int bottom);
+
+        [DllImport("ScreenCaptureLib.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern UInt32 GetBottomPadding(int left, int right, int top, int bottom);
+
+        private ApplicationFinder mApplicationFinder;
+
+        public VideoEffectGenerator(ColourOutputManager colourOutputManager, ApplicationFinder appFinder) : base(colourOutputManager)
         {
+            mApplicationFinder = appFinder;
         }
 
         protected override void ThreadTick()
@@ -36,15 +50,29 @@ namespace ControlPanel
 
             while (mRunning)
             {
+                Rectangle captureRegion = mApplicationFinder.GetTopmostRegisteredApp();
+
+                UInt32 leftPadding = GetLeftPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
+                UInt32 rightPadding = GetRightPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
+                UInt32 topPadding = GetTopPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
+                UInt32 bottomPadding = GetBottomPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
+
+                long x = captureRegion.Left + leftPadding;
+                long y = captureRegion.Top + topPadding;
+                long width = captureRegion.Width - (leftPadding + rightPadding);
+                long height = captureRegion.Height - (topPadding + bottomPadding);
+                
+                PixelRegions.Instance.CaptureRegion = new Rectangle((int) x, (int) y, (int) width, (int) height);
+                
                 for(UInt16 regionIndex = 0; regionIndex < 25; ++regionIndex)
                 {
                     Rectangle captureSubRegion = PixelRegions.Instance.GetCaptureSubRegion(regionIndex);
 
-                    UInt32 capturedColour = GetAverageColour((UInt32) captureSubRegion.Left,
-                                                             (UInt32) captureSubRegion.Top,
-                                                             (UInt32) captureSubRegion.Width,
-                                                             (UInt32) captureSubRegion.Height);
-
+                    UInt32 capturedColour = GetAverageColour(captureSubRegion.Left,
+                                                             captureSubRegion.Right,
+                                                             captureSubRegion.Top,
+                                                             captureSubRegion.Bottom);
+                    
                     mOutputManager.SetPixel(regionIndex, UInt32ToColor(capturedColour));
                 }
                 

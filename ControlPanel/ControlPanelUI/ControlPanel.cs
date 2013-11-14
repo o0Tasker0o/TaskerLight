@@ -35,14 +35,14 @@ namespace ControlPanelUI
 
             ledPreview1.ColourOutputManager = mColourOutputManager;
 
-            mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager);
-            mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
-            mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager);
-
-            mWallpaperEffectGenerator.Start();
-
             mApplicationFinder = new ApplicationFinder();
             mApplicationFinder.RegisterApplication(new FileInfo("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"));
+
+            mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager);
+            mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
+            mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager, mApplicationFinder);
+
+            mWallpaperEffectGenerator.Start();
         }
 
         private void ControlPanel_FormClosing(object sender, FormClosingEventArgs e)

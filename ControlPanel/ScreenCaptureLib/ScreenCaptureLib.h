@@ -13,8 +13,12 @@ extern "C"
 
 	DECLDIR unsigned int StopCapturing(void);
 
-	DECLDIR unsigned int GetAverageColour(unsigned int x, unsigned int y,
-										  unsigned int width, unsigned int height);
+	DECLDIR unsigned int GetAverageColour(int left, int right, int top, int bottom);
+	
+	DECLDIR unsigned int GetLeftPadding(int left, int right, int top, int bottom);
+	DECLDIR unsigned int GetRightPadding(int left, int right, int top, int bottom);
+	DECLDIR unsigned int GetTopPadding(int left, int right, int top, int bottom);
+	DECLDIR unsigned int GetBottomPadding(int left, int right, int top, int bottom);
 }
 
 #endif

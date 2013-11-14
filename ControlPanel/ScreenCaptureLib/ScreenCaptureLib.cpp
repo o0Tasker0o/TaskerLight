@@ -31,6 +31,29 @@ unsigned int g_bottomBorder(0);
 HWND g_hwnd(NULL);
 WNDCLASSEX g_windowClass;
 
+void CapRectangleToScreenBounds(int *left, int *right, int *top, int *bottom)
+{
+	if(*left < 0)
+	{
+		*left = 0;
+	}
+
+	if(*right >= g_screenWidth)
+	{
+		*right = g_screenWidth - 1;
+	}
+
+	if(*top < 0)
+	{
+		*top = 0;
+	}
+
+	if(*bottom >= g_screenHeight)
+	{
+		*bottom = g_screenHeight - 1;
+	}
+}
+
 DWORD WINAPI CaptureFunction(void* pParams)
 { 
 	//Don't allow the program to end while this thread is running
@@ -230,9 +253,10 @@ extern "C"
 		return 0;
 	}
 
-	DECLDIR unsigned int GetAverageColour(unsigned int x, unsigned int y,
-										  unsigned int width, unsigned int height)
+	DECLDIR unsigned int GetAverageColour(int left, int right, int top, int bottom)
 	{
+		CapRectangleToScreenBounds(&left, &right, &top, &bottom);
+
 		unsigned int r = 0;
 		unsigned int g = 0;
 		unsigned int b = 0;
@@ -244,9 +268,9 @@ extern "C"
 		ResetEvent(g_captureThreadCriticalSectionLock);
 
 		//Go through each BGRA byte in the given region
-		for(unsigned int yPos = y; yPos < y + height; ++yPos)
+		for(unsigned int yPos = top; yPos < bottom; ++yPos)
 		{
-			for(unsigned int xPos = x * 4; xPos < (x + width) * 4; xPos += 4)
+			for(unsigned int xPos = left * 4; xPos < right * 4; xPos += 4)
 			{
 				//Add the total colour of this region
 				b += g_pCapturedPixelBits[xPos + (yPos * g_screenWidth * 4)];
@@ -279,5 +303,169 @@ extern "C"
 		colour |= b;
 
 		return colour;
+	}
+
+	DECLDIR unsigned int GetLeftPadding(int left, int right, int top, int bottom)
+	{
+		CapRectangleToScreenBounds(&left, &right, &top, &bottom);
+		
+		unsigned int leftPadding = right - left;
+		
+		unsigned int r = 0;
+		unsigned int g = 0;
+		unsigned int b = 0;
+		
+		//Go through each BGRA byte in the given region
+		for(unsigned int y = top; y < bottom; y += (bottom - top) / 2)
+		{
+			//Don't allow any other threads to access the captured pixel data
+			WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
+			ResetEvent(g_captureThreadCriticalSectionLock);
+			
+			for(unsigned int x = left * 4; x < right * 4; x += 4)
+			{
+				b = g_pCapturedPixelBits[x + (y * g_screenWidth * 4)];
+				g = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 1];
+				r = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 2];
+				
+				if(r > 0 || g > 0 || b > 0)
+				{
+					if((x / 4) - left < leftPadding)
+					{
+						leftPadding = (x / 4) - left;
+						break;
+					}
+				}
+			}
+				
+			//Give up access to the captured pixel data
+			SetEvent(g_captureThreadCriticalSectionLock);
+		}
+
+		return leftPadding;
+	}
+
+	DECLDIR unsigned int GetRightPadding(int left, int right, int top, int bottom)
+	{
+		CapRectangleToScreenBounds(&left, &right, &top, &bottom);
+		
+		unsigned int rightPadding = right - left;
+		
+		unsigned int r = 0;
+		unsigned int g = 0;
+		unsigned int b = 0;
+		
+		//Go through each BGRA byte in the given region
+		for(unsigned int y = top; y < bottom; y += (bottom - top) / 2)
+		{
+			//Don't allow any other threads to access the captured pixel data
+			WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
+			ResetEvent(g_captureThreadCriticalSectionLock);
+			
+			for(unsigned int x = right * 4; x > left * 4; x -= 4)
+			{
+				b = g_pCapturedPixelBits[x + (y * g_screenWidth * 4)];
+				g = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 1];
+				r = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 2];
+
+				if(r > 0 || g > 0 || b > 0)
+				{
+					if(right - (x / 4) < rightPadding)
+					{
+						rightPadding = right - (x / 4);
+						break;
+					}
+				}
+			}
+				
+			//Give up access to the captured pixel data
+			SetEvent(g_captureThreadCriticalSectionLock);
+		}
+
+		return rightPadding;
+	}
+
+	DECLDIR unsigned int GetTopPadding(int left, int right, int top, int bottom)
+	{
+		CapRectangleToScreenBounds(&left, &right, &top, &bottom);
+		
+		unsigned int topPadding = bottom - top;
+		
+		unsigned int r = 0;
+		unsigned int g = 0;
+		unsigned int b = 0;
+		
+		int counter = 0;
+		
+		for(unsigned int x = left * 4; x <= right * 4; x += ((right - left) / 2) * 4)
+		{
+			//Don't allow any other threads to access the captured pixel data
+			WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
+			ResetEvent(g_captureThreadCriticalSectionLock);
+
+			//Go through each BGRA byte in the given region
+			for(unsigned int y = top; y < bottom; ++y)
+			{
+				b = g_pCapturedPixelBits[x + (y * g_screenWidth * 4)];
+				g = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 1];
+				r = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 2];
+
+				if(r > 0 || g > 0 || b > 0)
+				{
+					if(y - top < topPadding)
+					{
+						topPadding = y - top;
+						break;
+					}
+				}
+			}
+				
+			//Give up access to the captured pixel data
+			SetEvent(g_captureThreadCriticalSectionLock);
+		}
+
+		return topPadding;
+	}
+
+	DECLDIR unsigned int GetBottomPadding(int left, int right, int top, int bottom)
+	{
+		CapRectangleToScreenBounds(&left, &right, &top, &bottom);
+		
+		unsigned int bottomPadding = bottom - top;
+		
+		unsigned int r = 0;
+		unsigned int g = 0;
+		unsigned int b = 0;
+		
+		int counter = 0;
+		
+		for(unsigned int x = left * 4; x <= right * 4; x += ((right - left) / 2) * 4)
+		{
+			//Don't allow any other threads to access the captured pixel data
+			WaitForSingleObject(g_captureThreadCriticalSectionLock, 500);
+			ResetEvent(g_captureThreadCriticalSectionLock);
+
+			//Go through each BGRA byte in the given region
+			for(unsigned int y = bottom; y > top; --y)
+			{
+				b = g_pCapturedPixelBits[x + (y * g_screenWidth * 4)];
+				g = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 1];
+				r = g_pCapturedPixelBits[x + (y * g_screenWidth * 4) + 2];
+
+				if(r > 0 || g > 0 || b > 0)
+				{
+					if(bottom - y < bottomPadding)
+					{
+						bottomPadding = bottom - y;
+						break;
+					}
+				}
+			}
+				
+			//Give up access to the captured pixel data
+			SetEvent(g_captureThreadCriticalSectionLock);
+		}
+
+		return bottomPadding;
 	}
 }
