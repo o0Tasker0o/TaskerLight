@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PixelRegions.cs" />
     <Compile Include="SerialCommunicator.cs" />
+    <Compile Include="SettingsManager.cs" />
     <Compile Include="VideoEffectGenerator.cs" />
     <Compile Include="WallpaperEffectGenerator.cs" />
   </ItemGroup>

@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlPanel", "ControlPanel\ControlPanel.csproj", "{F3A95598-CBC4-46F5-BB22-AF6428118827}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD41A3CD-06C1-4AE1-AE90-874BC60D955D}"
-	ProjectSection(SolutionItems) = preProject
-		ControlPanel.vsmdi = ControlPanel.vsmdi
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlPanelTests", "ControlPanelTests\ControlPanelTests.csproj", "{2CC984AB-5941-41F5-83FA-45929D949EEE}"
 EndProject
@@ -25,9 +20,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RainbowScript", "Demo Scripts\RainbowScript\RainbowScript.csproj", "{8C452004-2E6C-4EED-8CB6-4A6764B2F3E5}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = ControlPanel.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
