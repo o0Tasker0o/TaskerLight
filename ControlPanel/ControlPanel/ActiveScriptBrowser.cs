@@ -62,7 +62,7 @@ namespace ControlPanel
 
         public ActiveScriptBrowser()
         {
-            RootDirectory = new DirectoryInfo("./");
+            RootDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

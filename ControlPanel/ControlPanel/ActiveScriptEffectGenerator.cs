@@ -20,7 +20,7 @@ namespace ControlPanel
         public ActiveScriptEffectGenerator(ColourOutputManager colourOutputManager)
             : base(colourOutputManager)
         {
-            CurrentScriptDirectory = new DirectoryInfo("./");
+            CurrentScriptDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         protected override void ThreadTick()
@@ -28,7 +28,7 @@ namespace ControlPanel
             mOutputManager.FadeTimeMs = 180;
 
             AppDomainSetup appSetup = new AppDomainSetup();
-            appSetup.ApplicationBase = Directory.GetCurrentDirectory();
+            appSetup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
 
             AppDomain scriptAppDomain = AppDomain.CreateDomain("TaskerLightScriptDomain",
                                                                new Evidence(AppDomain.CurrentDomain.Evidence),

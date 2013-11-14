@@ -35,7 +35,7 @@ namespace ControlPanelTests
                 scriptChanges++;
             };
 
-            Assert.AreEqual(new DirectoryInfo("./").FullName, scriptBrowser.RootDirectory.FullName);
+            Assert.AreEqual(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).FullName, scriptBrowser.RootDirectory.FullName);
             Assert.AreEqual(0, scriptBrowser.ScriptDirectories.Count);
             Assert.AreEqual(0, scriptChanges);
 
@@ -79,12 +79,12 @@ namespace ControlPanelTests
         public void ActiveScriptBrowserRootCannotBeSetToNull()
         {
             ActiveScriptBrowser scriptBrowser = new ActiveScriptBrowser();
-            
-            Assert.AreEqual(new DirectoryInfo("./").FullName, scriptBrowser.RootDirectory.FullName);
+
+            Assert.AreEqual(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).FullName, scriptBrowser.RootDirectory.FullName);
 
             scriptBrowser.RootDirectory = null;
 
-            Assert.AreEqual(new DirectoryInfo("./").FullName, scriptBrowser.RootDirectory.FullName);
+            Assert.AreEqual(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).FullName, scriptBrowser.RootDirectory.FullName);
         }
     }
 }
