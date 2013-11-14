@@ -421,7 +421,9 @@
             this.Controls.Add(this.ledPreview1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ControlPanel";
+            this.ShowInTaskbar = false;
             this.Text = "TaskerLight Control Panel";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlPanel_FormClosing);
             this.Resize += new System.EventHandler(this.ControlPanel_Resize);
             this.modePage.ResumeLayout(false);
