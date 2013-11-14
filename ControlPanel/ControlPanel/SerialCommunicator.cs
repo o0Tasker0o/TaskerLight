@@ -19,6 +19,8 @@ namespace ControlPanel
         public void Connect()
         {
             mArduinoComPort.Open();
+
+            System.Threading.Thread.Sleep(1500);
         }
 
         public void Write(Byte [] buffer)
@@ -28,7 +30,7 @@ namespace ControlPanel
 
         public byte Read()
         {
-           return (byte) mArduinoComPort.ReadByte();
+            return (byte) mArduinoComPort.ReadByte();
         }
 
         public void Disconnect()
