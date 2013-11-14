@@ -36,39 +36,18 @@ namespace ControlPanel
 
             while (mRunning)
             {
-                UInt32 width = 200;
-                UInt32 height = 128;
+                for(UInt16 regionIndex = 0; regionIndex < 25; ++regionIndex)
+                {
+                    Rectangle captureSubRegion = PixelRegions.Instance.GetCaptureSubRegion(regionIndex);
 
-                mOutputManager.SetPixel(0, UInt32ToColor(GetAverageColour(1320, 950, width, height)));
-                mOutputManager.SetPixel(1, UInt32ToColor(GetAverageColour(1520, 950, width, height)));
-                mOutputManager.SetPixel(2, UInt32ToColor(GetAverageColour(1720, 950, width, height)));
+                    UInt32 capturedColour = GetAverageColour((UInt32) captureSubRegion.Left,
+                                                             (UInt32) captureSubRegion.Top,
+                                                             (UInt32) captureSubRegion.Width,
+                                                             (UInt32) captureSubRegion.Height);
 
-                mOutputManager.SetPixel(3, UInt32ToColor(GetAverageColour(1720, 796, width, height)));
-                mOutputManager.SetPixel(4, UInt32ToColor(GetAverageColour(1720, 642, width, height)));
-                mOutputManager.SetPixel(5, UInt32ToColor(GetAverageColour(1720, 488, width, height)));
-                mOutputManager.SetPixel(6, UInt32ToColor(GetAverageColour(1720, 334, width, height)));
-                mOutputManager.SetPixel(7, UInt32ToColor(GetAverageColour(1720, 180, width, height)));
-
-                mOutputManager.SetPixel(8, UInt32ToColor(GetAverageColour(1720, 0, width, height)));
-                mOutputManager.SetPixel(9, UInt32ToColor(GetAverageColour(1491, 0, width, height)));
-                mOutputManager.SetPixel(10, UInt32ToColor(GetAverageColour(1278, 0, width, height)));
-                mOutputManager.SetPixel(11, UInt32ToColor(GetAverageColour(1065, 0, width, height)));
-                mOutputManager.SetPixel(12, UInt32ToColor(GetAverageColour(852, 0, width, height)));
-                mOutputManager.SetPixel(13, UInt32ToColor(GetAverageColour(639, 0, width, height)));
-                mOutputManager.SetPixel(14, UInt32ToColor(GetAverageColour(426, 0, width, height)));
-                mOutputManager.SetPixel(15, UInt32ToColor(GetAverageColour(213, 0, width, height)));
-                mOutputManager.SetPixel(16, UInt32ToColor(GetAverageColour(0, 0, width, height)));
-
-                mOutputManager.SetPixel(17, UInt32ToColor(GetAverageColour(0, 180, width, height)));
-                mOutputManager.SetPixel(18, UInt32ToColor(GetAverageColour(0, 334, width, height)));
-                mOutputManager.SetPixel(19, UInt32ToColor(GetAverageColour(0, 488, width, height)));
-                mOutputManager.SetPixel(20, UInt32ToColor(GetAverageColour(0, 642, width, height)));
-                mOutputManager.SetPixel(21, UInt32ToColor(GetAverageColour(0, 796, width, height)));
-
-                mOutputManager.SetPixel(22, UInt32ToColor(GetAverageColour(0, 950, width, height)));
-                mOutputManager.SetPixel(23, UInt32ToColor(GetAverageColour(200, 950, width, height)));
-                mOutputManager.SetPixel(24, UInt32ToColor(GetAverageColour(400, 950, width, height)));
-
+                    mOutputManager.SetPixel(regionIndex, UInt32ToColor(capturedColour));
+                }
+                
                 mOutputManager.FlushColours();
 
                 Thread.Sleep(mOutputManager.FadeTimeMs);
