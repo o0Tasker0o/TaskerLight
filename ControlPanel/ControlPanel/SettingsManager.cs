@@ -44,8 +44,8 @@ namespace ControlPanel
                 }
             }
 
-            OutputSaturation = UInt16.Parse(GetNodeValue(settingsXml, "OutputSaturation", "50"));
-            OutputContrast = UInt16.Parse(GetNodeValue(settingsXml, "OutputContrast", "50"));
+            OutputSaturation = UInt16.Parse(GetNodeValue(settingsXml, "OutputSaturation", "100"));
+            OutputContrast = UInt16.Parse(GetNodeValue(settingsXml, "OutputContrast", "100"));
         }
 
         private static void AddChildNode(XmlDocument settingsDocument, String variableName, String value)

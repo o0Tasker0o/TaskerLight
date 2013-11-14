@@ -65,8 +65,8 @@ namespace ControlPanelTests
 
             SettingsManager.Load(cSettingsFilename);
 
-            Assert.AreEqual(50, SettingsManager.OutputSaturation);
-            Assert.AreEqual(50, SettingsManager.OutputContrast);
+            Assert.AreEqual(100, SettingsManager.OutputSaturation);
+            Assert.AreEqual(100, SettingsManager.OutputContrast);
         }
 
         [TestMethod()]
@@ -77,8 +77,8 @@ namespace ControlPanelTests
 
             SettingsManager.Load(null);
 
-            Assert.AreEqual(50, SettingsManager.OutputSaturation);
-            Assert.AreEqual(50, SettingsManager.OutputContrast);
+            Assert.AreEqual(100, SettingsManager.OutputSaturation);
+            Assert.AreEqual(100, SettingsManager.OutputContrast);
         }
 
         private static void CreateTestFile(String filename)
