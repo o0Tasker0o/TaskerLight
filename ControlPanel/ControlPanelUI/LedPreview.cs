@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ControlPanel;
-using System.Threading;
 
 namespace ControlPanelUI
 {
@@ -68,7 +62,7 @@ namespace ControlPanelUI
 
             AllowInput = false;
 
-            StaticPixelColours = new Color[25];
+            StaticPixelColours = SettingsManager.StaticColours;
 
             refreshTimer.Start();
         }
@@ -139,6 +133,7 @@ namespace ControlPanelUI
                     if (scaledRegion.Contains(e.Location))
                     {
                         StaticPixelColours[pixelIndex] = InputColour;
+                        SettingsManager.StaticColours[pixelIndex] = InputColour;
                         ColourOutputManager.SetPixel(pixelIndex, InputColour);
                     }
                 }
