@@ -21,14 +21,19 @@ namespace ControlPanelUI
         private SerialCommunicator mSerialCommunicator;
         private ApplicationFinder mApplicationFinder;
 
+        private readonly String cSettingsFilepath;
+
         public ControlPanel()
         {
             InitializeComponent();
-                        
+
+            cSettingsFilepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                             "taskerlight settings.xml");
+
             mSerialCommunicator = new SerialCommunicator();
             mColourOutputManager = new ColourOutputManager(mSerialCommunicator);
 
-            SettingsManager.Load("./settings.xml");
+            SettingsManager.Load(cSettingsFilepath);
 
             saturationTrackbar.Value = SettingsManager.OutputSaturation;
             contrastTrackbar.Value = SettingsManager.OutputContrast;
@@ -51,7 +56,7 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator.Stop();
             mVideoEffectGenerator.Stop();
 
-            SettingsManager.Save("./settings.xml");
+            SettingsManager.Save(cSettingsFilepath);
         }
 
         private void staticColourRadioButton_CheckedChanged(object sender, EventArgs e)
