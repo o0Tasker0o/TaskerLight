@@ -37,6 +37,7 @@
             this.hsvPicker1 = new CSharpGUIElements.Colour_Pickers.HSVPicker();
             this.modePage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.settingsPage = new System.Windows.Forms.TabPage();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -53,15 +54,14 @@
             this.saturationTrackbar = new System.Windows.Forms.TrackBar();
             this.contrastTrackbar = new System.Windows.Forms.TrackBar();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
-            this.ledPreview1 = new ControlPanelUI.LedPreview();
             this.notifyIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.staticColoursToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.activeScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wallpaperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ledPreview1 = new ControlPanelUI.LedPreview();
             this.modePage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.settingsPage.SuspendLayout();
@@ -164,6 +164,20 @@
             this.tabPage1.Size = new System.Drawing.Size(337, 215);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Mode";
+            // 
+            // activeScriptBrowserControl1
+            // 
+            this.activeScriptBrowserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.activeScriptBrowserControl1.AutoScroll = true;
+            this.activeScriptBrowserControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(6, 23);
+            this.activeScriptBrowserControl1.Name = "activeScriptBrowserControl1";
+            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(220, 186);
+            this.activeScriptBrowserControl1.TabIndex = 4;
+            this.activeScriptBrowserControl1.Visible = false;
+            this.activeScriptBrowserControl1.ScriptSelectionChanged += new ControlPanelUI.ActiveScriptBrowserControl.ScriptSelectionChangedEventHandler(this.activeScriptBrowserControl1_ScriptSelectionChanged);
             // 
             // settingsPage
             // 
@@ -331,29 +345,6 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
             // 
-            // activeScriptBrowserControl1
-            // 
-            this.activeScriptBrowserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.activeScriptBrowserControl1.AutoScroll = true;
-            this.activeScriptBrowserControl1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.activeScriptBrowserControl1.Location = new System.Drawing.Point(6, 23);
-            this.activeScriptBrowserControl1.Name = "activeScriptBrowserControl1";
-            this.activeScriptBrowserControl1.Size = new System.Drawing.Size(220, 186);
-            this.activeScriptBrowserControl1.TabIndex = 4;
-            this.activeScriptBrowserControl1.Visible = false;
-            this.activeScriptBrowserControl1.ScriptSelectionChanged += new ControlPanelUI.ActiveScriptBrowserControl.ScriptSelectionChangedEventHandler(this.activeScriptBrowserControl1_ScriptSelectionChanged);
-            // 
-            // ledPreview1
-            // 
-            this.ledPreview1.AllowInput = false;
-            this.ledPreview1.InputColour = System.Drawing.Color.Empty;
-            this.ledPreview1.Location = new System.Drawing.Point(135, 12);
-            this.ledPreview1.Name = "ledPreview1";
-            this.ledPreview1.Size = new System.Drawing.Size(90, 70);
-            this.ledPreview1.TabIndex = 5;
-            // 
             // notifyIconMenu
             // 
             this.notifyIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -365,13 +356,6 @@
             this.exitToolStripMenuItem});
             this.notifyIconMenu.Name = "notifyIconMenu";
             this.notifyIconMenu.Size = new System.Drawing.Size(153, 142);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // staticColoursToolStripMenuItem
             // 
@@ -411,6 +395,22 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // ledPreview1
+            // 
+            this.ledPreview1.AllowInput = false;
+            this.ledPreview1.InputColour = System.Drawing.Color.Empty;
+            this.ledPreview1.Location = new System.Drawing.Point(135, 12);
+            this.ledPreview1.Name = "ledPreview1";
+            this.ledPreview1.Size = new System.Drawing.Size(90, 70);
+            this.ledPreview1.TabIndex = 5;
             // 
             // ControlPanel
             // 

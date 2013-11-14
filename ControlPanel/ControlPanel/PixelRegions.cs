@@ -110,11 +110,11 @@ namespace ControlPanel
         {
             Rectangle scaledSubRegion = mCaptureSubRegions[regionIndex];
 
-            scaledSubRegion.Location = new Point((scaledSubRegion.Left * CaptureRegion.Width) / 9,
-                                                 (scaledSubRegion.Top * CaptureRegion.Height) / 7);
+            scaledSubRegion.Location = new Point(CaptureRegion.Left + ((scaledSubRegion.Left * CaptureRegion.Width) / 9),
+                                                 CaptureRegion.Top + ((scaledSubRegion.Top * CaptureRegion.Height) / 7));
             scaledSubRegion.Width = (scaledSubRegion.Width * CaptureRegion.Width) / 9;
             scaledSubRegion.Height = (scaledSubRegion.Height * CaptureRegion.Height) / 7;
-
+            
             return scaledSubRegion;
         }
     }

@@ -19,6 +19,7 @@ namespace ControlPanelUI
 
         private ColourOutputManager mColourOutputManager;
         private SerialCommunicator mSerialCommunicator;
+        private ApplicationFinder mApplicationFinder;
 
         public ControlPanel()
         {
@@ -39,6 +40,9 @@ namespace ControlPanelUI
             mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager);
 
             mWallpaperEffectGenerator.Start();
+
+            mApplicationFinder = new ApplicationFinder();
+            mApplicationFinder.RegisterApplication(new FileInfo("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"));
         }
 
         private void ControlPanel_FormClosing(object sender, FormClosingEventArgs e)

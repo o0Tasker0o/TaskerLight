@@ -59,6 +59,7 @@
     <Compile Include="ColourUtilitiesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PixelRegionsTest.cs" />
+    <Compile Include="ApplicationFinderTest.cs" />
     <Compile Include="SettingsManagerTest.cs" />
     <Compile Include="TestSerialCommunicator.cs" />
     <Compile Include="VideoEffectGeneratorTest.cs" />

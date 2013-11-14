@@ -133,5 +133,41 @@ namespace ControlPanelTests
             Assert.AreEqual(new Rectangle(1, 6, 1, 1), pixelRegions.GetCaptureSubRegion(23));
             Assert.AreEqual(new Rectangle(2, 6, 1, 1), pixelRegions.GetCaptureSubRegion(24));
         }
+
+        [TestMethod()]
+        public void PixelRegionsCanScaleAndTranslateCaptureRegion()
+        {
+            PixelRegions pixelRegions = PixelRegions.Instance;
+
+            pixelRegions.CaptureRegion = new Rectangle(10, 10, 9, 7);
+
+            Assert.AreEqual(new Rectangle(10, 10, 9, 7), pixelRegions.CaptureRegion);
+
+            Assert.AreEqual(new Rectangle(16, 16, 1, 1), pixelRegions.GetCaptureSubRegion(0));
+            Assert.AreEqual(new Rectangle(17, 16, 1, 1), pixelRegions.GetCaptureSubRegion(1));
+            Assert.AreEqual(new Rectangle(18, 16, 1, 1), pixelRegions.GetCaptureSubRegion(2));
+            Assert.AreEqual(new Rectangle(18, 15, 1, 1), pixelRegions.GetCaptureSubRegion(3));
+            Assert.AreEqual(new Rectangle(18, 14, 1, 1), pixelRegions.GetCaptureSubRegion(4));
+            Assert.AreEqual(new Rectangle(18, 13, 1, 1), pixelRegions.GetCaptureSubRegion(5));
+            Assert.AreEqual(new Rectangle(18, 12, 1, 1), pixelRegions.GetCaptureSubRegion(6));
+            Assert.AreEqual(new Rectangle(18, 11, 1, 1), pixelRegions.GetCaptureSubRegion(7));
+            Assert.AreEqual(new Rectangle(18, 10, 1, 1), pixelRegions.GetCaptureSubRegion(8));
+            Assert.AreEqual(new Rectangle(17, 10, 1, 1), pixelRegions.GetCaptureSubRegion(9));
+            Assert.AreEqual(new Rectangle(16, 10, 1, 1), pixelRegions.GetCaptureSubRegion(10));
+            Assert.AreEqual(new Rectangle(15, 10, 1, 1), pixelRegions.GetCaptureSubRegion(11));
+            Assert.AreEqual(new Rectangle(14, 10, 1, 1), pixelRegions.GetCaptureSubRegion(12));
+            Assert.AreEqual(new Rectangle(13, 10, 1, 1), pixelRegions.GetCaptureSubRegion(13));
+            Assert.AreEqual(new Rectangle(12, 10, 1, 1), pixelRegions.GetCaptureSubRegion(14));
+            Assert.AreEqual(new Rectangle(11, 10, 1, 1), pixelRegions.GetCaptureSubRegion(15));
+            Assert.AreEqual(new Rectangle(10, 10, 1, 1), pixelRegions.GetCaptureSubRegion(16));
+            Assert.AreEqual(new Rectangle(10, 11, 1, 1), pixelRegions.GetCaptureSubRegion(17));
+            Assert.AreEqual(new Rectangle(10, 12, 1, 1), pixelRegions.GetCaptureSubRegion(18));
+            Assert.AreEqual(new Rectangle(10, 13, 1, 1), pixelRegions.GetCaptureSubRegion(19));
+            Assert.AreEqual(new Rectangle(10, 14, 1, 1), pixelRegions.GetCaptureSubRegion(20));
+            Assert.AreEqual(new Rectangle(10, 15, 1, 1), pixelRegions.GetCaptureSubRegion(21));
+            Assert.AreEqual(new Rectangle(10, 16, 1, 1), pixelRegions.GetCaptureSubRegion(22));
+            Assert.AreEqual(new Rectangle(11, 16, 1, 1), pixelRegions.GetCaptureSubRegion(23));
+            Assert.AreEqual(new Rectangle(12, 16, 1, 1), pixelRegions.GetCaptureSubRegion(24));
+        }
     }
 }
