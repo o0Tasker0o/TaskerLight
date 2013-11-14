@@ -16,6 +16,12 @@ namespace ControlPanelUI
         private ColourOutputManager mColourOutputManager;
         private bool mAllowInput;
 
+        public Color[] StaticPixelColours
+        {
+            get;
+            private set;
+        }
+
         public ColourOutputManager ColourOutputManager
         {
             private get
@@ -61,7 +67,9 @@ namespace ControlPanelUI
             InitializeComponent();
 
             AllowInput = false;
-            
+
+            StaticPixelColours = new Color[25];
+
             refreshTimer.Start();
         }
 
@@ -107,6 +115,7 @@ namespace ControlPanelUI
                 {
                     if (PixelRegions.Instance.GetRegion(pixelIndex).Contains(e.Location))
                     {
+                        StaticPixelColours[pixelIndex] = InputColour;
                         ColourOutputManager.SetPixel(pixelIndex, InputColour);
                     }
                 }

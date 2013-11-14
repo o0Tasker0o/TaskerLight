@@ -68,6 +68,14 @@ namespace ControlPanelUI
 
             ledPreview1.AllowInput = staticColourRadioButton.Checked;
             hsvPicker1.Visible = staticColourRadioButton.Checked;
+
+            if(staticColourRadioButton.Checked)
+            {
+                for(UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                {
+                    mColourOutputManager.SetPixel(pixelIndex, ledPreview1.StaticPixelColours[pixelIndex]);
+                }
+            }
         }
 
         private void activeScriptRadioButton_CheckedChanged(object sender, EventArgs e)
