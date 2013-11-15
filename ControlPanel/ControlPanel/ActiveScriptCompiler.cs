@@ -10,39 +10,41 @@ namespace ControlPanel
 {
     public static class ActiveScriptCompiler
     {
-        public static void CompileScript(FileInfo sourceFile, DirectoryInfo targetDirectory)
+        public static CompilerResults CompileScript(FileInfo sourceFile, DirectoryInfo targetDirectory)
         {
             if(null == sourceFile)
             {
-                return;
+                return null;
             }
 
             if(null == targetDirectory)
             {
-                return;
+                return null;
             }
 
-            CompileScript(File.ReadAllText(sourceFile.FullName), targetDirectory);
+            return CompileScript(File.ReadAllText(sourceFile.FullName), targetDirectory);
         }
 
-        public static void CompileScript(String source, DirectoryInfo targetDirectory)
+        public static CompilerResults CompileScript(String source, DirectoryInfo targetDirectory)
         {
-            if (null == targetDirectory)
+            CompilerResults results = null;
+
+            if(null != targetDirectory)
             {
-                return;
+                using (CSharpCodeProvider compiler = new CSharpCodeProvider())
+                {
+                    CompilerParameters compilerParameters = new CompilerParameters();
+                    compilerParameters.OutputAssembly = Path.Combine(targetDirectory.FullName, "script.dll");
+                    compilerParameters.GenerateExecutable = false;
+                    compilerParameters.GenerateInMemory = false;
+
+                    compilerParameters.ReferencedAssemblies.Add("System.Drawing.dll");
+
+                    results = compiler.CompileAssemblyFromSource(compilerParameters, source);
+                }
             }
 
-            using (CSharpCodeProvider compiler = new CSharpCodeProvider())
-            {
-                CompilerParameters compilerParameters = new CompilerParameters();
-                compilerParameters.OutputAssembly = Path.Combine(targetDirectory.FullName, "script.dll");
-                compilerParameters.GenerateExecutable = false;
-                compilerParameters.GenerateInMemory = false;
-
-                compilerParameters.ReferencedAssemblies.Add("System.Drawing.dll");
-
-                CompilerResults results = compiler.CompileAssemblyFromSource(compilerParameters, source);
-            }
+            return results;
         }
     }
 }
