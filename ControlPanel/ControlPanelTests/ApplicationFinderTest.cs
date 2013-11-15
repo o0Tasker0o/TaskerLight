@@ -37,6 +37,10 @@ namespace ControlPanelTests
             applicationFinder.RegisterApplication(visualStudioExeFile);
 
             Assert.IsTrue(applicationFinder.RunningRegisteredApplications());
+
+            applicationFinder.UnregisterApplication(visualStudioExeFile);
+
+            Assert.IsFalse(applicationFinder.RunningRegisteredApplications());
         }
 
         [TestMethod()]
@@ -48,11 +52,29 @@ namespace ControlPanelTests
 
             Assert.IsFalse(applicationFinder.RunningRegisteredApplications());
 
-            FileInfo controlPanelExeFile = new FileInfo("C:\\Windows\\System32\\calc.exe");
+            FileInfo calculatorExeFile = new FileInfo("C:\\Windows\\System32\\calc.exe");
 
-            applicationFinder.RegisterApplication(controlPanelExeFile);
+            applicationFinder.RegisterApplication(calculatorExeFile);
 
             Assert.IsFalse(applicationFinder.RunningRegisteredApplications());
+        }
+
+        [TestMethod()]
+        public void ApplicationFinderCanUnregisterNullExe()
+        {
+            ApplicationFinder applicationFinder = new ApplicationFinder();
+
+            applicationFinder.UnregisterApplication(null);
+        }
+
+        [TestMethod()]
+        public void ApplicationFinderCanUnregisterUnknownExe()
+        {
+            ApplicationFinder applicationFinder = new ApplicationFinder();
+
+            FileInfo calculatorExeFile = new FileInfo("C:\\Windows\\System32\\calc.exe");
+
+            applicationFinder.UnregisterApplication(calculatorExeFile);
         }
     }
 }

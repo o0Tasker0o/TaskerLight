@@ -41,7 +41,6 @@ namespace ControlPanelUI
             ledPreview1.ColourOutputManager = mColourOutputManager;
 
             mApplicationFinder = new ApplicationFinder();
-            mApplicationFinder.RegisterApplication(new FileInfo("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"));
 
             mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager);
             mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
@@ -142,6 +141,10 @@ namespace ControlPanelUI
             activeScriptToolStripMenuItem.Checked = false;
             wallpaperToolStripMenuItem.Checked = false;
             videoToolStripMenuItem.Checked = videoRadioButton.Checked;
+
+            addVideoAppButton.Visible = videoRadioButton.Checked;
+            deleteVideoAppButton.Visible = videoRadioButton.Checked;
+            videoAppListView.Visible = videoRadioButton.Checked;
 
             if (videoRadioButton.Checked)
             {
@@ -249,6 +252,42 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator.CurrentScriptDirectory = null;
 
             activeScriptBrowserControl1.SelectedScriptDirectory.Delete(true);
+        }
+
+        private void deleteVideoAppButton_Click(object sender, EventArgs e)
+        {
+            String exeName = (String) videoAppListView.SelectedItems[0].Tag;
+
+            mApplicationFinder.UnregisterApplication(new FileInfo(exeName));
+
+            videoAppListView.SelectedItems[0].Remove();
+        }
+
+        private void addVideoAppButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openExeDialog = new OpenFileDialog();
+
+            if (openExeDialog.ShowDialog() == DialogResult.OK)
+            {
+                String exeFilename = openExeDialog.FileName;
+                Icon icon = Icon.ExtractAssociatedIcon(exeFilename);
+
+                videoAppIconList.Images.Add(icon);
+
+                ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFilename));
+                appItem.Tag = exeFilename;
+                appItem.ImageIndex = this.videoAppIconList.Images.Count - 1;
+
+                videoAppListView.Items.Add(appItem);
+
+                mApplicationFinder.RegisterApplication(new FileInfo(exeFilename));
+
+            }
+        }
+
+        private void videoAppListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            deleteVideoAppButton.Enabled = videoAppListView.SelectedItems.Count > 0;
         }
     }
 }

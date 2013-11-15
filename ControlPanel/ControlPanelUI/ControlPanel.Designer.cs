@@ -37,6 +37,10 @@
             this.hsvPicker1 = new CSharpGUIElements.Colour_Pickers.HSVPicker();
             this.modePage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.videoAppListView = new System.Windows.Forms.ListView();
+            this.videoAppIconList = new System.Windows.Forms.ImageList(this.components);
+            this.deleteVideoAppButton = new System.Windows.Forms.Button();
+            this.addVideoAppButton = new System.Windows.Forms.Button();
             this.deleteScriptButton = new System.Windows.Forms.Button();
             this.addScriptButton = new System.Windows.Forms.Button();
             this.settingsPage = new System.Windows.Forms.TabPage();
@@ -155,6 +159,9 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.videoAppListView);
+            this.tabPage1.Controls.Add(this.deleteVideoAppButton);
+            this.tabPage1.Controls.Add(this.addVideoAppButton);
             this.tabPage1.Controls.Add(this.deleteScriptButton);
             this.tabPage1.Controls.Add(this.addScriptButton);
             this.tabPage1.Controls.Add(this.hsvPicker1);
@@ -169,6 +176,53 @@
             this.tabPage1.Size = new System.Drawing.Size(337, 200);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Mode";
+            // 
+            // videoAppListView
+            // 
+            this.videoAppListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoAppListView.BackColor = System.Drawing.Color.Black;
+            this.videoAppListView.ForeColor = System.Drawing.Color.White;
+            this.videoAppListView.LargeImageList = this.videoAppIconList;
+            this.videoAppListView.Location = new System.Drawing.Point(9, 10);
+            this.videoAppListView.Name = "videoAppListView";
+            this.videoAppListView.Size = new System.Drawing.Size(216, 182);
+            this.videoAppListView.TabIndex = 12;
+            this.videoAppListView.UseCompatibleStateImageBehavior = false;
+            this.videoAppListView.Visible = false;
+            this.videoAppListView.SelectedIndexChanged += new System.EventHandler(this.videoAppListView_SelectedIndexChanged);
+            // 
+            // videoAppIconList
+            // 
+            this.videoAppIconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.videoAppIconList.ImageSize = new System.Drawing.Size(32, 32);
+            this.videoAppIconList.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // deleteVideoAppButton
+            // 
+            this.deleteVideoAppButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.deleteVideoAppButton.Enabled = false;
+            this.deleteVideoAppButton.Location = new System.Drawing.Point(277, 169);
+            this.deleteVideoAppButton.Name = "deleteVideoAppButton";
+            this.deleteVideoAppButton.Size = new System.Drawing.Size(24, 23);
+            this.deleteVideoAppButton.TabIndex = 11;
+            this.deleteVideoAppButton.Text = "-";
+            this.deleteVideoAppButton.UseVisualStyleBackColor = true;
+            this.deleteVideoAppButton.Visible = false;
+            this.deleteVideoAppButton.Click += new System.EventHandler(this.deleteVideoAppButton_Click);
+            // 
+            // addVideoAppButton
+            // 
+            this.addVideoAppButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.addVideoAppButton.Location = new System.Drawing.Point(307, 169);
+            this.addVideoAppButton.Name = "addVideoAppButton";
+            this.addVideoAppButton.Size = new System.Drawing.Size(24, 23);
+            this.addVideoAppButton.TabIndex = 10;
+            this.addVideoAppButton.Text = "+";
+            this.addVideoAppButton.UseVisualStyleBackColor = true;
+            this.addVideoAppButton.Visible = false;
+            this.addVideoAppButton.Click += new System.EventHandler(this.addVideoAppButton_Click);
             // 
             // deleteScriptButton
             // 
@@ -192,6 +246,7 @@
             this.addScriptButton.UseVisualStyleBackColor = true;
             this.addScriptButton.Visible = false;
             this.addScriptButton.Click += new System.EventHandler(this.addScriptButton_Click);
+            // 
             // settingsPage
             // 
             this.settingsPage.BackColor = System.Drawing.SystemColors.Control;
@@ -426,6 +481,7 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // 
             // activeScriptBrowserControl1
             // 
             this.activeScriptBrowserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -518,6 +574,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button addScriptButton;
         private System.Windows.Forms.Button deleteScriptButton;
+        private System.Windows.Forms.Button deleteVideoAppButton;
+        private System.Windows.Forms.Button addVideoAppButton;
+        private System.Windows.Forms.ListView videoAppListView;
+        private System.Windows.Forms.ImageList videoAppIconList;
     }
 }
 

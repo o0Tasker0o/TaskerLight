@@ -48,6 +48,16 @@ namespace ControlPanel
             RegisteredApplications.Add(Path.GetFileNameWithoutExtension(exeFile.FullName));
         }
 
+        public void UnregisterApplication(FileInfo exeFile)
+        {
+            if(null == exeFile)
+            {
+                return;
+            }
+
+            RegisteredApplications.Remove(Path.GetFileNameWithoutExtension(exeFile.FullName));
+        }
+
         public bool RunningRegisteredApplications()
         {
             foreach(String applicationName in RegisteredApplications)
