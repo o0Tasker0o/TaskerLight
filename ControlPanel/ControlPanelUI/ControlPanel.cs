@@ -96,6 +96,8 @@ namespace ControlPanelUI
 
         private void activeScriptRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            deleteScriptButton.Visible = activeScriptRadioButton.Checked;
+            addScriptButton.Visible = activeScriptRadioButton.Checked;
             staticColoursToolStripMenuItem.Checked = false;
             activeScriptToolStripMenuItem.Checked = activeScriptRadioButton.Checked;
             wallpaperToolStripMenuItem.Checked = false;
@@ -158,6 +160,8 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator.Stop();
             mActiveScriptEffectGenerator.CurrentScriptDirectory = scriptDirectory;
             mActiveScriptEffectGenerator.Start();
+
+            deleteScriptButton.Enabled = !scriptDirectory.FullName.StartsWith(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         private void hsvPicker1_ColourChanged(object sender, EventArgs e)
@@ -230,6 +234,21 @@ namespace ControlPanelUI
             wallpaperToolStripMenuItem.Checked = false;
 
             videoRadioButton.Checked = true;
+        }
+
+        private void addScriptButton_Click(object sender, EventArgs e)
+        {
+            ScriptCompilerForm compilerForm = new ScriptCompilerForm();
+
+            compilerForm.ShowDialog();
+        }
+
+        private void deleteScriptButton_Click(object sender, EventArgs e)
+        {
+            mActiveScriptEffectGenerator.Stop();
+            mActiveScriptEffectGenerator.CurrentScriptDirectory = null;
+
+            activeScriptBrowserControl1.SelectedScriptDirectory.Delete(true);
         }
     }
 }

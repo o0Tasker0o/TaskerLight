@@ -27,7 +27,9 @@ namespace ControlPanelTests
         public void ActiveScriptBrowserListsDllDirectories()
         {
             ActiveScriptBrowser scriptBrowser = new ActiveScriptBrowser();
-            
+
+            scriptBrowser.RootDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
             Int32 scriptChanges = 0;
 
             scriptBrowser.ScriptsChanged += delegate()
@@ -47,7 +49,7 @@ namespace ControlPanelTests
 
             using(FileStream emptyStream = File.Create(Path.Combine(cScriptDir, "script.dll"))) { }
 
-            Assert.AreEqual(1, scriptBrowser.ScriptDirectories.Count);
+            Assert.AreEqual(2, scriptBrowser.ScriptDirectories.Count);
             System.Threading.Thread.Sleep(50);
             Assert.AreEqual(2, scriptChanges);
             Assert.AreEqual(new DirectoryInfo(cScriptDir).FullName, scriptBrowser.ScriptDirectories[0].FullName);
@@ -62,6 +64,8 @@ namespace ControlPanelTests
         public void ActiveScriptBrowserDoesNotListDirectoriesWithOtherFiles()
         {
             ActiveScriptBrowser scriptBrowser = new ActiveScriptBrowser();
+
+            scriptBrowser.RootDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
             Directory.CreateDirectory(cScriptDir);
 
@@ -79,6 +83,8 @@ namespace ControlPanelTests
         public void ActiveScriptBrowserRootCannotBeSetToNull()
         {
             ActiveScriptBrowser scriptBrowser = new ActiveScriptBrowser();
+
+            scriptBrowser.RootDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
             Assert.AreEqual(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).FullName, scriptBrowser.RootDirectory.FullName);
 

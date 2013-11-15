@@ -37,6 +37,8 @@
             this.hsvPicker1 = new CSharpGUIElements.Colour_Pickers.HSVPicker();
             this.modePage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.deleteScriptButton = new System.Windows.Forms.Button();
+            this.addScriptButton = new System.Windows.Forms.Button();
             this.settingsPage = new System.Windows.Forms.TabPage();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -153,6 +155,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.deleteScriptButton);
+            this.tabPage1.Controls.Add(this.addScriptButton);
             this.tabPage1.Controls.Add(this.hsvPicker1);
             this.tabPage1.Controls.Add(this.staticColourRadioButton);
             this.tabPage1.Controls.Add(this.activeScriptBrowserControl1);
@@ -166,6 +170,28 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Mode";
             // 
+            // deleteScriptButton
+            // 
+            this.deleteScriptButton.Enabled = false;
+            this.deleteScriptButton.Location = new System.Drawing.Point(277, 169);
+            this.deleteScriptButton.Name = "deleteScriptButton";
+            this.deleteScriptButton.Size = new System.Drawing.Size(24, 23);
+            this.deleteScriptButton.TabIndex = 9;
+            this.deleteScriptButton.Text = "-";
+            this.deleteScriptButton.UseVisualStyleBackColor = true;
+            this.deleteScriptButton.Visible = false;
+            this.deleteScriptButton.Click += new System.EventHandler(this.deleteScriptButton_Click);
+            // 
+            // addScriptButton
+            // 
+            this.addScriptButton.Location = new System.Drawing.Point(307, 169);
+            this.addScriptButton.Name = "addScriptButton";
+            this.addScriptButton.Size = new System.Drawing.Size(24, 23);
+            this.addScriptButton.TabIndex = 8;
+            this.addScriptButton.Text = "+";
+            this.addScriptButton.UseVisualStyleBackColor = true;
+            this.addScriptButton.Visible = false;
+            this.addScriptButton.Click += new System.EventHandler(this.addScriptButton_Click);
             // settingsPage
             // 
             this.settingsPage.BackColor = System.Drawing.SystemColors.Control;
@@ -490,6 +516,8 @@
         private System.Windows.Forms.ToolStripMenuItem wallpaperToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem videoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Button addScriptButton;
+        private System.Windows.Forms.Button deleteScriptButton;
     }
 }
 

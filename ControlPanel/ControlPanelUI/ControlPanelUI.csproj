@@ -72,6 +72,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptCompilerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptCompilerForm.Designer.cs">
+      <DependentUpon>ScriptCompilerForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ActiveScriptBrowserControl.resx">
       <DependentUpon>ActiveScriptBrowserControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -91,6 +97,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ScriptCompilerForm.resx">
+      <DependentUpon>ScriptCompilerForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -48,21 +48,33 @@ namespace ControlPanel
             {
                 List<DirectoryInfo> directoriesList = new List<DirectoryInfo>();
 
-                foreach(DirectoryInfo scriptDirectory in RootDirectory.GetDirectories())
-                {
-                    if(scriptDirectory.GetFiles("script.dll").Count() > 0)
-                    {
-                        directoriesList.Add(scriptDirectory);
-                    }
-                }
+                directoriesList.AddRange(FindScriptDirectories(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory)));
+                directoriesList.AddRange(FindScriptDirectories(RootDirectory));
 
                 return directoriesList;
             }
         }
 
+        private List<DirectoryInfo> FindScriptDirectories(DirectoryInfo rootDirectory)
+        {
+            List<DirectoryInfo> directoriesList = new List<DirectoryInfo>();
+
+            foreach (DirectoryInfo scriptDirectory in rootDirectory.GetDirectories())
+            {
+                if (scriptDirectory.GetFiles("script.dll").Count() > 0)
+                {
+                    directoriesList.Add(scriptDirectory);
+                }
+            }
+
+            return directoriesList;
+        }
+
         public ActiveScriptBrowser()
         {
-            RootDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            String scriptDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                                  "TaskerLight Scripts");
+            RootDirectory = new DirectoryInfo(scriptDirectory);
         }
     }
 }
