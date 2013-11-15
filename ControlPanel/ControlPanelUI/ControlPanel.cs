@@ -47,7 +47,21 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
             mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager, mApplicationFinder);
 
-            mWallpaperEffectGenerator.Start();
+            switch(SettingsManager.Mode)
+            {
+                case OutputMode.StaticColours:
+                    staticColourRadioButton.Checked = true;
+                  break;
+                case OutputMode.ActiveScript:
+                    activeScriptRadioButton.Checked = true;
+                  break;
+                case OutputMode.Wallpaper:
+                    wallpaperRadioButton.Checked = true;
+                  break;
+                case OutputMode.Video:
+                    videoRadioButton.Checked = true;
+                  break;
+            }
         }
 
         private void ControlPanel_FormClosing(object sender, FormClosingEventArgs e)
@@ -71,6 +85,8 @@ namespace ControlPanelUI
 
             if(staticColourRadioButton.Checked)
             {
+                SettingsManager.Mode = OutputMode.StaticColours;
+
                 for(UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
                     mColourOutputManager.SetPixel(pixelIndex, ledPreview1.StaticPixelColours[pixelIndex]);
@@ -87,6 +103,8 @@ namespace ControlPanelUI
 
             if (activeScriptRadioButton.Checked)
             {
+                SettingsManager.Mode = OutputMode.ActiveScript;
+
                 activeScriptBrowserControl1.Visible = true;
                 mActiveScriptEffectGenerator.Start();
             }
@@ -106,6 +124,8 @@ namespace ControlPanelUI
 
             if (wallpaperRadioButton.Checked)
             {
+                SettingsManager.Mode = OutputMode.Wallpaper;
+
                 mWallpaperEffectGenerator.Start();
             }
             else
@@ -123,6 +143,8 @@ namespace ControlPanelUI
 
             if (videoRadioButton.Checked)
             {
+                SettingsManager.Mode = OutputMode.Video;
+
                 mVideoEffectGenerator.Start();
             }
             else

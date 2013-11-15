@@ -17,6 +17,7 @@ namespace ControlPanelTests
         {
             SettingsManager.OutputSaturation = 1;
             SettingsManager.OutputContrast = 2;
+            SettingsManager.Mode = OutputMode.ActiveScript;
 
             for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
             {
@@ -50,7 +51,9 @@ namespace ControlPanelTests
             {
                 Assert.AreEqual(1 * pixelIndex + "," + 2 * pixelIndex + "," + 3 * pixelIndex, 
                                 settingsXml.SelectSingleNode("//TaskerLightSettings/StaticColours" + pixelIndex).InnerText);
-            }
+            } 
+            
+            Assert.AreEqual("ActiveScript", settingsXml.SelectSingleNode("//TaskerLightSettings/OutputMode").InnerText);
         }
 
         [TestMethod()]
@@ -62,6 +65,7 @@ namespace ControlPanelTests
 
             Assert.AreEqual(1, SettingsManager.OutputSaturation);
             Assert.AreEqual(2, SettingsManager.OutputContrast);
+            Assert.AreEqual(OutputMode.ActiveScript, SettingsManager.Mode);
 
             SettingsManager.Load(cSettingsFilename);
 
@@ -73,17 +77,18 @@ namespace ControlPanelTests
                 Assert.AreEqual(Color.FromArgb(1 * pixelIndex, 2 * pixelIndex, 3 * pixelIndex),
                                 SettingsManager.StaticColours[pixelIndex]);
             }
+
+            Assert.AreEqual(OutputMode.ActiveScript, SettingsManager.Mode);
         }
 
         [TestMethod()]
         public void SettingsManagerCanHandleLoadingFromNonExistantFile()
         {
-            CreateTestFile("This file does not exist.xml");
-
             Assert.AreEqual(1, SettingsManager.OutputSaturation);
             Assert.AreEqual(2, SettingsManager.OutputContrast);
+            Assert.AreEqual(OutputMode.ActiveScript, SettingsManager.Mode);
 
-            SettingsManager.Load(cSettingsFilename);
+            SettingsManager.Load("This file does not exist.xml");
 
             Assert.AreEqual(100, SettingsManager.OutputSaturation);
             Assert.AreEqual(100, SettingsManager.OutputContrast);
@@ -95,6 +100,7 @@ namespace ControlPanelTests
             }
 
             CollectionAssert.AreEqual(expectedColours, SettingsManager.StaticColours);
+            Assert.AreEqual(OutputMode.Wallpaper, SettingsManager.Mode);
         }
 
         [TestMethod()]
@@ -102,6 +108,7 @@ namespace ControlPanelTests
         {
             Assert.AreEqual(1, SettingsManager.OutputSaturation);
             Assert.AreEqual(2, SettingsManager.OutputContrast);
+            Assert.AreEqual(OutputMode.ActiveScript, SettingsManager.Mode);
 
             SettingsManager.Load(null);
 
@@ -115,6 +122,7 @@ namespace ControlPanelTests
             }
 
             CollectionAssert.AreEqual(expectedColours, SettingsManager.StaticColours);
+            Assert.AreEqual(OutputMode.Wallpaper, SettingsManager.Mode);
         }
 
         private static void CreateTestFile(String filename)
@@ -137,6 +145,10 @@ namespace ControlPanelTests
                 staticColourNode.InnerText = 1 * pixelIndex + "," + 2 * pixelIndex + "," + 3 * pixelIndex;
                 rootNode.AppendChild(staticColourNode);
             }
+
+            XmlNode outputNode = settingsDocument.CreateElement("OutputMode");
+            outputNode.InnerText = "ActiveScript";
+            rootNode.AppendChild(outputNode);
 
             settingsDocument.Save(filename);
         }

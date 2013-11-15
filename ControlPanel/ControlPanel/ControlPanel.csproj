@@ -55,6 +55,7 @@
     <Compile Include="ColourUtilities.cs" />
     <Compile Include="EffectGenerator.cs" />
     <Compile Include="ISerialCommunicator.cs" />
+    <Compile Include="OutputMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PixelRegions.cs" />
     <Compile Include="ApplicationFinder.cs" />

@@ -78,7 +78,6 @@
             // 
             this.wallpaperRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.wallpaperRadioButton.AutoSize = true;
-            this.wallpaperRadioButton.Checked = true;
             this.wallpaperRadioButton.Location = new System.Drawing.Point(241, 56);
             this.wallpaperRadioButton.Name = "wallpaperRadioButton";
             this.wallpaperRadioButton.Size = new System.Drawing.Size(73, 17);

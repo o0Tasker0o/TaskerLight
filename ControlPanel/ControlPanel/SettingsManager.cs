@@ -37,6 +37,12 @@ namespace ControlPanel
             }
         }
 
+        public static OutputMode Mode
+        {
+            get;
+            set;
+        }
+
         public static void Save(String filename)
         {
             XmlDocument settingsDocument = new XmlDocument();
@@ -53,6 +59,8 @@ namespace ControlPanel
                 colourString += StaticColours[pixelIndex].B;
                 AddChildNode(settingsDocument, "StaticColours" + pixelIndex, colourString);
             }
+
+            AddChildNode(settingsDocument, "OutputMode", Mode.ToString());
 
             settingsDocument.Save(filename);
         }
@@ -76,7 +84,6 @@ namespace ControlPanel
             OutputSaturation = UInt16.Parse(GetNodeValue(settingsXml, "OutputSaturation", "100"));
             OutputContrast = UInt16.Parse(GetNodeValue(settingsXml, "OutputContrast", "100"));
 
-
             for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
             {
                 String colourString = GetNodeValue(settingsXml, "StaticColours" + pixelIndex, "0,0,0,0");
@@ -87,6 +94,8 @@ namespace ControlPanel
                                                             Int32.Parse(colourComponents[1]),
                                                             Int32.Parse(colourComponents[2]));
             }
+
+            Mode = (OutputMode) Enum.Parse(typeof(OutputMode), GetNodeValue(settingsXml, "OutputMode", "Wallpaper"));
         }
 
         private static void AddChildNode(XmlDocument settingsDocument, String variableName, String value)
