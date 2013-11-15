@@ -2,12 +2,14 @@
 using System.IO;
 using System.Xml;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace ControlPanel
 {
     public class SettingsManager
     {
         private static Color[] mStaticColours;
+        private static List<String> mVideoApps;
 
         public static UInt16 OutputSaturation
         {
@@ -43,6 +45,24 @@ namespace ControlPanel
             set;
         }
 
+        public static List<String> VideoApps
+        {
+            get
+            {
+                if (null == mVideoApps)
+                {
+                    mVideoApps = new List<String>();
+                }
+
+                return mVideoApps;
+            }
+
+            set
+            {
+                mVideoApps = value;
+            }
+        }
+
         public static void Save(String filename)
         {
             XmlDocument settingsDocument = new XmlDocument();
@@ -61,6 +81,12 @@ namespace ControlPanel
             }
 
             AddChildNode(settingsDocument, "OutputMode", Mode.ToString());
+
+
+            foreach(String appName in VideoApps)
+            {
+                AddChildNode(settingsDocument, "VideoApp", appName);
+            }
 
             settingsDocument.Save(filename);
         }
@@ -96,6 +122,7 @@ namespace ControlPanel
             }
 
             Mode = (OutputMode) Enum.Parse(typeof(OutputMode), GetNodeValue(settingsXml, "OutputMode", "Wallpaper"));
+            VideoApps = GetNodeValues(settingsXml, "VideoApp");
         }
 
         private static void AddChildNode(XmlDocument settingsDocument, String variableName, String value)
@@ -117,6 +144,23 @@ namespace ControlPanel
             {
                 return defaultValue;
             }
+        }
+
+        private static List<String> GetNodeValues(XmlDocument settingsDocument, String nodeName)
+        {
+            XmlNodeList selectedNodes = settingsDocument.SelectNodes("//TaskerLightSettings/" + nodeName);
+
+            List<String> nodeStrings = new List<String>();
+
+            if (null != selectedNodes)
+            {
+                foreach(XmlNode node in selectedNodes)
+                {
+                    nodeStrings.Add(node.InnerText);
+                }
+            }
+
+            return nodeStrings;
         }
     }
 }

@@ -55,6 +55,7 @@ namespace ControlPanel
                 return;
             }
 
+            SettingsManager.VideoApps.Remove(exeFile.FullName);
             RegisteredApplications.Remove(Path.GetFileNameWithoutExtension(exeFile.FullName));
         }
 

@@ -42,6 +42,11 @@ namespace ControlPanelUI
 
             mApplicationFinder = new ApplicationFinder();
 
+            foreach (String videoApp in SettingsManager.VideoApps)
+            {
+                AddVideoApp(videoApp);
+            }
+
             mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager);
             mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
             mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager, mApplicationFinder);
@@ -267,22 +272,30 @@ namespace ControlPanelUI
         {
             OpenFileDialog openExeDialog = new OpenFileDialog();
 
+            openExeDialog.InitialDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            openExeDialog.Filter = "Executables (*.exe)|*.exe";
+
             if (openExeDialog.ShowDialog() == DialogResult.OK)
             {
-                String exeFilename = openExeDialog.FileName;
-                Icon icon = Icon.ExtractAssociatedIcon(exeFilename);
+                AddVideoApp(openExeDialog.FileName);
 
-                videoAppIconList.Images.Add(icon);
-
-                ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFilename));
-                appItem.Tag = exeFilename;
-                appItem.ImageIndex = this.videoAppIconList.Images.Count - 1;
-
-                videoAppListView.Items.Add(appItem);
-
-                mApplicationFinder.RegisterApplication(new FileInfo(exeFilename));
-
+                SettingsManager.VideoApps.Add(openExeDialog.FileName);
             }
+        }
+
+        private void AddVideoApp(String exeFilename)
+        {
+            Icon icon = Icon.ExtractAssociatedIcon(exeFilename);
+
+            videoAppIconList.Images.Add(icon);
+
+            ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFilename));
+            appItem.Tag = exeFilename;
+            appItem.ImageIndex = this.videoAppIconList.Images.Count - 1;
+
+            videoAppListView.Items.Add(appItem);
+
+            mApplicationFinder.RegisterApplication(new FileInfo(exeFilename));
         }
 
         private void videoAppListView_SelectedIndexChanged(object sender, EventArgs e)

@@ -4,6 +4,7 @@ using System.Xml;
 using ControlPanel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace ControlPanelTests
 {
@@ -34,6 +35,10 @@ namespace ControlPanelTests
         [TestMethod()]
         public void SettingsManagerCanSaveSettingsToFile()
         {
+            SettingsManager.VideoApps = new List<String>();
+            SettingsManager.VideoApps.Add("app name 1");
+            SettingsManager.VideoApps.Add("app name 2");
+
             SettingsManager.Save(cSettingsFilename);
 
             Assert.IsTrue(File.Exists(cSettingsFilename));
@@ -54,6 +59,9 @@ namespace ControlPanelTests
             } 
             
             Assert.AreEqual("ActiveScript", settingsXml.SelectSingleNode("//TaskerLightSettings/OutputMode").InnerText);
+
+            Assert.AreEqual("app name 1", settingsXml.SelectNodes("//TaskerLightSettings/VideoApp")[0].InnerText);
+            Assert.AreEqual("app name 2", settingsXml.SelectNodes("//TaskerLightSettings/VideoApp")[1].InnerText);
         }
 
         [TestMethod()]
@@ -79,6 +87,12 @@ namespace ControlPanelTests
             }
 
             Assert.AreEqual(OutputMode.ActiveScript, SettingsManager.Mode);
+
+            List<String> videoApps = new List<String>();
+            videoApps.Add("app name 1");
+            videoApps.Add("app name 2");
+
+            CollectionAssert.AreEqual(videoApps, SettingsManager.VideoApps);
         }
 
         [TestMethod()]
@@ -101,6 +115,7 @@ namespace ControlPanelTests
 
             CollectionAssert.AreEqual(expectedColours, SettingsManager.StaticColours);
             Assert.AreEqual(OutputMode.Wallpaper, SettingsManager.Mode);
+            CollectionAssert.AreEqual(new List<String>(), SettingsManager.VideoApps);
         }
 
         [TestMethod()]
@@ -123,6 +138,7 @@ namespace ControlPanelTests
 
             CollectionAssert.AreEqual(expectedColours, SettingsManager.StaticColours);
             Assert.AreEqual(OutputMode.Wallpaper, SettingsManager.Mode);
+            CollectionAssert.AreEqual(new List<String>(), SettingsManager.VideoApps);
         }
 
         private static void CreateTestFile(String filename)
@@ -149,6 +165,14 @@ namespace ControlPanelTests
             XmlNode outputNode = settingsDocument.CreateElement("OutputMode");
             outputNode.InnerText = "ActiveScript";
             rootNode.AppendChild(outputNode);
+
+            XmlNode registeredAppNode1 = settingsDocument.CreateElement("VideoApp");
+            registeredAppNode1.InnerText = "app name 1";
+            rootNode.AppendChild(registeredAppNode1);
+
+            XmlNode registeredAppNode2 = settingsDocument.CreateElement("VideoApp");
+            registeredAppNode2.InnerText = "app name 2";
+            rootNode.AppendChild(registeredAppNode2);
 
             settingsDocument.Save(filename);
         }
