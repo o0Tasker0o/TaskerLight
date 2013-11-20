@@ -63,6 +63,12 @@ namespace ControlPanel
             }
         }
 
+        public static bool VideoOverlay
+        {
+            get;
+            set;
+        }
+
         public static void Save(String filename)
         {
             XmlDocument settingsDocument = new XmlDocument();
@@ -87,6 +93,8 @@ namespace ControlPanel
             {
                 AddChildNode(settingsDocument, "VideoApp", appName);
             }
+
+            AddChildNode(settingsDocument, "VideoOverlay", VideoOverlay.ToString());
 
             settingsDocument.Save(filename);
         }
@@ -123,6 +131,8 @@ namespace ControlPanel
 
             Mode = (OutputMode) Enum.Parse(typeof(OutputMode), GetNodeValue(settingsXml, "OutputMode", "Wallpaper"));
             VideoApps = GetNodeValues(settingsXml, "VideoApp");
+
+            VideoOverlay = GetNodeValue(settingsXml, "VideoOverlay", "false").Equals("true", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static void AddChildNode(XmlDocument settingsDocument, String variableName, String value)

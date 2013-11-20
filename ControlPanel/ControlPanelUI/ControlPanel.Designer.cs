@@ -68,6 +68,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.activeScriptBrowserControl1 = new ControlPanelUI.ActiveScriptBrowserControl();
             this.ledPreview1 = new ControlPanelUI.LedPreview();
+            this.videoAppPollTimer = new System.Windows.Forms.Timer(this.components);
+            this.videoOverlayCheckbox = new System.Windows.Forms.CheckBox();
             this.modePage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.settingsPage.SuspendLayout();
@@ -159,6 +161,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.videoOverlayCheckbox);
             this.tabPage1.Controls.Add(this.videoAppListView);
             this.tabPage1.Controls.Add(this.deleteVideoAppButton);
             this.tabPage1.Controls.Add(this.addVideoAppButton);
@@ -499,14 +502,31 @@
             // ledPreview1
             // 
             this.ledPreview1.AllowInput = false;
+            this.ledPreview1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ledPreview1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ledPreview1.BackgroundImage")));
             this.ledPreview1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ledPreview1.InputColour = System.Drawing.Color.Empty;
             this.ledPreview1.Location = new System.Drawing.Point(102, 12);
             this.ledPreview1.Name = "ledPreview1";
+            this.ledPreview1.RefreshInterval = 100;
             this.ledPreview1.Size = new System.Drawing.Size(149, 125);
             this.ledPreview1.TabIndex = 5;
             // 
+            // videoAppPollTimer
+            // 
+            this.videoAppPollTimer.Interval = 500;
+            this.videoAppPollTimer.Tick += new System.EventHandler(this.videoAppPollTimer_Tick);
+            // 
+            // videoOverlayCheckbox
+            // 
+            this.videoOverlayCheckbox.AutoSize = true;
+            this.videoOverlayCheckbox.Location = new System.Drawing.Point(241, 102);
+            this.videoOverlayCheckbox.Name = "videoOverlayCheckbox";
+            this.videoOverlayCheckbox.Size = new System.Drawing.Size(92, 17);
+            this.videoOverlayCheckbox.TabIndex = 13;
+            this.videoOverlayCheckbox.Text = "Video Overlay";
+            this.videoOverlayCheckbox.UseVisualStyleBackColor = true;
+            this.videoOverlayCheckbox.CheckedChanged += new System.EventHandler(this.videoOverlayCheckbox_CheckedChanged);
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -578,6 +598,8 @@
         private System.Windows.Forms.Button addVideoAppButton;
         private System.Windows.Forms.ListView videoAppListView;
         private System.Windows.Forms.ImageList videoAppIconList;
+        private System.Windows.Forms.Timer videoAppPollTimer;
+        private System.Windows.Forms.CheckBox videoOverlayCheckbox;
     }
 }
 

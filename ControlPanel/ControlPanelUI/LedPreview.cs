@@ -8,7 +8,6 @@ namespace ControlPanelUI
     public partial class LedPreview : UserControl
     {
         private ColourOutputManager mColourOutputManager;
-        private bool mAllowInput;
 
         public Color[] StaticPixelColours
         {
@@ -30,23 +29,20 @@ namespace ControlPanelUI
 
         public bool AllowInput
         {
+            get;
+            set;
+        }
+
+        public int RefreshInterval
+        {
             get
             {
-                return mAllowInput;
+                return refreshTimer.Interval;
             }
+
             set
             {
-                mAllowInput = value;
-
-                if(mAllowInput)
-                {
-                    ColourOutputManager.FadeTimeMs = 1000;
-                    refreshTimer.Interval = 1000;
-                }
-                else
-                {
-                    refreshTimer.Interval = 100;
-                }
+                refreshTimer.Interval = value;
             }
         }
 

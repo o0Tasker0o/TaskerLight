@@ -19,6 +19,8 @@ namespace ControlPanelTests
             SettingsManager.OutputSaturation = 1;
             SettingsManager.OutputContrast = 2;
             SettingsManager.Mode = OutputMode.ActiveScript;
+            SettingsManager.VideoApps = new List<String>();
+            SettingsManager.VideoOverlay = false;
 
             for(int pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
             {
@@ -35,7 +37,6 @@ namespace ControlPanelTests
         [TestMethod()]
         public void SettingsManagerCanSaveSettingsToFile()
         {
-            SettingsManager.VideoApps = new List<String>();
             SettingsManager.VideoApps.Add("app name 1");
             SettingsManager.VideoApps.Add("app name 2");
 
@@ -62,6 +63,7 @@ namespace ControlPanelTests
 
             Assert.AreEqual("app name 1", settingsXml.SelectNodes("//TaskerLightSettings/VideoApp")[0].InnerText);
             Assert.AreEqual("app name 2", settingsXml.SelectNodes("//TaskerLightSettings/VideoApp")[1].InnerText);
+            Assert.AreEqual("False", settingsXml.SelectSingleNode("//TaskerLightSettings/VideoOverlay").InnerText);
         }
 
         [TestMethod()]
@@ -93,6 +95,8 @@ namespace ControlPanelTests
             videoApps.Add("app name 2");
 
             CollectionAssert.AreEqual(videoApps, SettingsManager.VideoApps);
+
+            Assert.AreEqual(true, SettingsManager.VideoOverlay);
         }
 
         [TestMethod()]
@@ -173,6 +177,10 @@ namespace ControlPanelTests
             XmlNode registeredAppNode2 = settingsDocument.CreateElement("VideoApp");
             registeredAppNode2.InnerText = "app name 2";
             rootNode.AppendChild(registeredAppNode2);
+
+            XmlNode videoOverlayNode = settingsDocument.CreateElement("VideoOverlay");
+            videoOverlayNode.InnerText = "True";
+            rootNode.AppendChild(videoOverlayNode);
 
             settingsDocument.Save(filename);
         }

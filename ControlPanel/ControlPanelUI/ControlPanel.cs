@@ -66,6 +66,8 @@ namespace ControlPanelUI
                     videoRadioButton.Checked = true;
                   break;
             }
+
+            videoOverlayCheckbox.Checked = SettingsManager.VideoOverlay;
         }
 
         private void ControlPanel_FormClosing(object sender, FormClosingEventArgs e)
@@ -83,15 +85,26 @@ namespace ControlPanelUI
             activeScriptToolStripMenuItem.Checked = false;
             wallpaperToolStripMenuItem.Checked = false;
             videoToolStripMenuItem.Checked = false;
-
-            ledPreview1.AllowInput = staticColourRadioButton.Checked;
             hsvPicker1.Visible = staticColourRadioButton.Checked;
 
             if(staticColourRadioButton.Checked)
             {
                 SettingsManager.Mode = OutputMode.StaticColours;
 
-                for(UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
+                StartStaticColourMode();
+            }
+        }
+
+        private void StartStaticColourMode()
+        {
+            if(!(mApplicationFinder.RunningRegisteredApplications() && videoOverlayCheckbox.Checked))
+            {
+                ledPreview1.AllowInput = true;
+
+                ledPreview1.RefreshInterval = 1000;
+                mColourOutputManager.FadeTimeMs = 1000;
+
+                for (UInt16 pixelIndex = 0; pixelIndex < 25; ++pixelIndex)
                 {
                     mColourOutputManager.SetPixel(pixelIndex, ledPreview1.StaticPixelColours[pixelIndex]);
                 }
@@ -112,12 +125,23 @@ namespace ControlPanelUI
                 SettingsManager.Mode = OutputMode.ActiveScript;
 
                 activeScriptBrowserControl1.Visible = true;
-                mActiveScriptEffectGenerator.Start();
+                StartActiveScriptMode();
             }
             else
             {
                 activeScriptBrowserControl1.Visible = false;
                 mActiveScriptEffectGenerator.Stop();
+            }
+        }
+
+        private void StartActiveScriptMode()
+        {
+            if(!(mApplicationFinder.RunningRegisteredApplications() && videoOverlayCheckbox.Checked))
+            {
+                ledPreview1.AllowInput = false;
+
+                ledPreview1.RefreshInterval = 180;
+                mActiveScriptEffectGenerator.Start();
             }
         }
 
@@ -132,11 +156,22 @@ namespace ControlPanelUI
             {
                 SettingsManager.Mode = OutputMode.Wallpaper;
 
-                mWallpaperEffectGenerator.Start();
+                StartWallpaperMode();
             }
             else
             {
                 mWallpaperEffectGenerator.Stop();
+            }
+        }
+
+        private void StartWallpaperMode()
+        {
+            if (!(mApplicationFinder.RunningRegisteredApplications() && videoOverlayCheckbox.Checked))
+            {
+                ledPreview1.AllowInput = false;
+
+                ledPreview1.RefreshInterval = 1000;
+                mWallpaperEffectGenerator.Start();
             }
         }
 
@@ -155,6 +190,8 @@ namespace ControlPanelUI
             {
                 SettingsManager.Mode = OutputMode.Video;
 
+                ledPreview1.RefreshInterval = 100;
+                ledPreview1.AllowInput = false;
                 mVideoEffectGenerator.Start();
             }
             else
@@ -301,6 +338,66 @@ namespace ControlPanelUI
         private void videoAppListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             deleteVideoAppButton.Enabled = videoAppListView.SelectedItems.Count > 0;
+        }
+
+        private void videoAppPollTimer_Tick(object sender, EventArgs e)
+        {
+            if(mApplicationFinder.RunningRegisteredApplications())
+            {
+                switch (SettingsManager.Mode)
+                {
+                    case OutputMode.StaticColours:
+                        ledPreview1.AllowInput = false;
+                        break;
+                    case OutputMode.ActiveScript:
+                        mActiveScriptEffectGenerator.Stop();
+                        break;
+                    case OutputMode.Wallpaper:
+                        mWallpaperEffectGenerator.Stop();
+                        break;
+                }
+
+                ledPreview1.RefreshInterval = 100;
+                mVideoEffectGenerator.Start();
+            }
+            else
+            {
+                StopVideoOverlay();
+            }
+        }
+
+        private void videoOverlayCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            SettingsManager.VideoOverlay = videoOverlayCheckbox.Checked;
+
+            if(videoOverlayCheckbox.Checked)
+            {
+                videoAppPollTimer.Start();
+            }
+            else
+            {
+                videoAppPollTimer.Stop();
+                StopVideoOverlay();
+            }
+        }
+
+        private void StopVideoOverlay()
+        {
+            switch (SettingsManager.Mode)
+            {
+                case OutputMode.StaticColours:
+                    mVideoEffectGenerator.Stop();
+                    StartStaticColourMode();
+                    break;
+                case OutputMode.ActiveScript:
+                    mVideoEffectGenerator.Stop();
+                    StartActiveScriptMode();
+                    break;
+                case OutputMode.Wallpaper:
+                    mVideoEffectGenerator.Stop();
+                    StartWallpaperMode();
+                    break;
+            }
         }
     }
 }
