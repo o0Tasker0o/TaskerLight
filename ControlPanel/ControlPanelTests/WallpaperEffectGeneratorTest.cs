@@ -9,7 +9,6 @@ namespace ControlPanelTests
     public class WallpaperEffectGeneratorTest
     {
         [TestMethod()]
-        [DeploymentItem("ControlPanel.exe")]
         public void WallpaperEffectGeneratorConstructorTest()
         {
             TestSerialCommunicator testSerialCommunicator = new TestSerialCommunicator();
