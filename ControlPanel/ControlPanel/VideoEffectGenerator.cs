@@ -45,13 +45,15 @@ namespace ControlPanel
 
         protected override void ThreadTick()
         {
-            mOutputManager.FadeTimeMs = 110;
+            mOutputManager.FadeTimeMs = 90;
 
             InitialiseScreenCapture();
             StartCapturing();
 
             while (mRunning)
             {
+                long startTick = DateTime.Now.Ticks;
+
                 Rectangle captureRegion = mApplicationFinder.GetTopmostRegisteredApp();
 
                 UInt32 leftPadding = GetLeftPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
@@ -82,7 +84,15 @@ namespace ControlPanel
                 
                 mOutputManager.FlushColours();
 
-                Thread.Sleep(mOutputManager.FadeTimeMs);
+                long ticksElapsed = DateTime.Now.Ticks - startTick;
+                long msElapsed = ticksElapsed / TimeSpan.TicksPerMillisecond;
+
+                int sleepDuration = (int) (mOutputManager.FadeTimeMs - msElapsed) + 20;
+
+                if(sleepDuration > 0)
+                {
+                    Thread.Sleep(sleepDuration);
+                }
             }
 
             StopCapturing();
