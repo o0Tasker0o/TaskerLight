@@ -36,6 +36,8 @@ namespace ControlPanel
 
         private ApplicationFinder mApplicationFinder;
 
+        private const UInt16 cMaxPadding = 300;
+
         public VideoEffectGenerator(ColourOutputManager colourOutputManager, ApplicationFinder appFinder) : base(colourOutputManager)
         {
             mApplicationFinder = appFinder;
@@ -56,6 +58,8 @@ namespace ControlPanel
                 UInt32 rightPadding = GetRightPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
                 UInt32 topPadding = GetTopPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
                 UInt32 bottomPadding = GetBottomPadding(captureRegion.Left, captureRegion.Right, captureRegion.Top, captureRegion.Bottom);
+
+                CapPadding(ref leftPadding, ref rightPadding, ref topPadding, ref bottomPadding);
 
                 long x = captureRegion.Left + leftPadding;
                 long y = captureRegion.Top + topPadding;
@@ -83,6 +87,32 @@ namespace ControlPanel
 
             StopCapturing();
             ShutdownScreenCapture();
+        }
+
+        private void CapPadding(ref UInt32 leftPadding, 
+                                ref UInt32 rightPadding, 
+                                ref UInt32 topPadding, 
+                                ref UInt32 bottomPadding)
+        {
+            if(leftPadding > cMaxPadding)
+            {
+                leftPadding = cMaxPadding;
+            }
+
+            if(rightPadding > cMaxPadding)
+            {
+                rightPadding = cMaxPadding;
+            }
+
+            if(topPadding > cMaxPadding)
+            {
+                topPadding = cMaxPadding;
+            }
+
+            if(bottomPadding > cMaxPadding)
+            {
+                bottomPadding = cMaxPadding;
+            }
         }
 
         private Color UInt32ToColor(UInt32 rgbColour)
