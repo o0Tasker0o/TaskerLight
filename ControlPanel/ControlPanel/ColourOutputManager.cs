@@ -115,5 +115,15 @@ namespace ControlPanel
 
             return Color.FromArgb((int) adjustedRed, (int) adjustedGreen, (int) adjustedBlue);
         }
+
+        public void TurnLightsOff()
+        {
+            for(int colourIndex = 0; colourIndex < mColourBuffer.Length; ++colourIndex)
+            {
+                mColourBuffer[colourIndex] = Color.Black;
+            }
+
+            FlushColours();
+        }
     }
 }

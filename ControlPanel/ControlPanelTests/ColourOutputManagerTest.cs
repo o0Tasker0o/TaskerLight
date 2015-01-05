@@ -189,5 +189,23 @@ namespace ControlPanelTests
                 }
             }
         }
+
+        [TestMethod()]
+        public void ColourOutputManagerWritesBlackToSinglePixel()
+        {
+            TestSerialCommunicator serialCommunicator = new TestSerialCommunicator();
+
+            using (ColourOutputManager colourOutputManager = new ColourOutputManager(serialCommunicator))
+            {
+                colourOutputManager.TurnLightsOff();
+
+                for(int colourIndex = 0; colourIndex < 25 * 3; ++colourIndex)
+                {
+                    Assert.AreEqual(0, serialCommunicator.OutputBuffer[colourIndex]);
+                }
+
+                Assert.AreEqual(1U, serialCommunicator.ReadAmount);
+            }
+        }
     }
 }

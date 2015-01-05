@@ -76,6 +76,8 @@ namespace ControlPanelUI
             mActiveScriptEffectGenerator.Stop();
             mVideoEffectGenerator.Stop();
 
+            mColourOutputManager.TurnLightsOff();
+
             SettingsManager.Save(cSettingsFilepath);
         }
 
