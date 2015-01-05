@@ -31,6 +31,10 @@ namespace ControlPanel
             {
                 if(null != value)
                 {
+                    if (!Directory.Exists(value.FullName))
+                    {
+                        Directory.CreateDirectory(value.FullName);
+                    }
                     mScriptDirectoryWatcher = new FileSystemWatcher(value.FullName);
 
                     mScriptDirectoryWatcher.Changed += new FileSystemEventHandler(OnScriptsChanged);
