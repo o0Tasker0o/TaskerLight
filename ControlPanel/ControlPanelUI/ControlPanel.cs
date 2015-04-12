@@ -324,7 +324,16 @@ namespace ControlPanelUI
 
         private void AddVideoApp(String exeFilename)
         {
-            Icon icon = Icon.ExtractAssociatedIcon(exeFilename);
+            Icon icon = SystemIcons.Error;
+
+            try
+            {
+                icon = Icon.ExtractAssociatedIcon(exeFilename);
+            }
+            catch(FileNotFoundException)
+            {
+
+            }
 
             videoAppIconList.Images.Add(icon);
 

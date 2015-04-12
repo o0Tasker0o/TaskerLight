@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TaskerLight"
-#define MyAppVersion "2.0.1"
+#define MyAppVersion "2.0.2"
 #define MyAppPublisher "TaskerCode"
 #define MyAppURL "http://taskercode.wordpress.com"
 #define MyAppExeName "ControlPanelUI.exe"
