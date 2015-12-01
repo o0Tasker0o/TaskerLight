@@ -1,40 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Threading;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Reflection;
-using Microsoft.Win32;
 
 namespace ControlPanel
 {
     public class WallpaperEffectGenerator : EffectGenerator
     {
-        private readonly String mWallpaperDirectory;
-        private readonly String mWallpaperFilename;
         private DateTime mTimeSinceLastFileChange;
+        private IWallpaperProvider mWallpaperProvider;
 
-        public WallpaperEffectGenerator(ColourOutputManager colourOutputManager) : base(colourOutputManager)
+        public WallpaperEffectGenerator(ColourOutputManager colourOutputManager, IWallpaperProvider wallpaperProvider) : base(colourOutputManager)
         {
-            String roamingDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            mWallpaperDirectory = Path.Combine(roamingDir, "Microsoft\\Windows\\Themes");
-            mWallpaperFilename = Path.Combine(mWallpaperDirectory, "TranscodedWallpaper.jpg");
-
-            FileSystemWatcher fsw = new FileSystemWatcher(mWallpaperDirectory);
-
-            fsw.NotifyFilter = NotifyFilters.LastWrite;
-
-            fsw.EnableRaisingEvents = true;
-
-            fsw.Changed += new FileSystemEventHandler(WallpaperChanged);
+            mWallpaperProvider = wallpaperProvider;
+            mWallpaperProvider.WallpaperChanged += WallpaperChanged;
 
             DisplayWallpaperColours();
         }
 
-        private void WallpaperChanged(object sender, FileSystemEventArgs e)
+        private void WallpaperChanged(object sender, EventArgs e)
         {
             if(mRunning)
             {
@@ -47,7 +29,7 @@ namespace ControlPanel
 
         private void DisplayWallpaperColours()
         {
-            using (Bitmap scaledWallpaper = GetScaledWallpaper())
+            using (Bitmap scaledWallpaper = mWallpaperProvider.GetScaledWallpaper())
             {
                 if (null != scaledWallpaper)
                 {
@@ -86,33 +68,6 @@ namespace ControlPanel
                     mTimeSinceLastFileChange = DateTime.Now;
                 }
             }
-        }
-
-        private Bitmap GetScaledWallpaper()
-        {
-            Bitmap scaledWallpaper = new Bitmap(11, 7);
-            Image originalWallpaper;
-
-            try
-            {
-                using (FileStream stream = File.OpenRead(mWallpaperFilename))
-                {
-                    originalWallpaper = Bitmap.FromStream(stream);
-                }
-            }
-            catch
-            {
-                return null;
-            }
-
-            using (Graphics g = Graphics.FromImage(scaledWallpaper))
-            {
-                g.DrawImage(originalWallpaper, 0, 0, 9, 7);
-            }
-
-            originalWallpaper.Dispose();
-
-            return scaledWallpaper;
         }
 
         protected override void ThreadTick()

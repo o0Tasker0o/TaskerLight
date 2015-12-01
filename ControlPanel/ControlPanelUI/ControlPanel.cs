@@ -47,7 +47,7 @@ namespace ControlPanelUI
                 AddVideoApp(videoApp);
             }
 
-            mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager);
+            mWallpaperEffectGenerator = new WallpaperEffectGenerator(mColourOutputManager, new WallpaperProvider());
             mActiveScriptEffectGenerator = new ActiveScriptEffectGenerator(mColourOutputManager);
             mVideoEffectGenerator = new VideoEffectGenerator(mColourOutputManager, mApplicationFinder);
 

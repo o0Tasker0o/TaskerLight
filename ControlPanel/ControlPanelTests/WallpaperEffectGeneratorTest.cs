@@ -1,7 +1,7 @@
-﻿using ControlPanel;
+﻿using System.Drawing;
+using ControlPanel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading;
+using NSubstitute;
 
 namespace ControlPanelTests
 {
@@ -11,24 +11,24 @@ namespace ControlPanelTests
         [TestMethod()]
         public void WallpaperEffectGeneratorConstructorTest()
         {
+            IWallpaperProvider wallpaperProvider = Substitute.For<IWallpaperProvider>();
+            wallpaperProvider.GetScaledWallpaper().Returns(new Bitmap(9, 7));
+
             TestSerialCommunicator testSerialCommunicator = new TestSerialCommunicator();
 
             using(ColourOutputManager colourOutputManager = new ColourOutputManager(testSerialCommunicator))
             {
-                WallpaperEffectGenerator wallpaperGenerator = new WallpaperEffectGenerator(colourOutputManager);
+                WallpaperEffectGenerator wallpaperGenerator = new WallpaperEffectGenerator(colourOutputManager, wallpaperProvider);
 
-                CollectionAssert.AreEqual(new byte[77], testSerialCommunicator.OutputBuffer);
+                AssertColourValuesMatchWallpaper(testSerialCommunicator.OutputBuffer);
+            }
+        }
 
-                wallpaperGenerator.Start();
-
-                Thread.Sleep(100);
-
-                byte[] fadeBytes = BitConverter.GetBytes((UInt16) 1000);
-
-                Assert.AreEqual(fadeBytes[0], testSerialCommunicator.OutputBuffer[75]);
-                Assert.AreEqual(fadeBytes[1], testSerialCommunicator.OutputBuffer[76]);
-
-                wallpaperGenerator.Stop();
+        private void AssertColourValuesMatchWallpaper(byte[] colourValues)
+        {
+            for (int index = 0; index < 75; ++index)
+            {
+                Assert.AreEqual(0, colourValues[index]);
             }
         }
     }
