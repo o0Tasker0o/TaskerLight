@@ -64,7 +64,6 @@
     <Compile Include="PixelRegionsTest.cs" />
     <Compile Include="ApplicationFinderTest.cs" />
     <Compile Include="SettingsManagerTest.cs" />
-    <Compile Include="TestSerialCommunicator.cs" />
     <Compile Include="VideoEffectGeneratorTest.cs" />
     <Compile Include="WallpaperEffectGeneratorTest.cs" />
   </ItemGroup>
