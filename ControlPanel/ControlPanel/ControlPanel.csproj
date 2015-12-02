@@ -54,7 +54,7 @@
     <Compile Include="ColourOutputManager.cs" />
     <Compile Include="ColourUtilities.cs" />
     <Compile Include="EffectGenerator.cs" />
-    <Compile Include="ISerialCommunicator.cs" />
+    <Compile Include="Interfaces\ISerialCommunicator.cs" />
     <Compile Include="OutputMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PixelRegions.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="SettingsManager.cs" />
     <Compile Include="VideoEffectGenerator.cs" />
     <Compile Include="WallpaperEffectGenerator.cs" />
-    <Compile Include="IWallpaperProvider .cs" />
+    <Compile Include="Interfaces\IWallpaperProvider .cs" />
     <Compile Include="WallpaperProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
