@@ -44,6 +44,11 @@ namespace ControlPanel
 
         public Color GetPixel(UInt32 pixelIndex)
         {
+            if (pixelIndex >= mColourBuffer.Length)
+            {
+                return Color.Black;
+            }
+
             Color adjustedColour = AdjustSaturation(mColourBuffer[pixelIndex]);
             return AdjustContrast(adjustedColour);
         }
