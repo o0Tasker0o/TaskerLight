@@ -4,11 +4,11 @@ namespace ControlPanel
 {
     public abstract class EffectGenerator
     {
-        private Thread mTickThread;
+        protected Thread mTickThread;
         protected bool mRunning;
         protected ColourOutputManager mOutputManager;
 
-        public EffectGenerator(ColourOutputManager outputManager)
+        protected EffectGenerator(ColourOutputManager outputManager)
         {
             mOutputManager = outputManager;
         }

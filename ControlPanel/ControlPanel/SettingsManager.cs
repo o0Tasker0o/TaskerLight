@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ControlPanel
 {
-    public class SettingsManager
+    public static class SettingsManager
     {
         private static Color[] mStaticColours;
         private static List<String> mVideoApps;

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace ControlPanel
 {
@@ -11,7 +10,7 @@ namespace ControlPanel
         public delegate void ScriptsChangedEventHandler();
         public event ScriptsChangedEventHandler ScriptsChanged;
 
-        FileSystemWatcher mScriptDirectoryWatcher;
+        private FileSystemWatcher mScriptDirectoryWatcher;
 
         protected virtual void OnScriptsChanged(object sender, FileSystemEventArgs e)
         {
@@ -37,9 +36,9 @@ namespace ControlPanel
                     }
                     mScriptDirectoryWatcher = new FileSystemWatcher(value.FullName);
 
-                    mScriptDirectoryWatcher.Changed += new FileSystemEventHandler(OnScriptsChanged);
-                    mScriptDirectoryWatcher.Created += new FileSystemEventHandler(OnScriptsChanged);
-                    mScriptDirectoryWatcher.Deleted += new FileSystemEventHandler(OnScriptsChanged);
+                    mScriptDirectoryWatcher.Changed += OnScriptsChanged;
+                    mScriptDirectoryWatcher.Created += OnScriptsChanged;
+                    mScriptDirectoryWatcher.Deleted += OnScriptsChanged;
 
                     mScriptDirectoryWatcher.EnableRaisingEvents = true;
                 }

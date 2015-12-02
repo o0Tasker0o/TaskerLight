@@ -5,7 +5,7 @@ namespace ControlPanel
 {
     public class SerialCommunicator : ISerialCommunicator
     {
-        private SerialPort mArduinoComPort;
+        private readonly SerialPort mArduinoComPort;
 
         public SerialCommunicator()
         {

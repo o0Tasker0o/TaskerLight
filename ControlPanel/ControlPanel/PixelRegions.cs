@@ -7,8 +7,8 @@ namespace ControlPanel
     {
         private static PixelRegions mInstance;
 
-        private List<RectangleF> mRegions;
-        private List<RectangleF> mCaptureSubRegions;
+        private readonly List<RectangleF> mRegions;
+        private readonly List<RectangleF> mCaptureSubRegions;
 
         public Rectangle CaptureRegion
         {

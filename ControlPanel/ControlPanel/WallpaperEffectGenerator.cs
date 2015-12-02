@@ -6,7 +6,7 @@ namespace ControlPanel
     public class WallpaperEffectGenerator : EffectGenerator
     {
         private DateTime mTimeSinceLastFileChange;
-        private IWallpaperProvider mWallpaperProvider;
+        private readonly IWallpaperProvider mWallpaperProvider;
 
         public WallpaperEffectGenerator(ColourOutputManager colourOutputManager, IWallpaperProvider wallpaperProvider) : base(colourOutputManager)
         {

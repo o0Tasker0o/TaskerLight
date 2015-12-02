@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Drawing;
 
 namespace ControlPanel
 {
@@ -23,7 +21,7 @@ namespace ControlPanel
         [DllImport("user32.dll")]
         static extern bool ClientToScreen(IntPtr hWnd, ref Point point);
 
-        uint GW_HWNDNEXT = 2;
+        private const uint GW_HWNDNEXT = 2;
 
         private HashSet<String> RegisteredApplications
         {

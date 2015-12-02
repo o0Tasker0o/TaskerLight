@@ -8,22 +8,21 @@ namespace ControlPanel
     {
         public event EventHandler WallpaperChanged;
 
-        private readonly String mWallpaperDirectory;
         private readonly String mWallpaperFilename;
 
         public WallpaperProvider()
         {
             String roamingDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            mWallpaperDirectory = Path.Combine(roamingDir, "Microsoft\\Windows\\Themes");
-            mWallpaperFilename = Path.Combine(mWallpaperDirectory, "TranscodedWallpaper");
+            String wallpaperDirectory = Path.Combine(roamingDir, "Microsoft\\Windows\\Themes");
+            mWallpaperFilename = Path.Combine(wallpaperDirectory, "TranscodedWallpaper");
 
-            FileSystemWatcher fsw = new FileSystemWatcher(mWallpaperDirectory);
+            FileSystemWatcher fsw = new FileSystemWatcher(wallpaperDirectory);
 
             fsw.NotifyFilter = NotifyFilters.LastWrite;
 
             fsw.EnableRaisingEvents = true;
 
-            fsw.Changed += new FileSystemEventHandler(WallpaperChangedCallback);
+            fsw.Changed += WallpaperChangedCallback;
         }
 
         public Bitmap GetScaledWallpaper()
@@ -35,7 +34,7 @@ namespace ControlPanel
             {
                 using (FileStream stream = File.OpenRead(mWallpaperFilename))
                 {
-                    originalWallpaper = Bitmap.FromStream(stream);
+                    originalWallpaper = Image.FromStream(stream);
                 }
             }
             catch

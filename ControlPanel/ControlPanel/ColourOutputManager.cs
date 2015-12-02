@@ -5,8 +5,8 @@ namespace ControlPanel
 {
     public class ColourOutputManager : IDisposable
     {
-        private ISerialCommunicator mSerialCommunicator;
-        private Color [] mColourBuffer;
+        private readonly ISerialCommunicator mSerialCommunicator;
+        private readonly Color [] mColourBuffer;
 
         public UInt16 FadeTimeMs
         {
@@ -113,7 +113,7 @@ namespace ControlPanel
             adjustedBlue = Math.Max(adjustedBlue, 0);
             adjustedBlue = Math.Min(adjustedBlue, 255);
 
-            return Color.FromArgb((int) adjustedRed, (int) adjustedGreen, (int) adjustedBlue);
+            return Color.FromArgb(adjustedRed, adjustedGreen, adjustedBlue);
         }
 
         public void TurnLightsOff()
