@@ -519,6 +519,7 @@
             // 
             // videoOverlayCheckbox
             // 
+            this.videoOverlayCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.videoOverlayCheckbox.AutoSize = true;
             this.videoOverlayCheckbox.Location = new System.Drawing.Point(241, 102);
             this.videoOverlayCheckbox.Name = "videoOverlayCheckbox";
