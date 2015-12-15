@@ -30,7 +30,7 @@ namespace ControlPanelUI
             cSettingsFilepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                              "taskerlight settings.xml");
 
-            mSerialCommunicator = new SerialCommunicator();
+            mSerialCommunicator = new SerialCommunicator("COM3");
             mColourOutputManager = new ColourOutputManager(mSerialCommunicator);
 
             SettingsManager.Load(cSettingsFilepath);

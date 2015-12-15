@@ -4,7 +4,7 @@ namespace ControlPanel
 {
     public interface ISerialCommunicator
     {
-        void Connect();
+        bool Connect();
         void Disconnect();
         byte Read();
         void Write(Byte [] buffer);

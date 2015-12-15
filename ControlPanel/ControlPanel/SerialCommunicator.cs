@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.IO.Ports;
 
 namespace ControlPanel
@@ -6,30 +7,52 @@ namespace ControlPanel
     public class SerialCommunicator : ISerialCommunicator
     {
         private readonly SerialPort mArduinoComPort;
+        private bool mIsValid;
 
-        public SerialCommunicator()
+        public SerialCommunicator(string comPort)
         {
-            mArduinoComPort = new SerialPort("COM3",
+            mIsValid = false;
+            mArduinoComPort = new SerialPort(comPort,
                                              115200,
                                              Parity.None,
                                              8,
                                              StopBits.One);
         }
 
-        public void Connect()
+        public bool Connect()
         {
-            mArduinoComPort.Open();
+            try
+            {
+                mArduinoComPort.Open();
+                mIsValid = true;
+            }
+            catch (IOException)
+            {
+            }
+            catch (ArgumentException)
+            {
+            }
 
             System.Threading.Thread.Sleep(1500);
+
+            return mIsValid;
         }
 
         public void Write(Byte [] buffer)
         {
-            mArduinoComPort.Write(buffer, 0, buffer.Length);
+            if (mIsValid)
+            {
+                mArduinoComPort.Write(buffer, 0, buffer.Length);
+            }
         }
 
         public byte Read()
         {
+            if (!mIsValid)
+            {
+                return 0;
+            }
+
             return (byte) mArduinoComPort.ReadByte();
         }
 
