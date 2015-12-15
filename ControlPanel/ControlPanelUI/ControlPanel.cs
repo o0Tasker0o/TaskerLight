@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using ControlPanel;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using ControlPanel;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ControlPanelUI
 {
     public partial class ControlPanel : Form
     {
-        private WallpaperEffectGenerator mWallpaperEffectGenerator;
-        private ActiveScriptEffectGenerator mActiveScriptEffectGenerator;
-        private VideoEffectGenerator mVideoEffectGenerator;
+        private readonly WallpaperEffectGenerator mWallpaperEffectGenerator;
+        private readonly ActiveScriptEffectGenerator mActiveScriptEffectGenerator;
+        private readonly VideoEffectGenerator mVideoEffectGenerator;
 
-        private ColourOutputManager mColourOutputManager;
-        private SerialCommunicator mSerialCommunicator;
-        private ApplicationFinder mApplicationFinder;
+        private readonly ColourOutputManager mColourOutputManager;
+        private readonly ApplicationFinder mApplicationFinder;
 
         private readonly String cSettingsFilepath;
 
@@ -30,8 +24,7 @@ namespace ControlPanelUI
             cSettingsFilepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                              "taskerlight settings.xml");
 
-            mSerialCommunicator = new SerialCommunicator("COM3");
-            mColourOutputManager = new ColourOutputManager(mSerialCommunicator);
+            mColourOutputManager = new ColourOutputManager(new SerialCommunicator("COM3"));
 
             SettingsManager.Load(cSettingsFilepath);
 
@@ -219,13 +212,13 @@ namespace ControlPanelUI
         private void saturationTrackbar_ValueChanged(object sender, EventArgs e)
         {
             SettingsManager.OutputSaturation = (UInt16) saturationTrackbar.Value;
-            mColourOutputManager.SaturationMultiplier = (float) saturationTrackbar.Value / 100.0f;
+            mColourOutputManager.SaturationMultiplier = saturationTrackbar.Value / 100.0f;
         }
 
         private void contrastTrackbar_ValueChanged(object sender, EventArgs e)
         {
             SettingsManager.OutputContrast = (UInt16) contrastTrackbar.Value;
-            mColourOutputManager.ContrastMultiplier = (float) contrastTrackbar.Value / 100.0f;
+            mColourOutputManager.ContrastMultiplier = contrastTrackbar.Value / 100.0f;
         }
 
         private void ControlPanel_Resize(object sender, EventArgs e)
@@ -309,10 +302,11 @@ namespace ControlPanelUI
 
         private void addVideoAppButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openExeDialog = new OpenFileDialog();
-
-            openExeDialog.InitialDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            openExeDialog.Filter = "Executables (*.exe)|*.exe";
+            OpenFileDialog openExeDialog = new OpenFileDialog()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                Filter = "Executables (*.exe)|*.exe"
+            };
 
             if (openExeDialog.ShowDialog() == DialogResult.OK)
             {
@@ -337,9 +331,11 @@ namespace ControlPanelUI
 
             videoAppIconList.Images.Add(icon);
 
-            ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFilename));
-            appItem.Tag = exeFilename;
-            appItem.ImageIndex = this.videoAppIconList.Images.Count - 1;
+            ListViewItem appItem = new ListViewItem(Path.GetFileNameWithoutExtension(exeFilename))
+            {
+                Tag = exeFilename,
+                ImageIndex = videoAppIconList.Images.Count - 1
+            };
 
             videoAppListView.Items.Add(appItem);
 
